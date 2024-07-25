@@ -7,7 +7,7 @@ project:
   # 应用名称
   app-name: newadmin
   # 版本
-  version: 1.0.2
+  version: 1.0.0
   # 描述
   description: 论坛社区
   # 基本包
