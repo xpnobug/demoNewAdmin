@@ -39,6 +39,7 @@
     <freemarker.version>2.3.31</freemarker.version>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
+    <sonar.version>3.11.0.3922</sonar.version>
   </properties>
 
   <!-- 依赖声明 -->
@@ -142,6 +143,7 @@
           <plugin>
             <groupId>org.sonarsource.scanner.maven</groupId>
             <artifactId>sonar-maven-plugin</artifactId>
+            <version>${sonar.version}</version>
             <executions>
               <execution>
                 <phase>verify</phase>
@@ -169,4 +171,17 @@
     </repository>
   </repositories>
 
+  <!-- 插件仓库配置 -->
+  <pluginRepositories>
+    <pluginRepository>
+      <id>huawei-mirror</id>
+      <name>HuaweiCloud Mirror</name>
+      <url>https://mirrors.huaweicloud.com/repository/maven/</url>
+    </pluginRepository>
+    <pluginRepository>
+      <id>ali-mirror</id>
+      <name>AliYun Mirror</name>
+      <url>https://maven.aliyun.com/repository/public/</url>
+    </pluginRepository>
+  </pluginRepositories>
 </project>
