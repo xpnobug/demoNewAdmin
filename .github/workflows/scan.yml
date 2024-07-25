@@ -36,8 +36,10 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}  # 缓存键，基于操作系统和pom.xml文件的哈希值
           restore-keys: ${{ runner.os }}-m2  # 恢复键
 
-      - name: Build and analyze  # 构建并分析
+      - name: Analyze # 第五步：执行代码分析
+        run: |
+          sed -i.bak '/<pluginRepositories>/,/<\/pluginRepositories>/d' pom.xml
+          mvn -B verify -Psonar
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 获取PR信息所需的GitHub令牌
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # SonarCloud认证令牌
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=xpnobug_demoNewAdmin  # 运行Maven验证和SonarQube分析
+          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }} # 用于访问 GitHub 公关信息
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # 用于 SonarCloud 认证
