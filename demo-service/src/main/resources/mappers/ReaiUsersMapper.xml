@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newadmin.demoservice.mainPro.ltpro.dao.ReaiUsersMapper">
+
+  <!-- 通用查询映射结果 -->
+  <resultMap id="BaseResultMap" type="com.newadmin.demoservice.mainPro.ltpro.entity.ReaiUsers">
+    <id column="user_id" property="userId"/>
+    <result column="username" property="username"/>
+    <result column="password" property="password"/>
+    <result column="email" property="email"/>
+    <result column="full_name" property="fullName"/>
+    <result column="phone_number" property="phoneNumber"/>
+    <result column="address" property="address"/>
+    <result column="registration_time" property="registrationTime"/>
+    <result column="last_login_time" property="lastLoginTime"/>
+    <result column="user_type" property="userType"/>
+    <result column="status" property="status"/>
+    <result column="password_reset_token" property="passwordResetToken"/>
+    <result column="password_reset_token_expires_at" property="passwordResetTokenExpiresAt"/>
+    <result column="password_reset_requested_at" property="passwordResetRequestedAt"/>
+    <result column="account_locked" property="accountLocked"/>
+    <result column="account_locked_at" property="accountLockedAt"/>
+    <result column="account_unlocked_at" property="accountUnlockedAt"/>
+    <result column="password_last_updated_at" property="passwordLastUpdatedAt"/>
+    <result column="password_expires_at" property="passwordExpiresAt"/>
+    <result column="last_failed_login" property="lastFailedLogin"/>
+    <result column="failed_login_attempts" property="failedLoginAttempts"/>
+    <result column="two_factor_auth_enabled" property="twoFactorAuthEnabled"/>
+    <result column="session_token" property="sessionToken"/>
+    <result column="session_token_expires_at" property="sessionTokenExpiresAt"/>
+    <result column="wechat_id" property="wechatId"/>
+    <result column="qq_id" property="qqId"/>
+  </resultMap>
+
+  <!-- 通用查询结果列 -->
+  <sql id="Base_Column_List">
+    user_id
+    , username, password, email, full_name, phone_number, address, registration_time, last_login_time, user_type, status, password_reset_token, password_reset_token_expires_at, password_reset_requested_at, account_locked, account_locked_at, account_unlocked_at, password_last_updated_at, password_expires_at, last_failed_login, failed_login_attempts, two_factor_auth_enabled, session_token, session_token_expires_at, wechat_id, qq_id
+  </sql>
+
+</mapper>

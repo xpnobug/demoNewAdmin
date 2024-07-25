@@ -1,0 +1,262 @@
+### 项目配置
+project:
+  # URL（跨域配置默认放行此 URL，第三方登录回调默认使用此 URL 为前缀，注意更改为实际的前端 URL）
+  url: https://pc.reaicc.com
+
+server:
+  port: 8070
+
+spring:
+  #  main:
+  #    allow-circular-references: true
+  datasource:
+    url: jdbc:mysql://${DB_HOST:127.0.0.1}:${DB_PORT:3305}/${DB_NAME:demo_newpro}?characterEncoding=utf-8&useSSL=false&nullCatalogMeansCurrent=true&serverTimezone=Asia/Shanghai
+    username: ${DB_USER:root}
+    password: ${DB_PWD:1q2w3e4r}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      minimum-idle: 3
+      maximum-pool-size: 10
+      max-lifetime: 30000   #不能小于30秒，否则默认回到1800秒
+      connection-test-query: SELECT 1
+  jackson:
+    # 时区配置
+    time-zone: GMT+8
+    # 日期格式化（针对 java.util.Date）
+    date-format: yyyy-MM-dd HH:mm:ss
+    # 序列化配置（Bean -> JSON）
+    serialization:
+      # 允许序列化无属性的 Bean
+      FAIL_ON_EMPTY_BEANS: false
+    # 反序列化配置（JSON -> Bean）
+    deserialization:
+      # 允许反序列化不存在的属性
+      FAIL_ON_UNKNOWN_PROPERTIES: false
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  rabbitmq:
+    username: ${MQ_NAME}
+    password: ${MQ_PWD}
+    virtual-host: /
+    host: ${MQ_HOST}
+    port: ${MQ_PORT}
+  data:
+    redis:
+      # Redis服务器地址
+      host: ${REDIS_HOST}
+      # Redis服务器端口号
+      port: ${REDIS_PORT}
+      # 使用的数据库索引，默认是0
+      database: 0
+      # 连接超时时间
+      timeout: 1800000
+      # 设置密码
+      password: ${REDIS_PWD}
+#配置日志
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: mappers/*
+### 跨域配置
+cors:
+  enabled: true
+  # 配置允许跨域的域名
+  allowed-origins: '*'
+  # 配置允许跨域的请求方式
+  allowed-methods: '*'
+  # 配置允许跨域的请求头
+  allowed-headers: '*'
+  # 配置允许跨域的响应头
+  exposed-headers: '*'
+### 加密
+jasypt:
+  encryptor:
+    # 加密的秘钥
+    password: haha
+    # 加密算法
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator
+    property:
+      # 算法识别的前后缀，默认ENC()，包含在前后缀的加密信息，会使用指定算法解密
+      prefix: Enc(
+      suffix: )
+
+### Sa-Token 扩展配置
+sa-token.extension:
+  # 安全配置：排除（放行）路径配置
+  security.excludes:
+    - /error
+    # 静态资源
+    - /*.html
+    - /*/*.html
+    - /*/*.css
+    - /*/*.js
+    - /websocket/**
+    # 接口文档相关资源
+    - /favicon.ico
+    - /doc.html
+    - /webjars/**
+    - /swagger-ui/**
+    - /swagger-resources/**
+    - /*/api-docs/**
+    # 本地存储资源
+    - /file/**
+    # 无需token 验证的接口
+    - /users/isLogin
+    - /users/pageList
+    - /article/**
+    - /dict/getDictByItemCode
+    - /comment/**
+    - /likes/**
+    - /recommend/**
+
+reai:
+  show-sql:
+    enabled: true
+    mode: time_sql
+
+# QQ机器人配置
+qqbot:
+  base:
+    # 机器人API地址 统一地址 https://api.sgroup.qq.com
+    base-url: ${qqbot.baseUrl}
+    #获取带分片 WSS 接入点API
+    gateway-bot-url: ${qqbot.gatewayUrl}
+    #是否启用
+    enabled: true
+    #token 格式 Bot 机器人appId.Token(机器人令牌)
+    bot-token: ${qqbot.botToken}
+    #AppID (机器人ID)
+    app-id: ${qqbot.appId}
+    #AppSecret(机器人密钥)
+    app-secret: ${qqbot.appSecret}
+
+### 接口文档配置
+springdoc:
+  swagger-ui:
+    enabled: true
+# knife4j的增强配置，不需要增强可以不配
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+
+### 安全配置
+new-admin:
+  security:
+    ## 字段加/解密配置
+    crypto:
+      enabled: true
+      # 对称加密算法密钥
+      password: abcdefghijklmnop
+      # 非对称加密算法密钥（在线生成 RSA 密钥对：http://web.chacuo.net/netrsakeypair）
+      public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAL/o9GLBOOUldoxrKp5mGbZndhHTWq+YgW8UoyrItiX+fcdSGNgP5bKauGvbWtNFTdy3dZImZ4M8PhKIovk5XnsCAwEAAQ==
+      private-key: MIIBVQIBADANBgkqhkiG9w0BAQEFAASCAT8wggE7AgEAAkEAv+j0YsE45SV2jGsqnmYZtmd2EdNar5iBbxSjKsi2Jf59x1IY2A/lspq4a9ta00VN3Ld1kiZngzw+Eoii+TleewIDAQABAkATXhk71jA9v/gk17PnZHp31B0wU1o1mniFk1mcOcFYOBgMdd9/PxeahrLrk07MBxbc8Y5f+9B5AyGNUl+LuXfRAiEA442JqZAkoCL/0fKqRLVUH5+/KA5tBX6X8GV9g+ew5OUCIQDX5rkvrsazWGYghX3JbYaM6UWV/VSTTBumcxCpUl1f3wIhAIBjjoWWZ6PWu4JIqZskuDczmdZO9WJBQBcKHFx9MEilAiB3k/h5amnvJ0TZOlZi2+Cr5v99hWP0eTDPTeeqgE3rLQIhAKapJS5mkYffmedfwrR9YUKHTcLZ7DTtqndHDjGU9Aok
+    ## 密码编码器配置
+    password:
+      enabled: true
+      # BCryptPasswordEncoder
+      encoding-id: bcrypt
+    ## 限流器配置
+    limiter:
+      enabled: true
+      key-prefix: RateLimiter
+
+### 验证码配置
+new-admin.captcha:
+  ## 行为验证码
+  behavior:
+    enabled: true
+    cache-type: REDIS
+    water-mark:
+    # 一分钟内接口请求次数限制开关（默认：0，关闭，开启后下方失败锁定配置才会生效）
+    req-frequency-limit-enable: 0
+    # 一分钟内验证码最多失败次数限制（默认：5次）
+    req-get-lock-limit: 5
+    # 一分钟内验证码最多失败次数限制达标后锁定时间（默认：300秒）
+    req-get-lock-seconds: 300
+  ## 图形验证码
+  graphic:
+    # 类型
+    type: SPEC
+    # 内容长度
+    length: 4
+    # 过期时间
+    expirationInMinutes: 2
+
+## 其他验证码配置
+captcha:
+  ## 邮箱验证码配置
+  mail:
+    # 内容长度
+    length: 6
+    # 过期时间
+    expirationInMinutes: 5
+    # 模板路径
+    templatePath: mail/captcha.ftl
+  ## 短信验证码配置
+  sms:
+    # 内容长度
+    length: 4
+    # 过期时间
+    expirationInMinutes: 5
+    # 模板 ID
+    templateId: 1
+
+### 短信配置
+sms:
+  # 从 YAML 读取配置
+  config-type: YAML
+  http-log: true
+  is-print: false
+  blends:
+    cloopen:
+      # 短信厂商
+      supplier: cloopen
+      base-url: https://app.cloopen.com:8883/2013-12-26
+      access-key-id: ${ACCESS-KEY-ID}
+      access-key-secret: ${ACCESS-KEY-SECRET}
+      sdk-app-id: ${SDK-APP-ID}
+
+### 邮件配置
+spring.mail:
+  # 根据需要更换
+  host: smtp.qq.com
+  port: 465
+  username: ${MAIL_USER}
+  password: ${MAIL_PWD}
+  properties:
+    mail:
+      smtp:
+        auth: true
+        socketFactory:
+          class: javax.net.ssl.SSLSocketFactory
+          port: 465
+
+### Just Auth 配置
+justauth:
+  enabled: true
+  type:
+    GITEE:
+      client-id: 3a2a6d4e477ce5a8f4741eb3b6fa0473643c028cfebe7c64206ada1d4fe63acd
+      client-secret: ${GITEE_SECRET}
+      redirect-uri: ${project.url}/login?source=gitee
+    GITHUB:
+      client-id: Ov23liTMSDyw2P8EkM2h
+      client-secret: ${GITHUB_SECRET}
+      redirect-uri: ${project.url}/login?source=github
+    QQ:
+      client-id: 102152130
+      client-secret: ${QQ_SECRET}
+      redirect-uri: ${project.url}/login?source=qq
+  cache:
+    type: REDIS
+
+### WebSocket 配置
+new-admin.messaging.websocket:
+  enabled: true
+  path: /websocket
+  # 配置允许跨域的域名
+  allowed-origins: '*'

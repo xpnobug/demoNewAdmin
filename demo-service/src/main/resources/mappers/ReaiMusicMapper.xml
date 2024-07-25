@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newadmin.demoservice.mainPro.ltpro.dao.ReaiMusicMapper">
+
+  <!-- 通用查询映射结果 -->
+  <resultMap id="BaseResultMap" type="com.newadmin.demoservice.mainPro.ltpro.entity.ReaiMusic">
+    <id column="sid" property="sid"/>
+    <result column="user_id" property="userId"/>
+    <result column="article_id" property="articleId"/>
+    <result column="song_name" property="songName"/>
+    <result column="singer" property="singer"/>
+    <result column="song_url" property="songUrl"/>
+    <result column="song_img" property="songImg"/>
+    <result column="song_id" property="songId"/>
+    <result column="create_date" property="createDate"/>
+  </resultMap>
+
+  <!-- 通用查询结果列 -->
+  <sql id="Base_Column_List">
+    sid
+    , user_id, article_id, song_name, singer, song_url, song_img, song_id, create_date
+  </sql>
+
+</mapper>

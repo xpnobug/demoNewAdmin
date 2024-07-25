@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newadmin.demoservice.mainPro.colorGrad.dao.ColorGradMapper">
+
+  <!-- 通用查询映射结果 -->
+  <resultMap id="BaseResultMap" type="com.newadmin.demoservice.mainPro.colorGrad.entity.ColorGrad">
+    <id column="idU" property="idU"/>
+    <result column="content" property="content"/>
+    <result column="css" property="css"/>
+    <result column="freeze" property="freeze"/>
+    <result column="initDate" property="initDate"/>
+    <result column="like" property="like"/>
+    <result column="name" property="name"/>
+    <result column="tags" property="tags"/>
+    <result column="updateDate" property="updateDate"/>
+  </resultMap>
+
+  <!-- 通用查询结果列 -->
+  <sql id="Base_Column_List">
+    idU
+    , content, css, freeze, initDate, like, name, tags, updateDate
+  </sql>
+
+  <insert id="insertColorGrad"
+    parameterType="com.newadmin.demoservice.mainPro.colorGrad.entity.ColorGrad">
+    INSERT INTO color_grad (idU, `like`, `css`, `name`, content, freeze, tags)
+    VALUES (#{idU}, #{like}, #{css}, #{name}, #{content}, #{freeze}, #{tags})
+  </insert>
+</mapper>

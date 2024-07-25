@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newadmin.demoservice.mainPro.mai.mapper.ImgMaiMapper">
+
+  <resultMap type="com.newadmin.demoservice.mainPro.mai.entity.ImgMai" id="ImgMaiMap">
+    <result property="id" column="id" jdbcType="VARCHAR"/>
+    <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+    <result property="card" column="card" jdbcType="VARCHAR"/>
+    <result property="cateName" column="cate_name" jdbcType="VARCHAR"/>
+    <result property="cid" column="cid" jdbcType="INTEGER"/>
+    <result property="sid" column="sid" jdbcType="VARCHAR"/>
+    <result property="collectionCount" column="collection_count" jdbcType="INTEGER"/>
+    <result property="collectionStatus" column="collection_status" jdbcType="INTEGER"/>
+    <result property="commentCount" column="comment_count" jdbcType="INTEGER"/>
+    <result property="createTime" column="create_time" jdbcType="INTEGER"/>
+    <result property="followCount" column="follow_count" jdbcType="INTEGER"/>
+    <result property="followStatus" column="follow_status" jdbcType="INTEGER"/>
+    <result property="followerCount" column="follower_count" jdbcType="INTEGER"/>
+    <result property="followerStatus" column="follower_status" jdbcType="INTEGER"/>
+    <result property="label" column="label" jdbcType="VARCHAR"/>
+    <result property="likeCount" column="like_count" jdbcType="INTEGER"/>
+    <result property="likeStatus" column="like_status" jdbcType="INTEGER"/>
+    <result property="memo" column="memo" jdbcType="VARCHAR"/>
+    <result property="name" column="name" jdbcType="VARCHAR"/>
+    <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
+    <result property="updatedAt" column="updated_at" jdbcType="TIMESTAMP"/>
+  </resultMap>
+
+  <sql id="base_column">
+    idavatarcardcate_namecidsidcollection_countcollection_statuscomment_countcreate_timefollow_countfollow_statusfollower_countfollower_statuslabellike_countlike_statusmemonamecreated_atupdated_at    </sql>
+
+  <!--用于粘贴复制-->
+  <select id="test" resultMap="ImgMaiMap">
+    select
+    idavatarcardcate_namecidsidcollection_countcollection_statuscomment_countcreate_timefollow_countfollow_statusfollower_countfollower_statuslabellike_countlike_statusmemonamecreated_atupdated_at
+    from voyage_guide.img_mai
+    <where>
+      <if test="id != null and id != ''">
+        and id = #{id}
+      </if>
+      <if test="avatar != null and avatar != ''">
+        and avatar = #{avatar}
+      </if>
+      <if test="card != null and card != ''">
+        and card = #{card}
+      </if>
+      <if test="cateName != null and cateName != ''">
+        and cate_name = #{cateName}
+      </if>
+      <if test="cid != null">
+        and cid = #{cid}
+      </if>
+      <if test="sid != null and sid != ''">
+        and sid = #{sid}
+      </if>
+      <if test="collectionCount != null">
+        and collection_count = #{collectionCount}
+      </if>
+      <if test="collectionStatus != null">
+        and collection_status = #{collectionStatus}
+      </if>
+      <if test="commentCount != null">
+        and comment_count = #{commentCount}
+      </if>
+      <if test="createTime != null">
+        and create_time = #{createTime}
+      </if>
+      <if test="followCount != null">
+        and follow_count = #{followCount}
+      </if>
+      <if test="followStatus != null">
+        and follow_status = #{followStatus}
+      </if>
+      <if test="followerCount != null">
+        and follower_count = #{followerCount}
+      </if>
+      <if test="followerStatus != null">
+        and follower_status = #{followerStatus}
+      </if>
+      <if test="label != null and label != ''">
+        and label = #{label}
+      </if>
+      <if test="likeCount != null">
+        and like_count = #{likeCount}
+      </if>
+      <if test="likeStatus != null">
+        and like_status = #{likeStatus}
+      </if>
+      <if test="memo != null and memo != ''">
+        and memo = #{memo}
+      </if>
+      <if test="name != null and name != ''">
+        and name = #{name}
+      </if>
+      <if test="createdAt != null">
+        and created_at = #{createdAt}
+      </if>
+      <if test="updatedAt != null">
+        and updated_at = #{updatedAt}
+      </if>
+    </where>
+  </select>
+  <select id="selectPage" resultType="com.newadmin.demoservice.mainPro.mai.entity.ImgMai"></select>
+
+
+</mapper>
+

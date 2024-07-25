@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- Spring Boot 启动父依赖 -->
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>3.1.5</version>
+    <relativePath/> <!-- lookup parent from repository -->
+  </parent>
+
+  <!-- 项目说明：这里作为聚合工程的父工程 -->
+  <groupId>com.newadmin</groupId>
+  <artifactId>demoNewAdmin</artifactId>
+  <version>${revision}</version>
+  <packaging>pom</packaging>
+
+  <name>demoNewAdmin</name>
+  <description>demoNewAdmin</description>
+
+
+  <!-- 模块聚合 -->
+  <modules>
+    <!--        <module>demo-common</module>-->
+    <module>demo-service</module>
+    <module>demo-config</module>
+  </modules>
+
+  <!-- 版本管理 -->
+  <properties>
+    <!-- 项目版本号 -->
+    <revision>3.1.0-SNAPSHOT</revision>
+    <spring.boot.version>3.1.5</spring.boot.version>
+    <mybatis-version>2.1.4</mybatis-version>
+    <mysql-version>8.0.25</mysql-version>
+    <freemarker.version>2.3.31</freemarker.version>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+  </properties>
+
+  <!-- 依赖声明 -->
+  <dependencies>
+    <dependency>
+      <groupId>com.reai</groupId>
+      <artifactId>demo-common</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+
+    <!--SpringBoot 框架 web 项目起步依赖，通过该依赖自动关联其它依赖，不需要一个一个去添加-->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <!--MyBatis 整合 SpringBoot 的起步依赖-->
+    <!--mybatis-plus-->
+    <dependency>
+      <groupId>com.baomidou</groupId>
+      <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+      <version>3.5.6</version>
+    </dependency>
+
+    <!--MySQL 的驱动依赖-->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>${mysql-version}</version>
+    </dependency>
+
+    <!-- Lombok（在 Java 开发过程中用注解的方式，简化了 JavaBean 的编写，避免了冗余和样板式代码，让编写的类更加简洁） -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <optional>true</optional> <!-- 表示依赖不会被传递 -->
+    </dependency>
+
+
+    <!-- https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp -->
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+      <version>4.9.3</version>
+    </dependency>
+
+    <!-- Sa-Token 权限认证，在线文档：https://sa-token.cc -->
+    <dependency>
+      <groupId>cn.dev33</groupId>
+      <artifactId>sa-token-spring-boot3-starter</artifactId>
+      <version>1.38.0</version>
+    </dependency>
+
+    <!-- Sa-Token 整合 JWT -->
+    <dependency>
+      <groupId>cn.dev33</groupId>
+      <artifactId>sa-token-jwt</artifactId>
+      <version>1.38.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjweaver</artifactId>
+    </dependency>
+
+    <!-- 第三方封装 Ip2region（离线 IP 数据管理框架和定位库，支持亿级别的数据段，10 微秒级别的查询性能，提供了许多主流编程语言的 xdb 数据管理引擎的实现） -->
+    <dependency>
+      <groupId>net.dreamlu</groupId>
+      <artifactId>mica-ip2region</artifactId>
+      <version>3.2.6</version>
+    </dependency>
+
+  </dependencies>
+
+
+  <repositories>
+    <repository>
+      <id>maven-repo</id>
+      <url>https://raw.githubusercontent.com/xpnobug/maven-repo/main/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
+</project>

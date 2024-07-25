@@ -1,0 +1,56 @@
+name: Deploy
+
+on:
+  # 当推送到 dev 分支时执行
+  push:
+    branches: [ master ]
+  # 允许手动触发工作流
+  workflow_dispatch:
+
+jobs:
+  deploy-server:
+    runs-on: ubuntu-latest  # 在最新版本的 Ubuntu 上运行
+
+    steps:
+      # 1、检出源码
+      - name: Checkout
+        uses: actions/checkout@v4  # 使用 GitHub 的 Checkout Action 检出代码
+
+      # 2、安装 Java 环境
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "adopt"  # 使用 AdoptOpenJDK
+          java-version: 17  # 安装 JDK 17
+          cache: "maven"  # 缓存 Maven 依赖
+
+      # 3、打包
+      - name: Build
+        run: |
+          sed -i.bak '/<pluginRepositories>/,/<\/pluginRepositories>/d' pom.xml
+          mvn -B clean package --file pom.xml
+
+      # 4、拷贝到服务器
+      - name: Copy
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}  # 服务器地址
+          port: ${{ secrets.SERVER_PORT }}  # 服务器端口
+          username: ${{ secrets.SERVER_USERNAME }}  # 服务器用户名
+          password: ${{ secrets.DEPLOY_PASSWORD }}  # 服务器密码
+          source: ./demo-service/target/app/*  # 本地文件路径
+          target: /docker/demo-admin  # 远程服务器路径
+          strip_components: 3
+
+      # 5、启动
+      - name: Start
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}  # 服务器地址
+          port: ${{ secrets.SERVER_PORT }}  # 服务器端口
+          username: ${{ secrets.SERVER_USERNAME }}  # 服务器用户名
+          password: ${{ secrets.DEPLOY_PASSWORD }}  # 服务器密码
+          script: |
+            cd /docker  
+            docker-compose up --force-recreate --build -d demo-server
+            docker images | grep none | awk '{print $3}' | xargs docker rmi

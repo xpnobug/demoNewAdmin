@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newadmin.demoservice.mainPro.ltpro.dao.ReaiLogMapper">
+
+  <!-- 通用查询映射结果 -->
+  <resultMap id="BaseResultMap" type="com.newadmin.demoservice.mainPro.ltpro.entity.ReaiLog">
+    <id column="id" property="id"/>
+    <result column="user_name" property="username"/>
+    <result column="login_time" property="loginTime"/>
+    <result column="ip" property="ip"/>
+    <result column="address" property="address"/>
+    <result column="browser" property="browser"/>
+    <result column="description" property="description"/>
+    <result column="os" property="os"/>
+    <result column="status" property="status"/>
+    <result column="error_msg" property="errorMsg"/>
+    <result column="time_taken" property="timeTaken"/>
+  </resultMap>
+
+  <!-- 通用查询结果列 -->
+  <sql id="Base_Column_List">
+    id
+    , user_name, login_time, ip, address, browser, description, os, status, error_msg, time_taken
+  </sql>
+
+</mapper>

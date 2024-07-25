@@ -1,0 +1,25 @@
+name: Release # 定义工作流的名称为“Release”
+
+on:
+  push:
+    tags:
+      - "v*" # 当推送的标签匹配“v*”模式时触发工作流，例如 v1.0.0
+
+jobs:
+  release: # 定义一个名为“release”的作业
+    if: github.repository == 'xpnobug/demoNewAdminPro' # 仅当仓库是“xpnobug/demoNewAdminPro”时运行此作业
+    runs-on: ubuntu-latest # 指定作业运行在最新的 Ubuntu 环境中
+
+    steps: # 定义作业的步骤
+      - name: Checkout # 第一步：检出代码
+        uses: actions/checkout@master # 使用 actions/checkout@master 动作来检出代码
+
+      - name: Create Release for Tag # 第二步：为标签创建发布
+        id: release_tag # 设置此步骤的 ID 为 release_tag
+        uses: xpnobug/release-tag@master # 使用 xpnobug/release-tag@master 动作来创建发布
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }} # 设置环境变量 GITHUB_TOKEN，用于认证
+        with:
+          tag_name: ${{ github.ref }} # 使用推送的标签名称
+          body: | # 设置发布的内容
+            详情请参阅 [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/master/CHANGELOG.md) 。 # 链接到变更日志文件

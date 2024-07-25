@@ -1,0 +1,35 @@
+name: Build
+
+on:
+  pull_request:
+    branches:
+      - master  # 监听 master 分支的 Pull Request
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # 在最新版本的 Ubuntu 上运行
+
+    strategy:
+      matrix:
+        jdk-version:
+          - 17  # 使用 JDK 17 版本
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4  # 检出代码仓库
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "adopt"  # 使用 AdoptOpenJDK
+          java-version: ${{ matrix.jdk-version }}  # 选择 JDK 版本
+          cache: "maven"  # 缓存 Maven 依赖
+
+      - name: Compile
+        run: |
+          # 从 pom.xml 中删除 <repositories> 和 <pluginRepositories> 标签及其内容
+          #          sed -i.bak '/<repositories>/,/<\/repositories>/d' pom.xml
+          sed -i.bak '/<pluginRepositories>/,/<\/pluginRepositories>/d' pom.xml
+          
+          # 使用 Maven 编译项目
+          mvn -B compile --file pom.xml

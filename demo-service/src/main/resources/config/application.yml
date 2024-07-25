@@ -1,0 +1,92 @@
+### 项目配置
+project:
+  # URL（跨域配置默认放行此 URL，第三方登录回调默认使用此 URL 为前缀，注意更改为实际的前端 URL）
+  url: https://pc.reaicc.com
+  # 名称
+  name: LT-REAI
+  # 应用名称
+  app-name: newadmin
+  # 版本
+  version: 1.0.2
+  # 描述
+  description: 论坛社区
+  # 基本包
+  base-package: com.newadmin.admin
+  ## 作者信息配置
+  contact:
+    name: couei
+    email: 2877406366@qq.com
+    url: https://blog.reaicc.com
+  ## 许可协议信息配置
+  license:
+    name: Apache-2.0
+    url: ---
+
+spring:
+  application:
+    name: ${project.app-name}
+  main:
+    # 允许定义重名的 bean 对象覆盖原有的 bean
+    allow-bean-definition-overriding: true
+    # 允许循环依赖
+    allow-circular-references: true
+  ## 环境配置
+  profiles:
+    # 启用的环境
+    active: prod
+
+#配置日志
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: mappers/*
+
+### 加密
+jasypt:
+  encryptor:
+    # 加密的秘钥
+    password: haha
+    # 加密算法
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator
+    property:
+      # 算法识别的前后缀，默认ENC()，包含在前后缀的加密信息，会使用指定算法解密
+      prefix: Enc(
+      suffix: )
+
+############## Sa-Token 配置 (文档: https://sa-token.cc) ##############
+sa-token:
+  # token 名称（同时也是 cookie 名称）
+  token-name: Authorization
+  # token 有效期（单位：秒，默认 30 天，-1 代表永不过期）
+  timeout: 86400
+  # token 最低活跃频率（单位：秒，默认 -1，代表不限制，永不冻结。如果 token 超过此时间没有访问系统就会被冻结）
+  active-timeout: 1800
+  # 是否打开自动续签（如果此值为 true，框架会在每次直接或间接调用 getLoginId() 时进行一次过期检查与续签操作）
+  auto-renew: true
+  # 是否允许同一账号多地同时登录（为 true 时允许一起登录，为 false 时新登录挤掉旧登录）
+  is-concurrent: true
+  # 在多人登录同一账号时，是否共用一个 token（为 true 时所有登录共用一个 token，为 false 时每次登录新建一个 token）
+  is-share: false
+  # 是否输出操作日志
+  is-log: false
+  # JWT 秘钥
+  jwt-secret-key: asdasdasifhueuiwyurfewbfjsdafjk
+  ## 扩展配置
+  extension:
+    enabled: true
+    enableJwt: true
+    # 持久层配置
+    dao.type: REDIS
+
+
+### 接口文档配置
+springdoc:
+  swagger-ui:
+    enabled: true
+# knife4j的增强配置，不需要增强可以不配
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+
