@@ -46,9 +46,9 @@ jobs:
 
       - name: Analyze # 第五步：执行代码分析
         run: |
-          #          sed -i.bak '/<repositories>/,/<\/repositories>/d' pom.xml # 删除 pom.xml 文件中的 <repositories> 节点
-               sed -i.bak '/<pluginRepositories>/,/<\/pluginRepositories>/d' pom.xml # 删除 pom.xml 文件中的 <pluginRepositories> 节点
-               mvn -B verify -Psonar # 使用 Maven 进行验证并运行 Sonar 分析
+          sed -i.bak '/<repositories>/,/<\/repositories>/d' pom.xml
+          sed -i.bak '/<pluginRepositories>/,/<\/pluginRepositories>/d' pom.xml
+          mvn -B verify -Psonar
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }} # 用于访问 GitHub 公关信息
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # 用于 SonarCloud 认证
