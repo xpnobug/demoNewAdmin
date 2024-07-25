@@ -1,53 +1,43 @@
-name: Scan # 定义工作流的名称为“Scan”
-
+name: SonarCloud
 on:
   push:
     branches:
-      - master # 当推送到 dev 分支时触发工作流
+      - master  # 当推送到 master 分支时触发
   pull_request:
-    branches:
-      - master # 当有 pull request 指向 dev 分支时触发工作流
+    types: [ opened, synchronize, reopened ]  # 当PR打开、同步或重新打开时触发
 
 jobs:
-  sonar-scan: # 定义一个名为“sonar-scan”的作业
-    runs-on: ubuntu-latest # 指定作业运行在最新的 Ubuntu 环境中
+  build:
+    name: Build and analyze  # 定义作业名称
+    runs-on: ubuntu-latest  # 在最新版本的 Ubuntu 上运行
 
-    strategy:
-      matrix:
-        jdk-version:
-          - 17 # 使用 JDK 版本 17
-
-    steps: # 定义作业的步骤
-      - name: Checkout # 第一步：检出代码
-        uses: actions/checkout@v4 # 使用 actions/checkout@v4 动作来检出代码
+    steps:
+      - uses: actions/checkout@v3  # 使用 GitHub 的 Checkout Action 检出代码
         with:
-          fetch-depth: 0 # 检出完整的 git 历史
+          fetch-depth: 0  # 禁用浅克隆，以提高分析相关性
 
-      - name: Setup Java # 第二步：设置 Java 环境
-        uses: actions/setup-java@v4 # 使用 actions/setup-java@v4 动作来设置 Java 环境
+      - name: Set up JDK 17  # 设置JDK 17
+        uses: actions/setup-java@v3
         with:
-          distribution: "adopt" # 使用 AdoptOpenJDK 发行版
-          java-version: ${{ matrix.jdk-version }} # 设置 Java 版本为矩阵中定义的版本
-          cache: "maven" # 启用 Maven 缓存
+          java-version: 17  # 安装JDK 17
+          distribution: 'zulu'  # 选择Zulu JDK分发版
 
-      - name: Cache SonarCloud packages # 第三步：缓存 SonarCloud 包
-        uses: actions/cache@v3 # 使用 actions/cache@v3 动作来缓存
+      - name: Cache SonarCloud packages  # 缓存SonarCloud包
+        uses: actions/cache@v3
         with:
-          path: ~/.sonar/cache # 缓存路径
-          key: ${{ runner.os }}-sonar # 缓存键
-          restore-keys: ${{ runner.os }}-sonar # 恢复键
+          path: ~/.sonar/cache  # 缓存路径
+          key: ${{ runner.os }}-sonar  # 缓存键
+          restore-keys: ${{ runner.os }}-sonar  # 恢复键
 
-      - name: Cache Maven packages # 第四步：缓存 Maven 包
-        uses: actions/cache@v3 # 使用 actions/cache@v3 动作来缓存
+      - name: Cache Maven packages  # 缓存Maven包
+        uses: actions/cache@v3
         with:
-          path: ~/.m2 # 缓存路径
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }} # 缓存键，基于操作系统和 pom.xml 文件的哈希值
-          restore-keys: ${{ runner.os }}-m2 # 恢复键
+          path: ~/.m2  # 缓存路径
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}  # 缓存键，基于操作系统和pom.xml文件的哈希值
+          restore-keys: ${{ runner.os }}-m2  # 恢复键
 
-      - name: Analyze # 第五步：执行代码分析
-        run: |
-          sed -i.bak '/<pluginRepositories>/,/<\/pluginRepositories>/d' pom.xml
-          mvn -B verify -Psonar
+      - name: Build and analyze  # 构建并分析
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }} # 用于访问 GitHub 公关信息
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # 用于 SonarCloud 认证
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 获取PR信息所需的GitHub令牌
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # SonarCloud认证令牌
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=xpnobug_demoNewAdmin  # 运行Maven验证和SonarQube分析
