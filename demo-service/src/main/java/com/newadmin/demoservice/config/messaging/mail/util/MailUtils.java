@@ -1,4 +1,3 @@
-
 package com.newadmin.demoservice.config.messaging.mail.util;
 
 import cn.hutool.core.collection.CollUtil;
