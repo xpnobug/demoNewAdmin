@@ -37,7 +37,7 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}  # 服务器地址
           port: ${{ secrets.SERVER_PORT }}  # 服务器端口
           username: ${{ secrets.SERVER_USERNAME }}  # 服务器用户名
-          password: ${{ secrets.DEPLOY_PASSWORD }}  # 服务器密码
+          password: ${{ secrets.SERVER_PASSWORD }}  # 服务器密码
           source: ./demo-service/target/app/*  # 本地文件路径
           target: /docker/demo-admin  # 远程服务器路径
           strip_components: 3
@@ -49,7 +49,7 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}  # 服务器地址
           port: ${{ secrets.SERVER_PORT }}  # 服务器端口
           username: ${{ secrets.SERVER_USERNAME }}  # 服务器用户名
-          password: ${{ secrets.DEPLOY_PASSWORD }}  # 服务器密码
+          password: ${{ secrets.SERVER_PASSWORD }}  # 服务器密码
           script: |
             cd /docker  
             docker-compose up --force-recreate --build -d demo-server

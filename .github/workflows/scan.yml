@@ -30,12 +30,12 @@ jobs:
           java-version: ${{ matrix.jdk-version }} # 设置 Java 版本为矩阵中定义的版本
           cache: "maven" # 启用 Maven 缓存
 
-      #      - name: Cache SonarCloud packages # 第三步：缓存 SonarCloud 包
-      #        uses: actions/cache@v3 # 使用 actions/cache@v3 动作来缓存
-      #        with:
-      #          path: ~/.sonar/cache # 缓存路径
-      #          key: ${{ runner.os }}-sonar # 缓存键
-      #          restore-keys: ${{ runner.os }}-sonar # 恢复键
+      - name: Cache SonarCloud packages # 第三步：缓存 SonarCloud 包
+        uses: actions/cache@v3 # 使用 actions/cache@v3 动作来缓存
+        with:
+          path: ~/.sonar/cache # 缓存路径
+          key: ${{ runner.os }}-sonar # 缓存键
+          restore-keys: ${{ runner.os }}-sonar # 恢复键
 
       - name: Cache Maven packages # 第四步：缓存 Maven 包
         uses: actions/cache@v3 # 使用 actions/cache@v3 动作来缓存
@@ -51,4 +51,4 @@ jobs:
                mvn -B verify -Psonar # 使用 Maven 进行验证并运行 Sonar 分析
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }} # 用于访问 GitHub 公关信息
-#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # 用于 SonarCloud 认证
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # 用于 SonarCloud 认证
