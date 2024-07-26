@@ -147,6 +147,7 @@ public class MailConfig {
      * @return Properties 对象
      */
     public Properties toJavaMailProperties() {
+        //配置转换为 JavaMail 的 Properties 对象
         Properties javaMailProperties = new Properties();
         javaMailProperties.putAll(this.getProperties());
         javaMailProperties.put("mail.from", this.getFrom());
