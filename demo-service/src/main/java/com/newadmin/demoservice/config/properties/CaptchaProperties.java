@@ -1,4 +1,3 @@
-
 package com.newadmin.demoservice.config.properties;
 
 import lombok.Data;

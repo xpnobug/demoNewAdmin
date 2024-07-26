@@ -22,10 +22,6 @@ import org.springframework.core.ResolvableType;
 
 /**
  * 行为验证码缓存自动配置
- *
- * @author Bull-BCLS
- * @author Charles7c
- * @since 1.1.0
  */
 @AutoConfiguration
 public class BehaviorCaptchaCacheAutoConfiguration {
