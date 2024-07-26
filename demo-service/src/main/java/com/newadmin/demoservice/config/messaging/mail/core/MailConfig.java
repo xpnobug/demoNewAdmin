@@ -147,7 +147,6 @@ public class MailConfig {
      * @return Properties 对象
      */
     public Properties toJavaMailProperties() {
-        //配置转换为 JavaMail 的 Properties 对象
         Properties javaMailProperties = new Properties();
         javaMailProperties.putAll(this.getProperties());
         javaMailProperties.put("mail.from", this.getFrom());
@@ -156,11 +155,8 @@ public class MailConfig {
         if (this.isSslEnabled()) {
             ValidationUtils.throwIfNull(this.getSslPort(), "邮件配置错误：SSL端口不能为空");
             javaMailProperties.put("mail.smtp.socketFactory.port", this.sslPort);
-            // 设置SSL socket工厂类
             javaMailProperties.put("mail.smtp.socketFactory.class",
                 "javax.net.ssl.SSLSocketFactory");
-            // 启用服务器主机名验证
-            javaMailProperties.put("mail.smtp.ssl.checkserveridentity", true);
         }
         return javaMailProperties;
     }

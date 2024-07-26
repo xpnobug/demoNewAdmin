@@ -6,5 +6,5 @@
 com.newadmin.demoservice.config.justauth.autoconfigure.JustAuthAutoConfiguration
 com.xkcoding.justauth.autoconfigure.JustAuthAutoConfiguration
 com.newadmin.demoservice.config.websocket.autoconfigure.WebSocketAutoConfiguration
-
+com.newadmin.demoservice.config.messaging.mail.autoconfigure.MailAutoConfiguration
 com.newadmin.demoservice.config.satoken.autoconfigure.SaTokenAutoConfiguration
