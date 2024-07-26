@@ -1,4 +1,3 @@
-
 package com.newadmin.demoservice.config.security.limiter.core;
 
 import cn.hutool.core.convert.Convert;
@@ -32,10 +31,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * 限流器切面
- *
- * @author KAI
- * @author Charles7c
- * @since 2.2.0
  */
 @Aspect
 @Component

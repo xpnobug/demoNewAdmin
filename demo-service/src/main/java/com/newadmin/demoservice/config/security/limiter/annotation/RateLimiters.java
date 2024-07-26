@@ -1,14 +1,13 @@
-
-
 package com.newadmin.demoservice.config.security.limiter.annotation;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * 限流组注解
- *
- * @author KAI
- * @since 2.2.0
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

@@ -1,4 +1,3 @@
-
 package com.newadmin.demoservice.config.security.limiter.enums;
 
 public enum LimitType {

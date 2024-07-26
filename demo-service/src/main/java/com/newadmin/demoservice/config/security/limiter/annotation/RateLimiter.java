@@ -1,16 +1,15 @@
-
 package com.newadmin.demoservice.config.security.limiter.annotation;
 
 import com.newadmin.demoservice.config.security.limiter.enums.LimitType;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import org.redisson.api.RateIntervalUnit;
-
-import java.lang.annotation.*;
 
 /**
  * 限流注解
- *
- * @author KAI
- * @since 2.2.0
  */
 @Documented
 @Target(ElementType.METHOD)

@@ -1,5 +1,3 @@
-
-
 package com.newadmin.demoservice.config.security.limiter.core;
 
 import cn.hutool.core.util.ClassUtil;
@@ -9,9 +7,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 默认限流器名称生成器
- *
- * @author couei
- * @since 2.2.0
  */
 public class DefaultRateLimiterNameGenerator implements RateLimiterNameGenerator {
 

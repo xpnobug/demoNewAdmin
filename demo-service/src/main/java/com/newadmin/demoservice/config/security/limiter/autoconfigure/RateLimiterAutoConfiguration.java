@@ -1,4 +1,3 @@
-
 package com.newadmin.demoservice.config.security.limiter.autoconfigure;
 
 import com.newadmin.demoservice.config.security.limiter.core.DefaultRateLimiterNameGenerator;
@@ -16,10 +15,6 @@ import org.springframework.context.annotation.ComponentScan;
 
 /**
  * 限流器自动配置
- *
- * @author KAI
- * @author Charles7c
- * @since 2.2.0
  */
 @AutoConfiguration
 @EnableConfigurationProperties(RateLimiterProperties.class)
