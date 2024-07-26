@@ -7,10 +7,6 @@ import cn.hutool.core.util.XmlUtil;
 
 /**
  * 字符串相关常量
- *
- * @author looly
- * @author Charles7c
- * @since 1.0.0
  */
 public class StringConstants {
 

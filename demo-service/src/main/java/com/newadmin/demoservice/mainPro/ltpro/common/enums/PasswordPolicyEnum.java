@@ -1,4 +1,3 @@
-
 package com.newadmin.demoservice.mainPro.ltpro.common.enums;
 
 import cn.hutool.core.util.ReUtil;
@@ -13,10 +12,6 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * 密码策略枚举
- *
- * @author Kils
- * @author Charles7c
- * @since 2024/5/9 11:25
  */
 @Getter
 @RequiredArgsConstructor

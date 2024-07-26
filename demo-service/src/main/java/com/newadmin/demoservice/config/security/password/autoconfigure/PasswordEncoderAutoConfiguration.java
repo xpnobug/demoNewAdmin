@@ -1,4 +1,3 @@
-
 package com.newadmin.demoservice.config.security.password.autoconfigure;
 
 import cn.hutool.core.collection.CollUtil;
@@ -30,10 +29,6 @@ import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
  * 包含了编码的方式再拼接上该方式编码后的密码串。<br /> 可以添加自定义的编解码，也可以修改默认的编解码器，只需修改默认的 encodingId。<br />
  * 优点：如果有一天我们对密码编码规则进行替换或者轮转，现有的用户不会受到影响，只要修改 DelegatingPasswordEncoder 的 idForEncode 即可。
  * </p>
- *
- * @author Jasmine
- * @author Charles7c
- * @since 1.3.0
  */
 @AutoConfiguration
 @EnableConfigurationProperties(PasswordEncoderProperties.class)
