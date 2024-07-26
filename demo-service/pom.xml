@@ -78,6 +78,13 @@
       <artifactId>spring-boot-starter-mail</artifactId>
       <version>3.2.7</version>
     </dependency>
+
+    <!-- Junit5 单元测试 -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+    </dependency>
+
   </dependencies>
 
 
