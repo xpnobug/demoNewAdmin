@@ -51,7 +51,7 @@ public class ReaiUsersController {
      */
     @GetMapping("{id}")
     public JsonObject selectOne(@PathVariable Serializable id) {
-        return new JsonObject(reaiUsersService.getUserById(id));
+        return new JsonObject(reaiUsersService.getUser(id));
     }
 
     /**

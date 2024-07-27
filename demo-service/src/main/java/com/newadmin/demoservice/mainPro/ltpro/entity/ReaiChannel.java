@@ -415,7 +415,7 @@ public class ReaiChannel extends ValueMap {
      *
      * @param creator 创建者 ID
      */
-    public void setCreator(Integer creator) {
+    public void setCreator(String creator) {
         super.setValue(CREATOR, creator);
     }
 
@@ -424,8 +424,8 @@ public class ReaiChannel extends ValueMap {
      *
      * @return 创建者 ID
      */
-    public Integer getCreator() {
-        return super.getValueAsInteger(CREATOR);
+    public String getCreator() {
+        return super.getValueAsString(CREATOR);
     }
 
     /**

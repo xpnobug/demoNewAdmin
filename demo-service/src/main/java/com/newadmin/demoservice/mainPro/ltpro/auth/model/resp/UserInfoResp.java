@@ -28,7 +28,7 @@ public class UserInfoResp implements Serializable {
      * ID
      */
     @Schema(description = "ID", example = "1")
-    private Long id;
+    private String userId;
 
     /**
      * 用户名

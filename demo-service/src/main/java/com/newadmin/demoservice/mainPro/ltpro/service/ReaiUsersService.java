@@ -1,6 +1,7 @@
 package com.newadmin.demoservice.mainPro.ltpro.service;
 
 import com.newadmin.democommon.utils.Page;
+import com.newadmin.demoservice.mainPro.ltpro.auth.model.resp.UserInfoResp;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiUsers;
 import java.io.Serializable;
 import java.util.List;
@@ -49,6 +50,7 @@ public interface ReaiUsersService {
 
     ReaiUsers getUserById(Serializable id);
 
+    UserInfoResp getUser(Serializable id);
     /**
      * 根据用户名查询
      *

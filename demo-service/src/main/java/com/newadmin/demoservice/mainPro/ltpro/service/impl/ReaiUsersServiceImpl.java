@@ -10,6 +10,7 @@ import com.newadmin.democommon.service.ValueMap;
 import com.newadmin.democommon.sqlbuild.ConditionBuilder.ConditionType;
 import com.newadmin.democommon.sqlbuild.SelectBuilder;
 import com.newadmin.democommon.utils.Page;
+import com.newadmin.demoservice.mainPro.ltpro.auth.model.resp.UserInfoResp;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiFollow;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiUsers;
 import com.newadmin.demoservice.mainPro.ltpro.query.UserQuery;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -248,6 +250,29 @@ public class ReaiUsersServiceImpl extends DefaultService implements
             }
         }
         return reaiUsers;
+    }
+
+    @Override
+    public UserInfoResp getUser(Serializable id) {
+        ReaiUsers reaiUsers = usersById(String.valueOf(id));
+        // 获取当前登录的用户信息
+        SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
+        if (tokenInfo.loginId != null) {
+            String userId = tokenInfo.loginId.toString();
+            if (!id.equals(userId)) {
+                // 获取当前用户关注的用户列表
+                List<ReaiFollow> followList = followService.getFollowList(userId, null);
+                // 对比reaiUsers 中userid 和 followList 中 followUserId是否一致
+                // 判断当前用户是否关注了该用户
+                boolean isFollow = followList.stream()
+                    .anyMatch(follow -> follow.getFollowUserId().equals(id));
+                // 设置关注状态
+                reaiUsers.setIsFollow(isFollow);
+            }
+        }
+        UserInfoResp userInfoResp = new UserInfoResp();
+        BeanUtils.copyProperties(reaiUsers, userInfoResp);
+        return userInfoResp;
     }
 
     @Override
