@@ -3,7 +3,6 @@ package com.newadmin.demoservice.config;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import org.yaml.snakeyaml.Yaml;
 
 /**
  * 配置文件通常只需要加载一次。 单例模式可以确保配置管理器在应用程序的整个生命周期中只存在一个实例。
@@ -18,12 +17,12 @@ public class ConfigurationManager {
     private Properties properties;
 
     private ConfigurationManager() {
-        Yaml yaml = new Yaml();
+//        Yaml yaml = new Yaml();
         properties = new Properties();
         // 加载配置文件
         try {
-            yml = yaml.load(getClass().getClassLoader().getResourceAsStream(
-                "config/application.yml"));
+//            yml = yaml.load(getClass().getClassLoader().getResourceAsStream(
+//                "config/application.yml"));
             properties.load(
                 getClass().getClassLoader().getResourceAsStream("config/application.properties"));
         } catch (Exception e) {
