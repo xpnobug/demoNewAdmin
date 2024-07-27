@@ -42,7 +42,7 @@ public class BaseUploadService {
 
     public OssResp upload(MultipartFile file, OssReq req) {
         MinioClientManager manager = new MinioClientManager();
-        manager.loadConfigFromExternalSource(); // 确保加载配置信息
+//        manager.loadConfigFromExternalSource(); // 确保加载配置信息
         MinioClient minioClient = manager.createMinioClient();
         // 获取文件名
         String fileName = file.getOriginalFilename();

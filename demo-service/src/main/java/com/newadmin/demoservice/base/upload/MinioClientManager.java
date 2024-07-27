@@ -1,12 +1,17 @@
 package com.newadmin.demoservice.base.upload;
 
-import com.newadmin.demoservice.config.ConfigurationManager;
 import io.minio.MinioClient;
+import org.springframework.beans.factory.annotation.Value;
 
 public class MinioClientManager {
 
+    @Value("${minio.endpoint}")
     private String endpoint;
+
+    @Value("${minio.accessKey}")
     private String accessKey;
+
+    @Value("${minio.secretKey}")
     private String secretKey;
 
     public MinioClient createMinioClient() {
@@ -24,10 +29,10 @@ public class MinioClientManager {
     }
 
     // 可以从配置文件、数据库或其他配置源加载初始配置
-    public void loadConfigFromExternalSource() {
-        // 示例：从配置文件加载
-        this.endpoint = ConfigurationManager.getInstance().getProperty("minio.endpoint");
-        this.accessKey = ConfigurationManager.getInstance().getProperty("minio.accessKey");
-        this.secretKey = ConfigurationManager.getInstance().getProperty("minio.secretKey");
-    }
+//    public void loadConfigFromExternalSource() {
+//        // 示例：从配置文件加载
+//        this.endpoint = ConfigurationManager.getInstance().getProperty("minio.endpoint");
+//        this.accessKey = ConfigurationManager.getInstance().getProperty("minio.accessKey");
+//        this.secretKey = ConfigurationManager.getInstance().getProperty("minio.secretKey");
+//    }
 }
