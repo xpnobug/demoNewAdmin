@@ -6,8 +6,7 @@ import com.newadmin.demoservice.mainPro.ltpro.common.enums.GenderEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Set;
 import lombok.Data;
 
@@ -77,7 +76,7 @@ public class UserInfoResp implements Serializable {
      * 最后一次修改密码时间
      */
     @Schema(description = "最后一次修改密码时间", example = "2023-08-08 08:08:08", type = "string")
-    private LocalDateTime pwdResetTime;
+    private Date pwdResetTime;
 
     /**
      * 密码是否已过期
@@ -89,13 +88,13 @@ public class UserInfoResp implements Serializable {
      * 创建时间
      */
     @JsonIgnore
-    private LocalDateTime createTime;
+    private Date createTime;
 
     /**
      * 注册日期
      */
     @Schema(description = "注册日期", example = "2023-08-08")
-    private LocalDate registrationDate;
+    private Date registrationDate;
 
     /**
      * 部门 ID
@@ -121,7 +120,7 @@ public class UserInfoResp implements Serializable {
     @Schema(description = "角色编码集合", example = "[\"test\"]")
     private Set<String> roles;
 
-    public LocalDate getRegistrationDate() {
-        return createTime.toLocalDate();
-    }
+//    public LocalDate getRegistrationDate() {
+//        return createTime.toLocalDate();
+//    }
 }
