@@ -30,7 +30,7 @@ public class BaseUploadService {
         String uid = Optional.ofNullable(req.getUid()).map(String::valueOf).orElse("000000");
         cn.hutool.core.lang.UUID uuid = cn.hutool.core.lang.UUID.fastUUID();
         String suffix = FileNameUtil.getSuffix(req.getFileName());
-        String yearAndMonth = DateUtil.format(new Date(), DatePattern.NORM_MONTH_PATTERN);
+        String yearAndMonth = DateUtil.format(new Date(), DatePattern.NORM_DATE_FORMAT);
         return req.getFilePath() + StrUtil.SLASH + yearAndMonth + StrUtil.SLASH + uid
             + StrUtil.SLASH + uuid + StrUtil.DOT + suffix;
     }

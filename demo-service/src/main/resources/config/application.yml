@@ -33,7 +33,7 @@ spring:
   ## 环境配置
   profiles:
     # 启用的环境
-    active: prod
+    active: dev
 
 #配置日志
 mybatis-plus:

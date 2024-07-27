@@ -25,7 +25,7 @@ public class ConfigurationManager {
             yml = yaml.load(getClass().getClassLoader().getResourceAsStream(
                 "config/application.yml"));
             properties.load(
-                getClass().getClassLoader().getResourceAsStream("application.properties"));
+                getClass().getClassLoader().getResourceAsStream("config/application.properties"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -87,13 +87,13 @@ public class ConfigurationManager {
     public static void main(String[] args) {
         ConfigurationManager configManager = ConfigurationManager.getInstance();
 
-        System.out.println(configManager.getProperty("mysql.ip"));
-        System.out.println(configManager.getYml("server.port"));
+        System.out.println(configManager.getProperty("minio.endpoint"));
+//        System.out.println(configManager.getYml("server.port"));
 
         // 读取数据库配置
-        String dbUrl = configManager.getStringProperty("spring.datasource.url");
-        String dbUsername = configManager.getStringProperty("spring.datasource.username");
-        System.out.println("Database URL: " + dbUrl);
-        System.out.println("Database Username: " + dbUsername);
+//        String dbUrl = configManager.getStringProperty("spring.datasource.url");
+//        String dbUsername = configManager.getStringProperty("spring.datasource.username");
+//        System.out.println("Database URL: " + dbUrl);
+//        System.out.println("Database Username: " + dbUsername);
     }
 }
