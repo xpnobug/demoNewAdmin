@@ -20,11 +20,22 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
+@RequiredArgsConstructor
 public class BaseUploadService {
+
+    private final MinioClientManager minioClientManager;
+
+    public MinioClient createMinioClient() {
+        return MinioClient.builder()
+            .endpoint(minioClientManager.getEndpoint())
+            .credentials(minioClientManager.getAccessKey(), minioClientManager.getSecretKey())
+            .build();
+    }
 
     public String generateAutoPath(OssReq req) {
         String uid = Optional.ofNullable(req.getUid()).map(String::valueOf).orElse("000000");
@@ -41,9 +52,8 @@ public class BaseUploadService {
     }
 
     public OssResp upload(MultipartFile file, OssReq req) {
-        MinioClientManager manager = new MinioClientManager();
 //        manager.loadConfigFromExternalSource(); // 确保加载配置信息
-        MinioClient minioClient = manager.createMinioClient();
+        MinioClient minioClient = createMinioClient();
         // 获取文件名
         String fileName = file.getOriginalFilename();
         // 获取文件大小
