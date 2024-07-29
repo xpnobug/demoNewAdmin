@@ -103,7 +103,7 @@ public class ReaiArticleController {
      * @return 删除结果
      */
     @DeleteMapping("/delete")
-    public JsonObject delete(@RequestBody String idList) {
+    public JsonObject delete(@RequestParam String idList) {
         return new JsonObject(reaiArticleService.deleteArticle(idList));
     }
 
