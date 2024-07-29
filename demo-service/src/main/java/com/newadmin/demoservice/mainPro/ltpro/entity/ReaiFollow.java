@@ -36,6 +36,11 @@ public class ReaiFollow extends ValueMap {
     public static final String FOLLOW_USER_ID = "followUserId";
 
     /**
+     * 加入的版块id
+     */
+    public static final String FOLLOW_CHANNEL_ID = "followChannelId";
+
+    /**
      * 关注时间
      */
     public static final String FOLLOW_TIME = "followTime";
@@ -135,5 +140,23 @@ public class ReaiFollow extends ValueMap {
      */
     public Date getFollowTime() {
         return super.getValueAsDate(FOLLOW_TIME);
+    }
+
+    /**
+     * 设置 加入的版块id
+     *
+     * @param followChannelId 加入的版块id
+     */
+    public void setFollowChannelId(String followChannelId) {
+        super.setValue(FOLLOW_CHANNEL_ID, followChannelId);
+    }
+
+    /**
+     * 获取 加入的版块id
+     *
+     * @return 加入的版块id
+     */
+    public String getFollowChannelId() {
+        return super.getValueAsString(FOLLOW_CHANNEL_ID);
     }
 }

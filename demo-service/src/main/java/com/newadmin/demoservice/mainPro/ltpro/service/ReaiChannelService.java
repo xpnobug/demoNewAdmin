@@ -2,6 +2,7 @@ package com.newadmin.demoservice.mainPro.ltpro.service;
 
 import com.newadmin.democommon.utils.Page;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiChannel;
+import com.newadmin.demoservice.mainPro.ltpro.entity.model.query.ChannelQuery;
 import java.util.List;
 
 /**
@@ -20,6 +21,8 @@ public interface ReaiChannelService {
      * @return
      */
     List<ReaiChannel> list(Page page);
+
+    List<ChannelQuery> listQuery(Integer isOfficial);
 
     Object getById(String id);
 

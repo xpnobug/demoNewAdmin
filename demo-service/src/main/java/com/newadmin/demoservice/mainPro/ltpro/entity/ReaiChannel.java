@@ -649,7 +649,7 @@ public class ReaiChannel extends ValueMap {
      *
      * @param isOfficial 是否官方
      */
-    public void setIsOfficial(Boolean isOfficial) {
+    public void setIsOfficial(Integer isOfficial) {
         super.setValue(IS_OFFICIAL, isOfficial);
     }
 
@@ -658,8 +658,8 @@ public class ReaiChannel extends ValueMap {
      *
      * @return 是否官方
      */
-    public Boolean getIsOfficial() {
-        return super.getValueAsBoolean(IS_OFFICIAL);
+    public Integer getIsOfficial() {
+        return super.getValueAsInteger(IS_OFFICIAL);
     }
 
     /**

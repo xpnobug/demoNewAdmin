@@ -39,6 +39,11 @@ public class ReaiChannelController {
         return new JsonPageObject(page, reaiChannelService.list(page));
     }
 
+    @GetMapping("/channelList")
+    public JsonPageObject listQuery(Page page, Integer isOfficial) {
+        return new JsonPageObject(page, reaiChannelService.listQuery(isOfficial));
+    }
+
     /**
      * 通过主键查询单条数据
      *
