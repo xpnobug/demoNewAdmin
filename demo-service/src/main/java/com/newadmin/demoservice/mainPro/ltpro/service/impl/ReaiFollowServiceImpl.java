@@ -65,7 +65,8 @@ public class ReaiFollowServiceImpl extends DefaultService implements ReaiFollowS
         selectBuilder.from("", super.getEntityDef(TABLE_NAME))
             .where()
             .and("user_id", ConditionType.EQUALS, ReaiFollow.USER_ID)
-            .and("follow_user_id", ConditionType.EQUALS, ReaiFollow.FOLLOW_USER_ID);
+            .and("follow_user_id", ConditionType.EQUALS, ReaiFollow.FOLLOW_USER_ID)
+            .and("follow_channel_id", ConditionType.IS_NULL, ReaiFollow.FOLLOW_CHANNEL_ID);
         return super.listForBean(selectBuilder.build(), null, ReaiFollow::new);
     }
 }

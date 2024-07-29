@@ -114,9 +114,7 @@ public class RecommendServiceImpl implements
             List<ReaiFollow> followList = followService.getFollowList(null, null);
             //根据 followUserId 计数，展示followUserId 和数量
             Map<String, Long> countMap = followList.stream()
-                .filter(follow -> follow.getFollowChannelId() != null)
                 .collect(Collectors.groupingBy(ReaiFollow::getFollowUserId, Collectors.counting()));
-
             //根据总数 排序，展示最受欢迎的用户
             // 注意：这里假设list中的ReaiUsers的userId都在countMap的键中存在
             List<ReaiUsers> zshyUsersList = list.stream()
