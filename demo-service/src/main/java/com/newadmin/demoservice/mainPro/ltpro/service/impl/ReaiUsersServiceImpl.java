@@ -111,8 +111,10 @@ public class ReaiUsersServiceImpl extends DefaultService implements
             "https://alist.reaicc.com/nas/image/jpeg/2024-05/1/fb02f075-42bb-4e0a-bb0a-dafc1032e4b6.jpg");
 
         //默认头像
-        user.setAvatar(
-            "https://alist.reaicc.com/nas/image/jpeg/2024-05/1/51c82bda-f7bf-422c-a8d1-fac48e863140.jpg");
+        if (user.getAvatar() == null) {
+            user.setAvatar(
+                "https://alist.reaicc.com/nas/image/jpeg/2024-05/1/51c82bda-f7bf-422c-a8d1-fac48e863140.jpg");
+        }
         // 设置用户等级
         //1级  1-20
         //2级 21-50
@@ -142,7 +144,6 @@ public class ReaiUsersServiceImpl extends DefaultService implements
         super.add(TABLE_NAME, user);
         return user;
     }
-
 
     @Override
     public ReaiUsers updateUserInfo(ReaiUsers user) {
