@@ -272,7 +272,9 @@ public class ReaiUsersServiceImpl extends DefaultService implements
             }
         }
         UserInfoResp userInfoResp = new UserInfoResp();
-        BeanUtils.copyProperties(reaiUsers, userInfoResp);
+        if (reaiUsers != null) {
+            BeanUtils.copyProperties(reaiUsers, userInfoResp);
+        }
         return userInfoResp;
     }
 
