@@ -106,13 +106,14 @@ sa-token.extension:
     # 本地存储资源
     - /file/**
     # 无需token 验证的接口
-    - /users/isLogin
-    - /users/pageList
+    - /users/**
     - /article/**
     - /dict/getDictByItemCode
     - /comment/**
     - /likes/**
     - /recommend/**
+    - /channel/**
+    - /message/**
 
 reai:
   show-sql:
