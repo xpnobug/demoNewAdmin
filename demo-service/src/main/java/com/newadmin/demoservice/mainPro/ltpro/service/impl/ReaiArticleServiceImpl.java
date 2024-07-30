@@ -115,28 +115,35 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
     @Override
     @Transactional
     public ReaiArticle addArticle(ReaiArticle article) {
-        //根据前端传的值添加
-        article.setPublishDate(new Date());
-        ReaiArticle convert = ConversionUtils.convert(article, ReaiArticle.class);
-        String aid = super.add(TABLE_NAME, convert).toString();
-
-        //添加图片
-        List<String> imgList = article.getImgList();
         //获取当前登录的用户信息
         SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
         Assert.notNull(tokenInfo.loginId, "用户未登录");
-        String userId = tokenInfo.loginId.toString();
-        if (imgList != null) {
-            for (String imgUrl : imgList) {
-                File file = new File();
-                file.setSrc(imgUrl);
-                file.setUpdatedAt(new Date());
-                file.setCreatedAt(new Date());
-                file.setUserId(Long.valueOf(userId));
-                file.setArticleId(aid);
-                file.setFileType(FileTypeUtil.fileTypeCheck(imgUrl));
-                fileService.addImg(file);
+        if (article.getArticleId() == null) {
+            //根据前端传的值添加
+            article.setPublishDate(new Date());
+            ReaiArticle convert = ConversionUtils.convert(article, ReaiArticle.class);
+            String aid = super.add(TABLE_NAME, convert).toString();
+            //添加图片
+            List<String> imgList = article.getImgList();
+            String userId = tokenInfo.loginId.toString();
+            if (imgList != null) {
+                for (String imgUrl : imgList) {
+                    File file = new File();
+                    file.setSrc(imgUrl);
+                    file.setUpdatedAt(new Date());
+                    file.setCreatedAt(new Date());
+                    file.setUserId(Long.valueOf(userId));
+                    file.setArticleId(aid);
+                    file.setFileType(FileTypeUtil.fileTypeCheck(imgUrl));
+                    fileService.addImg(file);
+                }
             }
+            article.setArticleId(idGenerator.nextId().toString());
+        } else {
+            //更新
+            ReaiArticle convert = ConversionUtils.convert(article, ReaiArticle.class);
+            convert.setUpdateTime(new Date());
+            super.update(TABLE_NAME, convert);
         }
         //返回添加之后的主键
         return article;

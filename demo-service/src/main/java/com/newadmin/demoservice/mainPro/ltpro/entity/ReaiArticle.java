@@ -148,6 +148,11 @@ public class ReaiArticle extends ValueMap {
     public static final String USER_ID = "userId";
 
     /**
+     * 修改时间
+     */
+    public static final String UPDATE_TIME = "updateTime";
+
+    /**
      * 设置不参与查询
      */
     public static final String AVATAR = "avatar";
@@ -726,5 +731,23 @@ public class ReaiArticle extends ValueMap {
      */
     public String getAddress() {
         return super.getValueAsString(ADDRESS);
+    }
+
+    /**
+     * 设置 修改时间
+     *
+     * @param updateTime 修改时间
+     */
+    public void setUpdateTime(Date updateTime) {
+        super.setValue(UPDATE_TIME, updateTime);
+    }
+
+    /**
+     * 获取 修改时间
+     *
+     * @return 修改时间
+     */
+    public Date getUpdateTime() {
+        return super.getValueAsDate(UPDATE_TIME);
     }
 }
