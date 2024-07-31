@@ -4,8 +4,7 @@ package com.newadmin.democonfig.redisCommon.util;
 
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.extra.spring.SpringUtil;
-
-import com.newadmin.democommon.core.constant.StringConstants;
+import com.newadmin.democore.constant.StringConstants;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.List;
