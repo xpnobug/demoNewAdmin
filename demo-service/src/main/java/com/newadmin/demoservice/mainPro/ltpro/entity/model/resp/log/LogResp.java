@@ -1,27 +1,22 @@
-package com.newadmin.demoservice.mainPro.ltpro.entity;
+package com.newadmin.demoservice.mainPro.ltpro.entity.model.resp.log;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.newadmin.democore.kduck.service.ValueMap;
 import com.newadmin.demoservice.mainPro.ltpro.common.enums.LogStatusEnum;
+import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Map;
 
 /**
- * 日志实体
+ * 日志信息
  */
-
-@TableName("reai_log")
-public class LogDO extends ValueMap {
+@Schema(description = "日志信息")
+public class LogResp extends ValueMap {
 
     /**
      * ID
      */
     public static final String ID = "id";
-
-    /**
-     * 链路 ID
-     */
-    public static final String TRACE_ID = "traceId";
 
     /**
      * 日志描述
@@ -32,41 +27,6 @@ public class LogDO extends ValueMap {
      * 所属模块
      */
     public static final String MODULE = "module";
-
-    /**
-     * 请求 URL
-     */
-    public static final String REQUEST_URL = "requestUrl";
-
-    /**
-     * 请求方式
-     */
-    public static final String REQUEST_METHOD = "requestMethod";
-
-    /**
-     * 请求头
-     */
-    public static final String REQUEST_HEADERS = "requestHeaders";
-
-    /**
-     * 请求体
-     */
-    public static final String REQUEST_BODY = "requestBody";
-
-    /**
-     * 状态码
-     */
-    public static final String STATUS_CODE = "statusCode";
-
-    /**
-     * 响应头
-     */
-    public static final String RESPONSE_HEADERS = "responseHeaders";
-
-    /**
-     * 响应体
-     */
-    public static final String RESPONSE_BODY = "responseBody";
 
     /**
      * 耗时（ms）
@@ -109,14 +69,19 @@ public class LogDO extends ValueMap {
     public static final String CREATE_USER = "createUser";
 
     /**
+     * 创建人
+     */
+    public static final String CREATE_USER_STRING = "createUserString";
+
+    /**
      * 创建时间
      */
     public static final String CREATE_TIME = "createTime";
 
-    public LogDO() {
+    public LogResp() {
     }
 
-    public LogDO(Map<String, Object> map) {
+    public LogResp(Map<String, Object> map) {
         super(map);
     }
 
@@ -136,24 +101,6 @@ public class LogDO extends ValueMap {
      */
     public String getId() {
         return super.getValueAsString(ID);
-    }
-
-    /**
-     * 设置 链路 ID
-     *
-     * @param traceId 链路 ID
-     */
-    public void setTraceId(String traceId) {
-        super.setValue(TRACE_ID, traceId);
-    }
-
-    /**
-     * 获取 链路 ID
-     *
-     * @return 链路 ID
-     */
-    public String getTraceId() {
-        return super.getValueAsString(TRACE_ID);
     }
 
     /**
@@ -190,132 +137,6 @@ public class LogDO extends ValueMap {
      */
     public String getModule() {
         return super.getValueAsString(MODULE);
-    }
-
-    /**
-     * 设置 请求 URL
-     *
-     * @param requestUrl 请求 URL
-     */
-    public void setRequestUrl(String requestUrl) {
-        super.setValue(REQUEST_URL, requestUrl);
-    }
-
-    /**
-     * 获取 请求 URL
-     *
-     * @return 请求 URL
-     */
-    public String getRequestUrl() {
-        return super.getValueAsString(REQUEST_URL);
-    }
-
-    /**
-     * 设置 请求方式
-     *
-     * @param requestMethod 请求方式
-     */
-    public void setRequestMethod(String requestMethod) {
-        super.setValue(REQUEST_METHOD, requestMethod);
-    }
-
-    /**
-     * 获取 请求方式
-     *
-     * @return 请求方式
-     */
-    public String getRequestMethod() {
-        return super.getValueAsString(REQUEST_METHOD);
-    }
-
-    /**
-     * 设置 请求头
-     *
-     * @param requestHeaders 请求头
-     */
-    public void setRequestHeaders(String requestHeaders) {
-        super.setValue(REQUEST_HEADERS, requestHeaders);
-    }
-
-    /**
-     * 获取 请求头
-     *
-     * @return 请求头
-     */
-    public String getRequestHeaders() {
-        return super.getValueAsString(REQUEST_HEADERS);
-    }
-
-    /**
-     * 设置 请求体
-     *
-     * @param requestBody 请求体
-     */
-    public void setRequestBody(String requestBody) {
-        super.setValue(REQUEST_BODY, requestBody);
-    }
-
-    /**
-     * 获取 请求体
-     *
-     * @return 请求体
-     */
-    public String getRequestBody() {
-        return super.getValueAsString(REQUEST_BODY);
-    }
-
-    /**
-     * 设置 状态码
-     *
-     * @param statusCode 状态码
-     */
-    public void setStatusCode(Integer statusCode) {
-        super.setValue(STATUS_CODE, statusCode);
-    }
-
-    /**
-     * 获取 状态码
-     *
-     * @return 状态码
-     */
-    public Integer getStatusCode() {
-        return super.getValueAsInteger(STATUS_CODE);
-    }
-
-    /**
-     * 设置 响应头
-     *
-     * @param responseHeaders 响应头
-     */
-    public void setResponseHeaders(String responseHeaders) {
-        super.setValue(RESPONSE_HEADERS, responseHeaders);
-    }
-
-    /**
-     * 获取 响应头
-     *
-     * @return 响应头
-     */
-    public String getResponseHeaders() {
-        return super.getValueAsString(RESPONSE_HEADERS);
-    }
-
-    /**
-     * 设置 响应体
-     *
-     * @param responseBody 响应体
-     */
-    public void setResponseBody(String responseBody) {
-        super.setValue(RESPONSE_BODY, responseBody);
-    }
-
-    /**
-     * 获取 响应体
-     *
-     * @return 响应体
-     */
-    public String getResponseBody() {
-        return super.getValueAsString(RESPONSE_BODY);
     }
 
     /**
@@ -422,8 +243,8 @@ public class LogDO extends ValueMap {
      *
      * @return 状态
      */
-    public String getStatus() {
-        return super.getValueAsString(STATUS);
+    public Integer getStatus() {
+        return super.getValueAsInteger(STATUS);
     }
 
     /**
@@ -463,11 +284,29 @@ public class LogDO extends ValueMap {
     }
 
     /**
+     * 设置 创建人
+     *
+     * @param createUserString 创建人
+     */
+    public void setCreateUserString(String createUserString) {
+        super.setValue(CREATE_USER_STRING, createUserString);
+    }
+
+    /**
+     * 获取 创建人
+     *
+     * @return 创建人
+     */
+    public String getCreateUserString() {
+        return super.getValueAsString(CREATE_USER_STRING);
+    }
+
+    /**
      * 设置 创建时间
      *
      * @param createTime 创建时间
      */
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(LocalDateTime createTime) {
         super.setValue(CREATE_TIME, createTime);
     }
 

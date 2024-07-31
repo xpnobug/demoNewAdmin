@@ -3,6 +3,8 @@ package com.newadmin.demoservice.mainPro.ltpro.controller;
 import com.newadmin.democore.kduck.web.json.JsonObject;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiFollow;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiFollowService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author couei
  * @since 2024-05-25
  */
+@Tag(name = "关注模块 API")
 @RestController
 @RequestMapping("/follow")
 public class ReaiFollowController {
@@ -53,6 +56,7 @@ public class ReaiFollowController {
      * @param reaiFollow 实体对象
      * @return 新增结果
      */
+    @Operation(summary = "关注用户", description = "关注用户")
     @PostMapping("/followUser")
     public JsonObject insert(@RequestBody ReaiFollow reaiFollow) {
         String add = reaiFollowService.add(reaiFollow);
@@ -72,8 +76,10 @@ public class ReaiFollowController {
 
     /**
      * 删除数据
+     *
      * @return 删除结果
      */
+    @Operation(summary = "取消关注", description = "取消关注")
     @DeleteMapping("/clearFollow")
     public JsonObject delete(String id) {
         return new JsonObject(reaiFollowService.delById(id));

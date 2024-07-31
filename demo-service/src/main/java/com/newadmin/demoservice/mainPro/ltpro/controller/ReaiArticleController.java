@@ -5,6 +5,7 @@ import com.newadmin.democore.kduck.web.json.JsonObject;
 import com.newadmin.democore.kduck.web.json.JsonPageObject;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiArticle;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiArticleService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.Serializable;
 import java.util.List;
@@ -40,16 +41,19 @@ public class ReaiArticleController {
      *
      * @return 所有数据
      */
+    @Operation(summary = "分页查询文章数据", description = "分页查询文章数据")
     @GetMapping("/pageList")
     public JsonObject selectPageAll() {
         return new JsonObject(reaiArticleService.getArticleList());
     }
 
+    @Operation(summary = "分页查询文章数据", description = "分页查询文章数据")
     @GetMapping("/list")
     public JsonPageObject selectAllList(Page page) {
         return new JsonPageObject(page, reaiArticleService.selectAllList(page));
     }
 
+    @Operation(summary = "根据用户id获取文章数据", description = "根据用户id获取文章数据")
     @GetMapping("/listByUserId")
     public JsonPageObject selectPageAll(Page page, @RequestParam("userId") String userId) {
         List<ReaiArticle> articleList = reaiArticleService.getArticleByUserId(userId);
@@ -67,6 +71,7 @@ public class ReaiArticleController {
      * @param id 主键
      * @return 单条数据
      */
+    @Operation(summary = "通过主键查询单条文章数据", description = "通过主键查询单条文章数据")
     @GetMapping("{id}")
     public JsonObject selectOne(@PathVariable Serializable id) {
         return new JsonObject(reaiArticleService.getArticleInfo(id));

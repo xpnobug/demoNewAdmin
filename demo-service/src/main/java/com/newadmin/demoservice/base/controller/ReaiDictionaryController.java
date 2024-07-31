@@ -1,5 +1,6 @@
 package com.newadmin.demoservice.base.controller;
 
+import com.newadmin.demolog.log.core.annotation.Log;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiDictionaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author couei
  * @since 2024-06-10
  */
+@Log(ignore = true)
 @RestController
 @RequestMapping("/reaiDictionary")
 public class ReaiDictionaryController {

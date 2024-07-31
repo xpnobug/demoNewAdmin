@@ -4,6 +4,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.newadmin.democore.kduck.utils.Page;
 import com.newadmin.democore.kduck.web.json.JsonObject;
 import com.newadmin.democore.kduck.web.json.JsonPageObject;
+import com.newadmin.demolog.log.core.annotation.Log;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiUsers;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiUsersService;
 import java.io.Serializable;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author couei
  * @since 2024-05-12
  */
+@Log(ignore = true)
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")

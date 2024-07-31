@@ -20,10 +20,10 @@ import com.newadmin.demoservice.mainPro.ltpro.auth.model.req.AccountLoginReq;
 import com.newadmin.demoservice.mainPro.ltpro.common.enums.LogStatusEnum;
 import com.newadmin.demoservice.mainPro.ltpro.common.enums.SysConstants;
 import com.newadmin.demoservice.mainPro.ltpro.entity.LogDO;
+import com.newadmin.demoservice.mainPro.ltpro.service.LogService;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiUsersService;
 import java.net.URI;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +35,7 @@ import org.springframework.scheduling.annotation.Async;
  * 日志持久层接口本地实现类
  *
  * @author Charles7c
+ * @author couei
  * @since 2023/12/16 23:55
  */
 @RequiredArgsConstructor
@@ -42,6 +43,7 @@ public class LogDaoLocalImpl implements LogDao {
 
     private final ReaiUsersService userService;
     private final TraceProperties traceProperties;
+    private final LogService logService;
 
     @Async
     @Override
@@ -52,8 +54,7 @@ public class LogDaoLocalImpl implements LogDao {
         logDO.setModule(
             StrUtils.blankToDefault(module, null,
                 m -> m.replace("API", StringConstants.EMPTY).trim()));
-        logDO.setCreateTime(
-            LocalDateTime.ofInstant(logRecord.getTimestamp(), ZoneId.systemDefault()));
+        logDO.setCreateTime(new Date());
         logDO.setTimeTaken(logRecord.getTimeTaken().toMillis());
         // 请求信息
         LogRequest logRequest = logRecord.getRequest();
@@ -112,6 +113,6 @@ public class LogDaoLocalImpl implements LogDao {
                 .getTokenPrefix() + StringConstants.SPACE, StringConstants.EMPTY);
             logDO.setCreateUser(String.valueOf(Convert.toLong(StpUtil.getLoginIdByToken(token))));
         }
-//        logMapper.insert(logDO);
+        logService.addLog(logDO);
     }
 }

@@ -3,8 +3,11 @@ package com.newadmin.demoservice.mainPro.ltpro.controller;
 import com.newadmin.democore.kduck.utils.Page;
 import com.newadmin.democore.kduck.web.json.JsonObject;
 import com.newadmin.democore.kduck.web.json.JsonPageObject;
+import com.newadmin.demolog.log.core.annotation.Log;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiChannel;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiChannelService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author couei
  * @since 2024-07-27
  */
+@Tag(name = "频道 API")
 @RestController
 @RequestMapping("/channel")
 public class ReaiChannelController {
@@ -34,11 +38,13 @@ public class ReaiChannelController {
      * @param page 分页对象
      * @return 所有数据
      */
+    @Operation(summary = "分页查询频道数据", description = "分页查询频道数据")
     @GetMapping("/pageList")
     public JsonPageObject selectPageAll(Page page) {
         return new JsonPageObject(page, reaiChannelService.list(page));
     }
 
+    @Operation(summary = "分页查询频道数据", description = "分页查询频道数据")
     @GetMapping("/channelList")
     public JsonPageObject listQuery(Page page, Integer isOfficial) {
         return new JsonPageObject(page, reaiChannelService.listQuery(isOfficial));
@@ -50,6 +56,7 @@ public class ReaiChannelController {
      * @param id 主键
      * @return 单条数据
      */
+    @Log(ignore = true)
     @GetMapping("{id}")
     public JsonObject selectOne(@PathVariable String id) {
         return new JsonObject(reaiChannelService.getById(id));
@@ -61,6 +68,7 @@ public class ReaiChannelController {
      * @param reaiChannel 实体对象
      * @return 新增结果
      */
+    @Operation(summary = "新增频道数据", description = "新增频道数据")
     @PostMapping("/add")
     public JsonObject insert(@RequestBody ReaiChannel reaiChannel) {
         return new JsonObject(reaiChannelService.save(reaiChannel));
