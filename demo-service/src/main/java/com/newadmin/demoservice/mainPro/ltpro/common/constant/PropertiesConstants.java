@@ -1,7 +1,6 @@
-
 package com.newadmin.demoservice.mainPro.ltpro.common.constant;
 
-import com.newadmin.democommon.core.constant.StringConstants;
+import com.newadmin.democore.constant.StringConstants;
 
 /**
  * 配置属性相关常量
