@@ -83,9 +83,9 @@ public class ReaiArticleController {
      * @param reaiArticle 实体对象
      * @return 新增结果
      */
+    @Operation(summary = "发布文章", description = "发布文章")
     @PostMapping("/add")
     public JsonObject insert(@RequestBody ReaiArticle reaiArticle) {
-
         ReaiArticle info = reaiArticleService.addArticle(reaiArticle);
         return new JsonObject(info.getArticleId());
     }
@@ -96,10 +96,9 @@ public class ReaiArticleController {
      * @param reaiArticle 实体对象
      * @return 修改结果
      */
+    @Operation(summary = "修改文章", description = "修改文章")
     @PutMapping("/update")
     public JsonObject update(@RequestBody ReaiArticle reaiArticle) {
-//        return new JsonObject(reaiArticleService.updateById(reaiArticle));
-
         return new JsonObject(reaiArticleService.updateArticle(reaiArticle));
     }
 
@@ -109,6 +108,7 @@ public class ReaiArticleController {
      * @param idList 主键结合
      * @return 删除结果
      */
+    @Operation(summary = "删除文章", description = "删除文章")
     @DeleteMapping("/delete")
     public JsonObject delete(@RequestParam String idList) {
         return new JsonObject(reaiArticleService.deleteArticle(idList));
@@ -121,6 +121,7 @@ public class ReaiArticleController {
      * @param userId
      * @return
      */
+    @Operation(summary = "查询好友动态", description = "查询好友动态")
     @GetMapping("/friendCircleList")
     public JsonPageObject selectFriendCircleList(Page page, @RequestParam("userId") String userId) {
         return new JsonPageObject(page, reaiArticleService.friendCircleList(page, userId));

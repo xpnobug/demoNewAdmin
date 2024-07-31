@@ -3,7 +3,7 @@ package com.newadmin.demoservice.base.upload;
 import com.newadmin.democore.kduck.web.json.JsonObject;
 import com.newadmin.democore.oss.domain.OssReq;
 import com.newadmin.democore.oss.domain.OssResp;
-import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +24,7 @@ public class UploadController {
      * @param file 文件
      * @Description 上传文件
      */
-    @Schema(description = "上传文件")
+    @Operation(summary = "上传文件", description = "上传文件")
     @PostMapping("/uploadImg")
     public JsonObject uploadFile(@RequestParam("imgfile") MultipartFile file) {
         //上传文件
