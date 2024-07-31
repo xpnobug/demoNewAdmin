@@ -118,7 +118,7 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
         //获取当前登录的用户信息
         SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
         Assert.notNull(tokenInfo.loginId, "用户未登录");
-        if (article.getArticleId() == null) {
+        if (article.getArticleId() == null || Objects.equals(article.getArticleId(), "")) {
             //根据前端传的值添加
             article.setPublishDate(new Date());
             ReaiArticle convert = ConversionUtils.convert(article, ReaiArticle.class);
@@ -138,7 +138,6 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
                     fileService.addImg(file);
                 }
             }
-            article.setArticleId(idGenerator.nextId().toString());
         } else {
             //更新
             ReaiArticle convert = ConversionUtils.convert(article, ReaiArticle.class);
