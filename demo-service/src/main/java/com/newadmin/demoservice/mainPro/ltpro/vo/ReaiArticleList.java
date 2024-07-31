@@ -1,6 +1,6 @@
 package com.newadmin.demoservice.mainPro.ltpro.vo;
 
-import com.newadmin.democommon.service.ValueMap;
+import com.newadmin.democore.kduck.service.ValueMap;
 import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;

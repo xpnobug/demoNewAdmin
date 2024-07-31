@@ -3,7 +3,7 @@ package com.newadmin.demoservice.config.satoken.exception;
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.exception.NotPermissionException;
 import cn.dev33.satoken.exception.NotRoleException;
-import com.newadmin.democommon.web.json.JsonObject;
+import com.newadmin.democore.kduck.web.json.JsonObject;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

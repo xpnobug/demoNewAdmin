@@ -1,9 +1,9 @@
 
 package com.newadmin.demoservice.config.security.limiter.autoconfigure;
 
+import com.newadmin.democore.constant.PropertiesConstants;
 import com.newadmin.demoservice.config.security.limiter.core.DefaultRateLimiterNameGenerator;
 import com.newadmin.demoservice.config.security.limiter.core.RateLimiterNameGenerator;
-import com.newadmin.demoservice.mainPro.ltpro.common.constant.PropertiesConstants;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

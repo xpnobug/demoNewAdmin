@@ -1,6 +1,6 @@
 package com.newadmin.demoservice.mainPro.nas.controller;
 
-import com.newadmin.democommon.web.json.JsonObject;
+import com.newadmin.democore.kduck.web.json.JsonObject;
 import java.util.HashMap;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

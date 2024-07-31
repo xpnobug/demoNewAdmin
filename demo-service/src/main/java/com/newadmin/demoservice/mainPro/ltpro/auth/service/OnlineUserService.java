@@ -1,6 +1,6 @@
 package com.newadmin.demoservice.mainPro.ltpro.auth.service;
 
-import com.newadmin.democommon.utils.Page;
+import com.newadmin.democore.kduck.utils.Page;
 import com.newadmin.demoservice.mainPro.ltpro.auth.model.dto.LoginUser;
 import com.newadmin.demoservice.mainPro.ltpro.auth.model.query.OnlineUserQuery;
 import com.newadmin.demoservice.mainPro.ltpro.auth.model.resp.OnlineUserResp;

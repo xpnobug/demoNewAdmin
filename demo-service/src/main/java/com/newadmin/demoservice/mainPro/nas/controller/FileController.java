@@ -1,8 +1,8 @@
 //package com.newadmin.demoservice.nas.controller;
 //
 //import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-//import com.newadmin.democommon.oss.domain.OssReq;
-//import com.newadmin.democommon.oss.domain.OssResp;
+//import com.newadmin.democore.kduck.oss.domain.OssReq;
+//import com.newadmin.democore.kduck.oss.domain.OssResp;
 //import com.newadmin.demoservice.nas.entity.User;
 //import com.newadmin.demoservice.nas.service.UserService;
 //import jakarta.servlet.http.HttpServletRequest;
@@ -16,9 +16,9 @@
 //import org.springframework.web.bind.annotation.RequestBody;
 //import org.springframework.web.bind.annotation.RequestMapping;
 //import org.springframework.web.bind.annotation.RequestParam;
-//import com.newadmin.democommon.web.json.JsonObject;
-//import com.newadmin.democommon.web.json.JsonPageObject;
-//import com.newadmin.democommon.utils.Page;
+//import com.newadmin.democore.kduck.web.json.JsonObject;
+//import com.newadmin.democore.kduck.web.json.JsonPageObject;
+//import com.newadmin.democore.kduck.utils.Page;
 //import java.util.List;
 //import com.newadmin.demoservice.nas.entity.File;
 //import com.newadmin.demoservice.nas.service.FileService;

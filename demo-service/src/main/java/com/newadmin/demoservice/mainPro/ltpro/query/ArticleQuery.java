@@ -1,11 +1,11 @@
 package com.newadmin.demoservice.mainPro.ltpro.query;
 
-import com.newadmin.democommon.definition.BeanDefDepository;
-import com.newadmin.democommon.definition.BeanEntityDef;
-import com.newadmin.democommon.query.QueryCreator;
-import com.newadmin.democommon.query.QuerySupport;
-import com.newadmin.democommon.sqlbuild.ConditionBuilder.ConditionType;
-import com.newadmin.democommon.sqlbuild.SelectBuilder;
+import com.newadmin.democore.kduck.definition.BeanDefDepository;
+import com.newadmin.democore.kduck.definition.BeanEntityDef;
+import com.newadmin.democore.kduck.query.QueryCreator;
+import com.newadmin.democore.kduck.query.QuerySupport;
+import com.newadmin.democore.kduck.sqlbuild.ConditionBuilder.ConditionType;
+import com.newadmin.democore.kduck.sqlbuild.SelectBuilder;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiArticle;
 import com.newadmin.demoservice.mainPro.ltpro.service.impl.ReaiArticleServiceImpl;
 import java.util.Map;

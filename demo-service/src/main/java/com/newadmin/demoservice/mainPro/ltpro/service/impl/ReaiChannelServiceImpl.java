@@ -1,10 +1,10 @@
 package com.newadmin.demoservice.mainPro.ltpro.service.impl;
 
-import com.newadmin.democommon.service.DefaultService;
-import com.newadmin.democommon.service.ValueMap;
-import com.newadmin.democommon.sqlbuild.ConditionBuilder.ConditionType;
-import com.newadmin.democommon.sqlbuild.SelectBuilder;
-import com.newadmin.democommon.utils.Page;
+import com.newadmin.democore.kduck.service.DefaultService;
+import com.newadmin.democore.kduck.service.ValueMap;
+import com.newadmin.democore.kduck.sqlbuild.ConditionBuilder.ConditionType;
+import com.newadmin.democore.kduck.sqlbuild.SelectBuilder;
+import com.newadmin.democore.kduck.utils.Page;
 import com.newadmin.demoservice.mainPro.ltpro.auth.model.resp.UserInfoResp;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiChannel;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiFollow;

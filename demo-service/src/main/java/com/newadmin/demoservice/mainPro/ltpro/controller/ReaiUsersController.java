@@ -1,9 +1,9 @@
 package com.newadmin.demoservice.mainPro.ltpro.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
-import com.newadmin.democommon.utils.Page;
-import com.newadmin.democommon.web.json.JsonObject;
-import com.newadmin.democommon.web.json.JsonPageObject;
+import com.newadmin.democore.kduck.utils.Page;
+import com.newadmin.democore.kduck.web.json.JsonObject;
+import com.newadmin.democore.kduck.web.json.JsonPageObject;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiUsers;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiUsersService;
 import java.io.Serializable;

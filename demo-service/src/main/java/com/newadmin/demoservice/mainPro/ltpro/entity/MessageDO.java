@@ -1,6 +1,6 @@
 package com.newadmin.demoservice.mainPro.ltpro.entity;
 
-import com.newadmin.democommon.service.ValueMap;
+import com.newadmin.democore.kduck.service.ValueMap;
 import com.newadmin.demoservice.mainPro.ltpro.common.enums.MessageTypeEnum;
 import java.util.Date;
 import java.util.Map;

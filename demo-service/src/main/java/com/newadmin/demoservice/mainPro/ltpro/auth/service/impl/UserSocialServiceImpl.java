@@ -1,10 +1,10 @@
 package com.newadmin.demoservice.mainPro.ltpro.auth.service.impl;
 
 import cn.hutool.json.JSONUtil;
-import com.newadmin.democommon.service.DefaultService;
-import com.newadmin.democommon.service.ValueMap;
-import com.newadmin.democommon.sqlbuild.SelectBuilder;
-import com.newadmin.demoservice.config.core.utils.CheckUtils;
+import com.newadmin.democore.kduck.service.DefaultService;
+import com.newadmin.democore.kduck.service.ValueMap;
+import com.newadmin.democore.kduck.sqlbuild.SelectBuilder;
+import com.newadmin.democore.util.validate.CheckUtils;
 import com.newadmin.demoservice.mainPro.ltpro.auth.entity.UserSocialDO;
 import com.newadmin.demoservice.mainPro.ltpro.auth.service.UserSocialService;
 import com.newadmin.demoservice.mainPro.ltpro.common.enums.SocialSourceEnum;

@@ -1,8 +1,8 @@
 package com.newadmin.demoservice.mainPro.ltpro.controller.message;
 
-import com.newadmin.democommon.utils.Page;
-import com.newadmin.democommon.web.json.JsonObject;
-import com.newadmin.democommon.web.json.JsonPageObject;
+import com.newadmin.democore.kduck.utils.Page;
+import com.newadmin.democore.kduck.web.json.JsonObject;
+import com.newadmin.democore.kduck.web.json.JsonPageObject;
 import com.newadmin.demoservice.mainPro.ltpro.entity.model.query.MessageQuery;
 import com.newadmin.demoservice.mainPro.ltpro.helper.LoginHelper;
 import com.newadmin.demoservice.mainPro.ltpro.service.MessageService;

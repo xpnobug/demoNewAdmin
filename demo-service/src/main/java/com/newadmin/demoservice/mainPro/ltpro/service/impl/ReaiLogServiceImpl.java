@@ -1,6 +1,6 @@
 package com.newadmin.demoservice.mainPro.ltpro.service.impl;
 
-import com.newadmin.democommon.id.IdGenerator;
+import com.newadmin.democore.kduck.id.IdGenerator;
 import com.newadmin.demoservice.mainPro.ltpro.auth.model.dto.LoginUser;
 import com.newadmin.demoservice.mainPro.ltpro.helper.LoginHelper;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiLogService;

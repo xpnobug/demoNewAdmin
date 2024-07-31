@@ -3,7 +3,7 @@
 package com.newadmin.demoservice.config.security.limiter.core;
 
 import cn.hutool.core.util.ClassUtil;
-import com.newadmin.demoservice.mainPro.ltpro.common.constant.StringConstants;
+import com.newadmin.democore.constant.StringConstants;
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
 

@@ -1,6 +1,6 @@
 package com.newadmin.demoservice.mainPro.ltpro.controller;
 
-import com.newadmin.democommon.web.json.JsonObject;
+import com.newadmin.democore.kduck.web.json.JsonObject;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiLikes;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiLikesService;
 import jakarta.servlet.http.HttpServletRequest;

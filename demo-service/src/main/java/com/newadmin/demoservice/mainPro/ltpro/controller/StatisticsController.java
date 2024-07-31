@@ -1,6 +1,6 @@
 package com.newadmin.demoservice.mainPro.ltpro.controller;
 
-import com.newadmin.democommon.web.json.JsonObject;
+import com.newadmin.democore.kduck.web.json.JsonObject;
 import com.newadmin.demoservice.mainPro.ltpro.service.StatisticsService;
 import com.newadmin.demoservice.mainPro.ltpro.vo.Statistics;
 import lombok.RequiredArgsConstructor;

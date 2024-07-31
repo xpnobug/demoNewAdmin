@@ -1,9 +1,9 @@
 package com.newadmin.demoservice.mainPro.nas.service;
 
-import com.newadmin.democommon.oss.domain.OssReq;
-import com.newadmin.democommon.oss.domain.OssResp;
-import com.newadmin.democommon.utils.Page;
-import com.newadmin.democommon.web.json.JsonObject;
+import com.newadmin.democore.kduck.utils.Page;
+import com.newadmin.democore.kduck.web.json.JsonObject;
+import com.newadmin.democore.oss.domain.OssReq;
+import com.newadmin.democore.oss.domain.OssResp;
 import com.newadmin.demoservice.mainPro.nas.entity.File;
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;

@@ -1,6 +1,6 @@
 package com.newadmin.demoservice.mainPro.ltpro.service.impl;
 
-import com.newadmin.democommon.service.DefaultService;
+import com.newadmin.democore.kduck.service.DefaultService;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiDictionary;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiDictionaryService;
 import org.springframework.stereotype.Service;

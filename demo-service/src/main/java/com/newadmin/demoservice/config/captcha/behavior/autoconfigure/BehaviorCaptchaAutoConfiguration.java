@@ -8,7 +8,7 @@ import com.anji.captcha.model.common.Const;
 import com.anji.captcha.service.CaptchaService;
 import com.anji.captcha.service.impl.CaptchaServiceFactory;
 import com.anji.captcha.util.ImageUtils;
-import com.newadmin.demoservice.mainPro.ltpro.common.constant.PropertiesConstants;
+import com.newadmin.democore.constant.PropertiesConstants;
 import jakarta.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;

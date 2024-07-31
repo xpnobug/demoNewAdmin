@@ -1,8 +1,8 @@
 package com.newadmin.demoservice.mainPro.nas.controller;
 
-import com.newadmin.democommon.utils.Page;
-import com.newadmin.democommon.web.json.JsonObject;
-import com.newadmin.democommon.web.json.JsonPageObject;
+import com.newadmin.democore.kduck.utils.Page;
+import com.newadmin.democore.kduck.web.json.JsonObject;
+import com.newadmin.democore.kduck.web.json.JsonPageObject;
 import com.newadmin.demoservice.mainPro.nas.entity.ModuleConfig;
 import com.newadmin.demoservice.mainPro.nas.service.ModuleConfigService;
 import java.io.Serializable;

@@ -1,10 +1,10 @@
 package com.newadmin.demoservice.mainPro.ltpro.service.impl;
 
-import com.newadmin.democommon.service.DefaultService;
-import com.newadmin.democommon.service.ValueMap;
-import com.newadmin.democommon.sqlbuild.ConditionBuilder.ConditionType;
-import com.newadmin.democommon.sqlbuild.SelectBuilder;
-import com.newadmin.democommon.web.json.JsonObject;
+import com.newadmin.democore.kduck.service.DefaultService;
+import com.newadmin.democore.kduck.service.ValueMap;
+import com.newadmin.democore.kduck.sqlbuild.ConditionBuilder.ConditionType;
+import com.newadmin.democore.kduck.sqlbuild.SelectBuilder;
+import com.newadmin.democore.kduck.web.json.JsonObject;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiMusic;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiMusicService;
 import java.util.Date;

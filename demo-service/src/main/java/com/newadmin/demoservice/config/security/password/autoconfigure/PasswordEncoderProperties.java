@@ -1,6 +1,6 @@
 package com.newadmin.demoservice.config.security.password.autoconfigure;
 
-import com.newadmin.demoservice.mainPro.ltpro.common.constant.PropertiesConstants;
+import com.newadmin.democore.constant.PropertiesConstants;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**

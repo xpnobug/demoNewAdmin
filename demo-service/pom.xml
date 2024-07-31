@@ -31,7 +31,6 @@
       <artifactId>demo-config</artifactId>
       <version>${revision}</version>
     </dependency>
-
     <!--MP代码生成器依赖-->
     <dependency>
       <groupId>com.baomidou</groupId>
@@ -84,7 +83,6 @@
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
     </dependency>
-
   </dependencies>
 
 

@@ -4,7 +4,7 @@ package com.newadmin.demoservice.config.security.crypto.encryptor;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
-import com.newadmin.demoservice.mainPro.ltpro.common.constant.StringConstants;
+import com.newadmin.democore.constant.StringConstants;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

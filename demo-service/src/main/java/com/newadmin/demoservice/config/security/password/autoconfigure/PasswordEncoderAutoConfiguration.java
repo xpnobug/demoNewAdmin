@@ -2,7 +2,7 @@ package com.newadmin.demoservice.config.security.password.autoconfigure;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.CharSequenceUtil;
-import com.newadmin.demoservice.mainPro.ltpro.common.constant.PropertiesConstants;
+import com.newadmin.democore.constant.PropertiesConstants;
 import jakarta.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.List;

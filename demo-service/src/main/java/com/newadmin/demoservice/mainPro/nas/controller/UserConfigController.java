@@ -1,9 +1,9 @@
 package com.newadmin.demoservice.mainPro.nas.controller;
 
 import cn.hutool.json.JSONObject;
-import com.newadmin.democommon.utils.Page;
-import com.newadmin.democommon.web.json.JsonObject;
-import com.newadmin.democommon.web.json.JsonPageObject;
+import com.newadmin.democore.kduck.utils.Page;
+import com.newadmin.democore.kduck.web.json.JsonObject;
+import com.newadmin.democore.kduck.web.json.JsonPageObject;
 import com.newadmin.demoservice.mainPro.nas.entity.User;
 import com.newadmin.demoservice.mainPro.nas.entity.UserConfig;
 import com.newadmin.demoservice.mainPro.nas.service.UserConfigService;

@@ -1,9 +1,9 @@
 
 package com.newadmin.demoservice.config.security.crypto.autoconfigure;
 
+import com.newadmin.democore.constant.PropertiesConstants;
 import com.newadmin.demoservice.config.security.crypto.core.MyBatisDecryptInterceptor;
 import com.newadmin.demoservice.config.security.crypto.core.MyBatisEncryptInterceptor;
-import com.newadmin.demoservice.mainPro.ltpro.common.constant.PropertiesConstants;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

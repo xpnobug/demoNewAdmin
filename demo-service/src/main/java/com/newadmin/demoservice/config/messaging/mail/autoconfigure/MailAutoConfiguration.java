@@ -1,7 +1,7 @@
 
 package com.newadmin.demoservice.config.messaging.mail.autoconfigure;
 
-import com.newadmin.demoservice.config.core.utils.GeneralPropertySourceFactory;
+import com.newadmin.democore.util.GeneralPropertySourceFactory;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

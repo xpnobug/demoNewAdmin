@@ -1,9 +1,9 @@
 package com.newadmin.demoservice.mainPro.ltpro.service.impl;
 
-import com.newadmin.democommon.service.DefaultService;
-import com.newadmin.democommon.service.ValueMap;
-import com.newadmin.democommon.sqlbuild.ConditionBuilder.ConditionType;
-import com.newadmin.democommon.sqlbuild.SelectBuilder;
+import com.newadmin.democore.kduck.service.DefaultService;
+import com.newadmin.democore.kduck.service.ValueMap;
+import com.newadmin.democore.kduck.sqlbuild.ConditionBuilder.ConditionType;
+import com.newadmin.democore.kduck.sqlbuild.SelectBuilder;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiArticle;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiLikes;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiUsers;

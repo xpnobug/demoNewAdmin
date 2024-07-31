@@ -1,10 +1,11 @@
 package com.newadmin.demoservice.mainPro.ltpro.controller;
 
-import com.newadmin.democommon.utils.Page;
-import com.newadmin.democommon.web.json.JsonObject;
-import com.newadmin.democommon.web.json.JsonPageObject;
+import com.newadmin.democore.kduck.utils.Page;
+import com.newadmin.democore.kduck.web.json.JsonObject;
+import com.newadmin.democore.kduck.web.json.JsonPageObject;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiArticle;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiArticleService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.Serializable;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author couei
  * @since 2024-05-16
  */
+@Tag(name = "文章管理 API")
 @RestController
 @RequestMapping("/article")
 public class ReaiArticleController {

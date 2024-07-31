@@ -1,8 +1,8 @@
 package com.newadmin.demoservice.mainPro.colorGrad.controller;
 
-import com.newadmin.democommon.utils.Page;
-import com.newadmin.democommon.web.json.JsonObject;
-import com.newadmin.democommon.web.json.JsonPageObject;
+import com.newadmin.democore.kduck.utils.Page;
+import com.newadmin.democore.kduck.web.json.JsonObject;
+import com.newadmin.democore.kduck.web.json.JsonPageObject;
 import com.newadmin.demoservice.mainPro.colorGrad.entity.ColorGrad;
 import com.newadmin.demoservice.mainPro.colorGrad.service.ColorGradService;
 import java.io.Serializable;

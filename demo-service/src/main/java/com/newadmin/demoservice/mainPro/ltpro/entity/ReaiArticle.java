@@ -1,6 +1,6 @@
 package com.newadmin.demoservice.mainPro.ltpro.entity;
 
-import com.newadmin.democommon.service.ValueMap;
+import com.newadmin.democore.kduck.service.ValueMap;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;

@@ -1,7 +1,7 @@
 
 package com.newadmin.demoservice.config.security.limiter.exception;
 
-import com.newadmin.demoservice.config.core.exception.BaseException;
+import com.newadmin.democore.exception.BaseException;
 
 /**
  * 限流异常

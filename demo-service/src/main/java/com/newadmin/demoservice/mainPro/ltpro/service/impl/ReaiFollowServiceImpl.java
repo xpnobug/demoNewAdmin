@@ -2,10 +2,10 @@ package com.newadmin.demoservice.mainPro.ltpro.service.impl;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
-import com.newadmin.democommon.service.DefaultService;
-import com.newadmin.democommon.service.ValueMap;
-import com.newadmin.democommon.sqlbuild.ConditionBuilder.ConditionType;
-import com.newadmin.democommon.sqlbuild.SelectBuilder;
+import com.newadmin.democore.kduck.service.DefaultService;
+import com.newadmin.democore.kduck.service.ValueMap;
+import com.newadmin.democore.kduck.sqlbuild.ConditionBuilder.ConditionType;
+import com.newadmin.democore.kduck.sqlbuild.SelectBuilder;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiFollow;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiFollowService;
 import java.util.Date;

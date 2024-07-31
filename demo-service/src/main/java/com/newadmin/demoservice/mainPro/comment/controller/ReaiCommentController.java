@@ -1,8 +1,8 @@
 package com.newadmin.demoservice.mainPro.comment.controller;
 
-import com.newadmin.democommon.utils.Page;
-import com.newadmin.democommon.web.json.JsonObject;
-import com.newadmin.democommon.web.json.JsonPageObject;
+import com.newadmin.democore.kduck.utils.Page;
+import com.newadmin.democore.kduck.web.json.JsonObject;
+import com.newadmin.democore.kduck.web.json.JsonPageObject;
 import com.newadmin.demoservice.mainPro.comment.dto.CommentDTO;
 import com.newadmin.demoservice.mainPro.comment.service.ReaiCommentService;
 import org.springframework.beans.factory.annotation.Autowired;

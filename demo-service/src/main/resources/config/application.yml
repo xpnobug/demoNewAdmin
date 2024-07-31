@@ -35,6 +35,31 @@ spring:
     # 启用的环境
     active: dev
 
+### 日志配置
+new-admin.log:
+  # 包含信息
+  includes:
+    - DESCRIPTION
+    - MODULE
+    - REQUEST_HEADERS
+    - REQUEST_BODY
+    - IP_ADDRESS
+    - BROWSER
+    - OS
+    - RESPONSE_HEADERS
+    - RESPONSE_BODY
+
+### 链路跟踪配置
+new-admin.web:
+  trace:
+    enabled: true
+    header-name: traceId
+    ## TLog 配置
+    tlog:
+      enable-invoke-time-print: false
+      pattern: '[$spanId][$traceId]'
+      mdc-enable: false
+
 #配置日志
 mybatis-plus:
   configuration:

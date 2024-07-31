@@ -1,8 +1,8 @@
 
 package com.newadmin.demoservice.config.justauth.autoconfigure;
 
+import com.newadmin.democore.constant.PropertiesConstants;
 import com.newadmin.demoservice.config.justauth.core.JustAuthStateCacheRedisImpl;
-import com.newadmin.demoservice.mainPro.ltpro.common.constant.PropertiesConstants;
 import jakarta.annotation.PostConstruct;
 import me.zhyd.oauth.cache.AuthStateCache;
 import org.redisson.client.RedisClient;

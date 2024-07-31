@@ -1,7 +1,7 @@
 
 package com.newadmin.demoservice.mainPro.ltpro.service;
 
-import com.newadmin.democommon.utils.Page;
+import com.newadmin.democore.kduck.utils.Page;
 import com.newadmin.demoservice.mainPro.ltpro.entity.model.query.MessageQuery;
 import com.newadmin.demoservice.mainPro.ltpro.entity.model.req.MessageReq;
 import com.newadmin.demoservice.mainPro.ltpro.entity.model.resp.MessageResp;

@@ -1,6 +1,6 @@
 package com.newadmin.demoservice.mainPro.ltpro.service;
 
-import com.newadmin.democommon.utils.Page;
+import com.newadmin.democore.kduck.utils.Page;
 import com.newadmin.demoservice.mainPro.ltpro.auth.model.resp.UserInfoResp;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiUsers;
 import java.io.Serializable;

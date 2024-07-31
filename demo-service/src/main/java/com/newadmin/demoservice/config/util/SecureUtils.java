@@ -1,10 +1,11 @@
 
-package com.newadmin.demoservice.config.core.utils;
+package com.newadmin.demoservice.config.util;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.extra.spring.SpringUtil;
+import com.newadmin.democore.util.validate.ValidationUtils;
 import com.newadmin.demoservice.config.properties.RsaProperties;
 import com.newadmin.demoservice.config.security.crypto.autoconfigure.CryptoProperties;
 import com.newadmin.demoservice.config.security.crypto.encryptor.AesEncryptor;

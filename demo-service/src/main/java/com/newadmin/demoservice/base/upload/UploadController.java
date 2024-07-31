@@ -1,8 +1,8 @@
 package com.newadmin.demoservice.base.upload;
 
-import com.newadmin.democommon.oss.domain.OssReq;
-import com.newadmin.democommon.oss.domain.OssResp;
-import com.newadmin.democommon.web.json.JsonObject;
+import com.newadmin.democore.kduck.web.json.JsonObject;
+import com.newadmin.democore.oss.domain.OssReq;
+import com.newadmin.democore.oss.domain.OssResp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

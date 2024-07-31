@@ -1,6 +1,6 @@
 package com.newadmin.demoservice.mainPro.ltpro.service;
 
-import com.newadmin.democommon.utils.Page;
+import com.newadmin.democore.kduck.utils.Page;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiChannel;
 import com.newadmin.demoservice.mainPro.ltpro.entity.model.query.ChannelQuery;
 import java.util.List;

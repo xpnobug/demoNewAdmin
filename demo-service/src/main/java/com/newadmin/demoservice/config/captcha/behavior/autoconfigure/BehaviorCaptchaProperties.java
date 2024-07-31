@@ -2,9 +2,9 @@
 package com.newadmin.demoservice.config.captcha.behavior.autoconfigure;
 
 import cn.hutool.core.convert.Convert;
+import com.newadmin.democore.constant.PropertiesConstants;
 import com.newadmin.demoservice.config.captcha.model.CaptchaTypeEnum;
 import com.newadmin.demoservice.config.captcha.model.StorageType;
-import com.newadmin.demoservice.mainPro.ltpro.common.constant.PropertiesConstants;
 import java.awt.Font;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

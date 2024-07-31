@@ -1,7 +1,7 @@
 package com.newadmin.demoservice.mainPro.mai.controller;
 
-import com.newadmin.democommon.utils.excelExport.export.MyCsvFileUtil;
-import com.newadmin.democommon.web.json.JsonObject;
+import com.newadmin.democore.kduck.web.json.JsonObject;
+import com.newadmin.democore.util.excelExport.export.MyCsvFileUtil;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiDictionaryItem;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiDictionaryItemService;
 import com.newadmin.demoservice.mainPro.mai.entity.ImgMai;

@@ -1,7 +1,7 @@
 
 package com.newadmin.demoservice.config.messaging.mail.core;
 
-import com.newadmin.demoservice.config.core.utils.ValidationUtils;
+import com.newadmin.democore.util.validate.ValidationUtils;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 /**

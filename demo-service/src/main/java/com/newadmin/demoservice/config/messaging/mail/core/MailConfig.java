@@ -1,7 +1,7 @@
 package com.newadmin.demoservice.config.messaging.mail.core;
 
 import cn.hutool.core.map.MapUtil;
-import com.newadmin.demoservice.config.core.utils.ValidationUtils;
+import com.newadmin.democore.util.validate.ValidationUtils;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;

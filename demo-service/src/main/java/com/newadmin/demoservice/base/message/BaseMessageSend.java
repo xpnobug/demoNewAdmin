@@ -2,8 +2,8 @@ package com.newadmin.demoservice.base.message;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
-import com.newadmin.demoservice.config.core.autoconfigure.project.ProjectProperties;
-import com.newadmin.demoservice.config.core.utils.CheckUtils;
+import com.newadmin.democore.project.ProjectProperties;
+import com.newadmin.democore.util.validate.CheckUtils;
 import com.newadmin.demoservice.config.websocket.util.WebSocketUtils;
 import com.newadmin.demoservice.mainPro.comment.entity.ReaiComment;
 import com.newadmin.demoservice.mainPro.ltpro.common.enums.MessageTemplateEnum;

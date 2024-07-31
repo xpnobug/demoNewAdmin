@@ -1,7 +1,7 @@
 package com.newadmin.demoservice.base.controller;
 
 import cn.hutool.extra.servlet.JakartaServletUtil;
-import com.newadmin.democommon.web.json.JsonObject;
+import com.newadmin.democore.kduck.web.json.JsonObject;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

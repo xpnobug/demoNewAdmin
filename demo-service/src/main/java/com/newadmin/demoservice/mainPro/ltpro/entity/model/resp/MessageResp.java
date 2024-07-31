@@ -1,6 +1,6 @@
 package com.newadmin.demoservice.mainPro.ltpro.entity.model.resp;
 
-import com.newadmin.democommon.service.ValueMap;
+import com.newadmin.democore.kduck.service.ValueMap;
 import com.newadmin.demoservice.mainPro.ltpro.common.enums.MessageTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Date;
