@@ -151,22 +151,7 @@ public class ReaiUsersServiceImpl extends DefaultService implements
     public ReaiUsers updateUserInfo(ReaiUsers user) {
         // 更新用户信息
         ReaiUsers userInfo = new ReaiUsers();
-        userInfo.setUserId(user.getUserId());
-        if (!user.getUsername().isEmpty()) {
-            userInfo.setUsername(user.getUsername());
-        }
-
-        if (!user.getEmail().isEmpty()) {
-            userInfo.setEmail(user.getEmail());
-        }
-
-        if (!user.getAvatar().isEmpty()) {
-            userInfo.setAvatar(user.getAvatar());
-        }
-
-        if (!user.getUserCover().isEmpty()) {
-            userInfo.setUserCover(user.getUserCover());
-        }
+        BeanUtils.copyProperties(user, userInfo);
         super.update(TABLE_NAME, userInfo);
         return user;
     }
