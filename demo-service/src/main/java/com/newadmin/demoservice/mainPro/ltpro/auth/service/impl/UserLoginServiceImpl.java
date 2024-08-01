@@ -8,6 +8,7 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.extra.servlet.JakartaServletUtil;
 import cn.hutool.json.JSONUtil;
+import com.alibaba.excel.util.StringUtils;
 import com.newadmin.democonfig.redisCommon.util.RedisUtils;
 import com.newadmin.democore.kduck.service.DefaultService;
 import com.newadmin.democore.util.ExceptionUtils;
@@ -146,18 +147,18 @@ public class UserLoginServiceImpl extends DefaultService implements LoginService
     public String socialLogin(AuthUser authUser) {
         String source = authUser.getSource();
         String openId = authUser.getUuid();
+        String username = authUser.getUsername();
+        String nickname = authUser.getNickname();
         UserSocialDO userSocial = userSocialService.getBySourceAndOpenId(source, openId);
         ReaiUsers user;
         if (null == userSocial) {
-            String username = authUser.getUsername();
-            String nickname = authUser.getNickname();
             ReaiUsers existsUser = userService.getByUsername(username);
-            String randomStr = RandomUtil.randomString(RandomUtil.BASE_CHAR, 5);
+            String randomStr = RandomUtil.randomString(RandomUtil.BASE_CHAR, 1);
             if (null != existsUser || !ReUtil.isMatch(RegexConstants.USERNAME, username)) {
-                username = randomStr + IdUtil.fastSimpleUUID();
+                username = randomStr;
             }
             if (!ReUtil.isMatch(RegexConstants.GENERAL_NAME, nickname)) {
-                nickname = source.toLowerCase() + randomStr;
+                nickname = randomStr;
             }
             user = new ReaiUsers();
             user.setUsername(username);
@@ -176,6 +177,9 @@ public class UserLoginServiceImpl extends DefaultService implements LoginService
         } else {
             user = BeanUtil.copyProperties(userService.getUserById(userSocial.getUserId()),
                 ReaiUsers.class);
+            if (!StringUtils.isEmpty(nickname)) {
+                user.setNickName(nickname);
+            }
         }
         this.checkUserStatus(user);
         userSocial.setMetaJson(JSONUtil.toJsonStr(authUser));
