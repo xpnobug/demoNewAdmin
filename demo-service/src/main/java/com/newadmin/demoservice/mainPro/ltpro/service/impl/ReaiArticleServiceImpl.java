@@ -28,9 +28,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -286,7 +289,7 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
     }
 
     private void extracted(String userId, List<ReaiArticle> articleList) {
-        if (!Objects.equals(userId, "null")) {
+        if (!Objects.equals(userId, "null") && userId != null) {
             //获取用户id
             ReaiUsers users = usersService.getUserById(userId);
             List<String> idList = new ArrayList<>();
@@ -294,7 +297,7 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
             //获取用户信息
             articleList.forEach(item -> {
                 idList.add(item.getArticleId());
-                item.setAuthor(users.getUsername());
+                item.setAuthor(users.getNickName());
                 item.setAvatar(users.getAvatar());
                 item.setExp(users.getExp());
                 item.setLevel(users.getLevel());
@@ -302,62 +305,78 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
             getMediaInfo(userId, articleList, idList);
         }
         List<String> articleIds = new ArrayList<>();
-        List<String> userIds = new ArrayList<>();
-        List<ReaiUsers> usersList = usersService.usersListById(userIds);
-        //获取用户信息
+        Set<String> userIds = new HashSet<>();
+
+        // 填充 userIds 和 articleIds
         articleList.forEach(item -> {
             userIds.add(item.getUserId());
             articleIds.add(item.getArticleId());
-            //获取用户信息
-            ReaiUsers users = usersList.stream().filter(
-                    user -> user.getUserId().equals(item.getUserId()))
-                .findFirst().orElse(null);
-            item.setAuthor(users.getUsername());
-            item.setAvatar(users.getAvatar());
-            item.setExp(users.getExp());
-            item.setLevel(users.getLevel());
+        });
+
+        // 使用 userIds 获取用户信息
+        List<ReaiUsers> usersList = usersService.usersListById(new ArrayList<>(userIds));
+
+        // 创建 userId 到用户信息的映射
+        Map<String, ReaiUsers> userMap = usersList.stream()
+            .collect(Collectors.toMap(ReaiUsers::getUserId, Function.identity()));
+
+        // 填充文章的作者信息
+        articleList.forEach(item -> {
+            ReaiUsers users = userMap.get(item.getUserId());
+            if (users != null) {
+                item.setAuthor(users.getNickName());
+                item.setAvatar(users.getAvatar());
+                item.setExp(users.getExp());
+                item.setLevel(users.getLevel());
+            }
         });
         //获取媒体信息
         getMediaInfo(userId, articleList, articleIds);
-
     }
 
     private void getMediaInfo(String userId, List<ReaiArticle> articleList, List<String> idList) {
-        //获取图片
+        // 获取所有文章相关的文件（图片和视频）
         List<File> fileList = fileService.getFileListById(idList);
+
+        // 为每篇文章设置图片列表
         articleList.forEach(item -> {
-            //判断文章id 是否一致
-            item.setImgList(
-                fileList.stream().filter(
-                        file -> file.getArticleId().equals(item.getArticleId())
-                            && file.getFileType() != null && file.getFileType()
-                            .equals("image"))
-                    .map(File::getSrc).collect(Collectors.toList()));
+            List<String> imgList = fileList.stream()
+                .filter(file -> file.getArticleId().equals(item.getArticleId())
+                    && "image".equals(file.getFileType()))
+                .map(File::getSrc)
+                .collect(Collectors.toList());
+            item.setImgList(imgList);
         });
-        //获取音乐
+
+        // 获取所有文章相关的音乐
         List<ReaiMusic> musicList = songService.songListById(null, idList);
+
+        // 为每篇文章设置音乐列表
         articleList.forEach(item -> {
-            //判断文章id 否一致
-            item.put("musicList", musicList.stream()
-                .filter(music -> music.getArticleId().equals(item.getArticleId())));
-        });
-        //获取视频
-        articleList.forEach(item -> {
-            item.put("videoList", fileList.stream().filter(
-                    file -> file.getArticleId().equals(item.getArticleId())
-                        && file.getFileType() != null && file.getFileType()
-                        .equals("video"))
-                .map(File::getSrc).collect(Collectors.toList()));
+            List<ReaiMusic> itemMusicList = musicList.stream()
+                .filter(music -> music.getArticleId().equals(item.getArticleId()))
+                .collect(Collectors.toList());
+            item.put("musicList", itemMusicList);
         });
 
-        //获取点赞信息
-//        List<ReaiLikes> likesByIds = likesService.getLikesByIds(userId, idList.toString());
-//        articleList.forEach(item -> {
-//            item.put("likesList", likesByIds.stream().filter(
-//                    likes -> likes.getArticleId().equals(item.getArticleId()))
-//                .collect(Collectors.toList()));
-//        });
+        // 为每篇文章设置视频列表
+        articleList.forEach(item -> {
+            List<String> videoList = fileList.stream()
+                .filter(file -> file.getArticleId().equals(item.getArticleId())
+                    && "video".equals(file.getFileType()))
+                .map(File::getSrc)
+                .collect(Collectors.toList());
+            item.put("videoList", videoList);
+        });
 
+        // 获取点赞信息（注释掉的代码，启用时根据需要取消注释）
+//    List<ReaiLikes> likesByIds = likesService.getLikesByIds(userId, idList.toString());
+//    articleList.forEach(item -> {
+//        List<ReaiLikes> itemLikesList = likesByIds.stream()
+//            .filter(likes -> likes.getArticleId().equals(item.getArticleId()))
+//            .collect(Collectors.toList());
+//        item.put("likesList", itemLikesList);
+//    });
     }
 
     @Override
@@ -405,39 +424,47 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
 
     @Override
     public JsonObject deleteArticle(String id) {
-        //根据id获取音乐列表
+        // 根据文章ID获取相关的音乐列表
         List<ReaiMusic> musicList = songService.songListById(null, Collections.singletonList(id));
-        //根据id获取文件列表
+
+        // 根据文章ID获取相关的文件列表
         List<File> fileList = fileService.getFileListById(Collections.singletonList(id));
-        //根据id获取点赞信息
+
+        // 根据文章ID获取相关的点赞信息
         List<ReaiLikes> likesByIdsList = getLikesByIds(null, id);
 
+        // 如果存在点赞信息，进行删除
         if (!likesByIdsList.isEmpty()) {
-            // 删除点赞信息
-            String[] articleIdsArray = likesByIdsList.stream().distinct()
+            // 提取所有点赞记录中的文章ID并去重
+            String[] articleIdsArray = likesByIdsList.stream()
                 .map(ReaiLikes::getArticleId)
+                .distinct()
                 .toArray(String[]::new);
-            // 调用 deleteLikes 方法删除点赞信息
+
+            // 删除所有关联的点赞信息
             deleteLikes(articleIdsArray);
         }
-        //如果音乐列表不为空
+
+        // 如果存在关联的音乐记录，进行删除
         if (!musicList.isEmpty()) {
-            //获取id
-            musicList.stream().map(ReaiMusic::getSid).forEach(
-                songService::deleteSong
-            );
+            // 删除所有关联的音乐记录
+            musicList.stream()
+                .map(ReaiMusic::getSid)
+                .forEach(songService::deleteSong);
         }
 
-        //如果文件列表不为空
+        // 如果存在关联的文件记录，进行删除
         if (!fileList.isEmpty()) {
-            //获取id
-            fileList.stream().map(File::getId).forEach(
-                fileService::delectFile
-            );
+            // 删除所有关联的文件记录
+            fileList.stream()
+                .map(File::getId)
+                .forEach(fileService::delectFile);
         }
 
-        //根据id删除文章
+        // 删除文章记录
         super.delete(TABLE_NAME, ReaiArticle.ARTICLE_ID, new String[]{id});
+
+        // 返回删除操作的结果
         return null;
     }
 
