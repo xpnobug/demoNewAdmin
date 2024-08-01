@@ -102,7 +102,7 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
                     .filter(item -> item.getUserId().equals(users.getUserId()))
                     .findFirst().orElse(null);
                 if (user != null) {
-                    users.setAuthor(user.getUsername());
+                    users.setAuthor(user.getNickName());
                     users.setAvatar(user.getAvatar());
                 }
             });
@@ -156,7 +156,7 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
         ReaiUsers user = super.getForBean(ReaiUsersServiceImpl.TABLE_NAME, "userId",
             article.getUserId(),
             ReaiUsers::new);
-        article.setAuthor(user.getUsername());
+        article.setAuthor(user.getNickName());
         article.setAvatar(user.getAvatar());
         article.setExp(user.getExp());
         //获取图片
