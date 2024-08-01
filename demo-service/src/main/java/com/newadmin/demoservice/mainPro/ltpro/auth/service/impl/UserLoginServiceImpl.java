@@ -153,7 +153,7 @@ public class UserLoginServiceImpl extends DefaultService implements LoginService
         ReaiUsers user;
         if (null == userSocial) {
             ReaiUsers existsUser = userService.getByUsername(username);
-            String randomStr = RandomUtil.randomString(RandomUtil.BASE_CHAR, 1);
+            String randomStr = RandomUtil.randomString(RandomUtil.BASE_CHAR_NUMBER_LOWER, 5);
             if (null != existsUser || !ReUtil.isMatch(RegexConstants.USERNAME, username)) {
                 username = randomStr;
             }
@@ -180,6 +180,7 @@ public class UserLoginServiceImpl extends DefaultService implements LoginService
             if (!StringUtils.isEmpty(nickname)) {
                 user.setNickName(nickname);
             }
+            userService.updateUserInfo(user);
         }
         this.checkUserStatus(user);
         userSocial.setMetaJson(JSONUtil.toJsonStr(authUser));
