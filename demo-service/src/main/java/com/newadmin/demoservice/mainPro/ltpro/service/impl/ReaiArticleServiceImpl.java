@@ -260,10 +260,11 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
             //筛选发布版块为朋友圈的文章
             extracted(userId, articleList);
             return articleList;
+        } else {
+            List<ReaiArticle> articleList = friendArticleList(page, userId);
+            extracted(userId, articleList);
+            return articleList;
         }
-        List<ReaiArticle> articleList = friendArticleList(page, userId);
-        extracted(userId, articleList);
-        return articleList;
     }
 
     @NotNull
