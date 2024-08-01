@@ -88,11 +88,12 @@ public class ReaiChannelServiceImpl extends DefaultService implements ReaiChanne
             // 设置成员数量
             channelQuery.setMemberCount(currentChannelFollows.size());
 
-            // 获取当前登录人
-            SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
             boolean isJoined = false; // 默认值为false
-
-            if (tokenInfo != null) {
+            //是否登录
+            boolean login = StpUtil.isLogin();
+            if (login) {
+                // 获取当前登录人
+                SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
                 String currentUserId = tokenInfo.getLoginId().toString();
                 // 判断当前用户是否已加入版块
                 isJoined = currentChannelFollows.stream()
