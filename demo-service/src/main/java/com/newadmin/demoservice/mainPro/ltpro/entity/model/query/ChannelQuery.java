@@ -43,4 +43,9 @@ public class ChannelQuery {
 
     private List<UserInfoResp> userList;
 
+    @Schema(description = "是否置顶", example = "1")
+    private Integer isTop;
+
+    @Schema(description = "是否已加入", example = "1")
+    private Boolean isJoin;
 }

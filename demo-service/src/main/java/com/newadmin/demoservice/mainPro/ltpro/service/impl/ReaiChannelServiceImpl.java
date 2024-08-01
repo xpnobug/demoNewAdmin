@@ -1,5 +1,7 @@
 package com.newadmin.demoservice.mainPro.ltpro.service.impl;
 
+import cn.dev33.satoken.stp.SaTokenInfo;
+import cn.dev33.satoken.stp.StpUtil;
 import com.newadmin.democore.kduck.service.DefaultService;
 import com.newadmin.democore.kduck.service.ValueMap;
 import com.newadmin.democore.kduck.sqlbuild.ConditionBuilder.ConditionType;
@@ -77,19 +79,31 @@ public class ReaiChannelServiceImpl extends DefaultService implements ReaiChanne
         for (ReaiChannel reaiChannel : channelList) {
             ChannelQuery channelQuery = new ChannelQuery();
             BeanUtils.copyProperties(reaiChannel, channelQuery);
-            if (followList.stream()
-                .anyMatch(follow -> follow.getFollowChannelId().equals(reaiChannel.getId()))) {
-                channelQuery.setMemberCount(userIdList.size());
-            }
-            channelQueryList.add(channelQuery);
-        }
 
-        // 将用户信息添加到相应的ChannelQuery对象中
-        for (ChannelQuery channelQuery : channelQueryList) {
+            // 获取当前版块的关注记录
+            List<ReaiFollow> currentChannelFollows = followList.stream()
+                .filter(follow -> follow.getFollowChannelId().equals(reaiChannel.getId()))
+                .collect(Collectors.toList());
+
+            // 设置成员数量
+            channelQuery.setMemberCount(currentChannelFollows.size());
+
+            // 获取当前登录人
+            SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
+            boolean isJoined = false; // 默认值为false
+
+            if (tokenInfo != null) {
+                String currentUserId = tokenInfo.getLoginId().toString();
+                // 判断当前用户是否已加入版块
+                isJoined = currentChannelFollows.stream()
+                    .anyMatch(follow -> follow.getUserId().equals(currentUserId));
+            }
+            channelQuery.setIsJoin(isJoined);
+
+            // 将用户信息添加到ChannelQuery对象中
             List<UserInfoResp> userInfoRespList = userList.stream()
-                .filter(user -> followList.stream()
-                    .anyMatch(follow -> follow.getFollowChannelId().equals(channelQuery.getId())
-                        && follow.getUserId().equals(user.getUserId())))
+                .filter(user -> currentChannelFollows.stream()
+                    .anyMatch(follow -> follow.getUserId().equals(user.getUserId())))
                 .map(user -> {
                     UserInfoResp userInfoResp = new UserInfoResp();
                     BeanUtils.copyProperties(user, userInfoResp);
@@ -97,12 +111,14 @@ public class ReaiChannelServiceImpl extends DefaultService implements ReaiChanne
                 })
                 .collect(Collectors.toList());
 
-            // 将用户列表添加到ChannelQuery对象中
             channelQuery.setUserList(userInfoRespList);
+
+            channelQueryList.add(channelQuery);
         }
 
         return channelQueryList;
     }
+
 
     /**
      * 根据是否是官方版块 获取版块列表 1:官方版块 2：用户版块
@@ -186,5 +202,26 @@ public class ReaiChannelServiceImpl extends DefaultService implements ReaiChanne
         reaiFollowService.add(follow);
         // 返回保存后的对象
         return reaiChannel;
+    }
+
+    @Override
+    public boolean joinChannel(ReaiChannel channel) {
+        if (channel == null) {
+            return false;
+        }
+        ReaiFollow follow = new ReaiFollow();
+        follow.setUserId(channel.getCreator());
+        follow.setFollowChannelId(channel.getId());
+        reaiFollowService.add(follow);
+        return true;
+    }
+
+    @Override
+    public boolean quitChannel(String id) {
+        if (id == null) {
+            return false;
+        }
+        reaiFollowService.quitFollow(id);
+        return true;
     }
 }

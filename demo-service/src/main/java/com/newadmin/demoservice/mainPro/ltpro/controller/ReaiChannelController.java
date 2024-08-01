@@ -9,11 +9,13 @@ import com.newadmin.demoservice.mainPro.ltpro.service.ReaiChannelService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -72,6 +74,18 @@ public class ReaiChannelController {
     @PostMapping("/add")
     public JsonObject insert(@RequestBody ReaiChannel reaiChannel) {
         return new JsonObject(reaiChannelService.save(reaiChannel));
+    }
+
+    @Operation(summary = "加入频道", description = "加入频道")
+    @PostMapping("/join")
+    public JsonObject join(@RequestBody ReaiChannel reaiChannel) {
+        return new JsonObject(reaiChannelService.joinChannel(reaiChannel));
+    }
+
+    @Operation(summary = "退出频道", description = "退出频道")
+    @DeleteMapping("/quit")
+    public JsonObject quit(@RequestParam String id) {
+        return new JsonObject(reaiChannelService.quitChannel(id));
     }
 
 }

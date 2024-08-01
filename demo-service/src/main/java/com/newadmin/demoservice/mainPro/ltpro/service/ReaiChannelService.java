@@ -27,4 +27,8 @@ public interface ReaiChannelService {
     Object getById(String id);
 
     ReaiChannel save(ReaiChannel reaiChannel);
+
+    boolean joinChannel(ReaiChannel channel);
+
+    boolean quitChannel(String id);
 }

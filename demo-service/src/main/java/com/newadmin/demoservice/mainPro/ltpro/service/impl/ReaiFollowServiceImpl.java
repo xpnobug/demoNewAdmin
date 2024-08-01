@@ -11,6 +11,7 @@ import com.newadmin.demoservice.mainPro.ltpro.service.ReaiFollowService;
 import java.util.Date;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 /**
  * <p>
@@ -29,6 +30,7 @@ public class ReaiFollowServiceImpl extends DefaultService implements ReaiFollowS
     public String add(ReaiFollow reaiFollow) {
         //获取当前登录的用户信息
         SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
+        Assert.notNull(tokenInfo.loginId, "请先登录");
         String userId = tokenInfo.loginId.toString();
         reaiFollow.setUserId(userId);
         reaiFollow.setFollowTime(new Date());
@@ -39,6 +41,7 @@ public class ReaiFollowServiceImpl extends DefaultService implements ReaiFollowS
     public String delById(String id) {
         //获取当前登录的用户信息
         SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
+        Assert.notNull(tokenInfo.loginId, "请先登录");
         String userId = tokenInfo.loginId.toString();
         //根据userid 查询关注列表
         List<ReaiFollow> list = getFollowList(userId, null);
@@ -49,6 +52,36 @@ public class ReaiFollowServiceImpl extends DefaultService implements ReaiFollowS
             }
         });
         return null;
+    }
+
+    @Override
+    public String quitFollow(String channelId) {
+        //获取当前登录的用户信息
+        SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
+        Assert.notNull(tokenInfo.loginId, "请先登录");
+        String userId = tokenInfo.loginId.toString();
+        //根据userid 查询关注列表
+        List<ReaiFollow> list = getFlowChannelList(userId, channelId);
+        // 传入的是关注的用户id，根据这个id 去和 list 比较，如果list中存在，就删除
+        list.forEach(follow -> {
+            if (follow.getFollowChannelId().equals(channelId)) {
+                super.delete(TABLE_NAME, new String[]{follow.getId()});
+            }
+        });
+        return null;
+    }
+
+    public List<ReaiFollow> getFlowChannelList(String userId, String channelId) {
+        ValueMap params = new ValueMap();
+        params.put(ReaiFollow.USER_ID, userId);
+        params.put(ReaiFollow.FOLLOW_CHANNEL_ID, channelId);
+        SelectBuilder selectBuilder = new SelectBuilder(params);
+        selectBuilder.from("", super.getEntityDef(TABLE_NAME));
+        selectBuilder.from("", super.getEntityDef(TABLE_NAME))
+            .where()
+            .and("user_id", ConditionType.EQUALS, ReaiFollow.USER_ID)
+            .and("follow_channel_id", ConditionType.EQUALS, ReaiFollow.FOLLOW_CHANNEL_ID);
+        return super.listForBean(selectBuilder.build(), null, ReaiFollow::new);
     }
 
     /**
