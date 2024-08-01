@@ -1,12 +1,13 @@
-package com.newadmin.demoservice.mainPro.ltpro.vo;
+package com.newadmin.demoservice.mainPro.ltpro.entity.model.query;
 
+import com.newadmin.demoservice.mainPro.ltpro.vo.Statistics;
 import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class ReaiUsersVo {
+public class UserInfoQuery {
 
     /**
      * 用户ID，主键，唯一标识用户
@@ -80,5 +81,7 @@ public class ReaiUsersVo {
      * 关注数
      */
     private Integer followCount;
+
+    private Statistics statistics;
 
 }

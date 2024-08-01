@@ -114,6 +114,7 @@ sa-token.extension:
     - /recommend/**
     - /channel/**
     - /message/**
+    - /statistics/**
 
 reai:
   show-sql:

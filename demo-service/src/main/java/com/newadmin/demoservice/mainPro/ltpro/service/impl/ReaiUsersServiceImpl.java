@@ -10,14 +10,15 @@ import com.newadmin.democore.kduck.service.ValueMap;
 import com.newadmin.democore.kduck.sqlbuild.ConditionBuilder.ConditionType;
 import com.newadmin.democore.kduck.sqlbuild.SelectBuilder;
 import com.newadmin.democore.kduck.utils.Page;
-import com.newadmin.demoservice.mainPro.ltpro.auth.model.resp.UserInfoResp;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiFollow;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiUsers;
+import com.newadmin.demoservice.mainPro.ltpro.entity.model.query.UserInfoQuery;
 import com.newadmin.demoservice.mainPro.ltpro.query.UserQuery;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiArticleService;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiFollowService;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiLogService;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiUsersService;
+import com.newadmin.demoservice.mainPro.ltpro.vo.ReaiUsersVo;
 import com.newadmin.demoservice.mainPro.ltpro.vo.Statistics;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -79,6 +80,7 @@ public class ReaiUsersServiceImpl extends DefaultService implements
     }
 
     /**
+     *
      */
     @Override
     public ReaiUsers register(ReaiUsers user) {
@@ -170,9 +172,10 @@ public class ReaiUsersServiceImpl extends DefaultService implements
     }
 
     @Override
-    public List<ReaiUsers> pageList(Page page) {
+    public List<UserInfoQuery> pageList(Page page) {
         //获取所有注册的用户
         List<ReaiUsers> reaiUsers = this.usersList(page);
+        List<UserInfoQuery> queryList = new ArrayList<>();
         //是否登录
         boolean login = StpUtil.isLogin();
         if (login) {
@@ -183,28 +186,39 @@ public class ReaiUsersServiceImpl extends DefaultService implements
             // 获取当前用户关注的用户列表
             List<ReaiFollow> followList = followService.getFollowList(userId, null);
 
-            // 获取统计的数量
-            Statistics statistics = this.getStatistics(userId);
-
             // 排除当前登录的自己
             reaiUsers.removeIf(user -> user.getUserId().equals(userId));
             // 对比reaiUsers 中userid 和 followList 中 followUserId是否一致
-            reaiUsers.forEach(user -> {
+            reaiUsers.stream().forEach(reaiUser -> {
+                UserInfoQuery userInfoQuery = new UserInfoQuery();
+                BeanUtils.copyProperties(reaiUser, userInfoQuery);
+                queryList.add(userInfoQuery);
+            });
+
+            queryList.forEach(user -> {
                 // 判断当前用户是否关注了该用户
                 boolean isFollow = followList.stream()
                     .anyMatch(follow -> follow.getFollowUserId().equals(user.getUserId()));
+                // 获取统计的数量
+                Statistics statistics = this.getStatistics(user.getUserId());
                 // 设置关注状态
                 user.setIsFollow(isFollow);
                 user.setStatistics(statistics);
             });
+        } else {
+
+            reaiUsers.stream().forEach(reaiUser -> {
+                UserInfoQuery userInfoQuery = new UserInfoQuery();
+                BeanUtils.copyProperties(reaiUser, userInfoQuery);
+                queryList.add(userInfoQuery);
+            });
+            queryList.forEach(user -> {
+                // 获取统计的数量
+                Statistics statistics = this.getStatistics(user.getUserId());
+                user.setStatistics(statistics);
+            });
         }
-        List<String> ids = reaiUsers.stream().map(ReaiUsers::getUserId).toList();
-        reaiUsers.forEach(user -> {
-            // 获取统计的数量
-            Statistics statistics = this.getStatistics(user.getUserId());
-            user.setStatistics(statistics);
-        });
-        return reaiUsers;
+        return queryList;
     }
 
     @Override
@@ -254,7 +268,7 @@ public class ReaiUsersServiceImpl extends DefaultService implements
     }
 
     @Override
-    public UserInfoResp getUser(Serializable id) {
+    public ReaiUsersVo getUser(Serializable id) {
         ReaiUsers reaiUsers = usersById(String.valueOf(id));
         // 获取当前登录的用户信息
         SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
@@ -271,7 +285,7 @@ public class ReaiUsersServiceImpl extends DefaultService implements
                 reaiUsers.setIsFollow(isFollow);
             }
         }
-        UserInfoResp userInfoResp = new UserInfoResp();
+        ReaiUsersVo userInfoResp = new ReaiUsersVo();
         if (reaiUsers != null) {
             BeanUtils.copyProperties(reaiUsers, userInfoResp);
         }

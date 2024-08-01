@@ -1,8 +1,9 @@
 package com.newadmin.demoservice.mainPro.ltpro.service;
 
 import com.newadmin.democore.kduck.utils.Page;
-import com.newadmin.demoservice.mainPro.ltpro.auth.model.resp.UserInfoResp;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiUsers;
+import com.newadmin.demoservice.mainPro.ltpro.entity.model.query.UserInfoQuery;
+import com.newadmin.demoservice.mainPro.ltpro.vo.ReaiUsersVo;
 import java.io.Serializable;
 import java.util.List;
 
@@ -44,13 +45,13 @@ public interface ReaiUsersService {
      * @param page
      * @return
      */
-    List<ReaiUsers> pageList(Page page);
+    List<UserInfoQuery> pageList(Page page);
 
     List<ReaiUsers> getFollowListById(String id);
 
     ReaiUsers getUserById(Serializable id);
 
-    UserInfoResp getUser(Serializable id);
+    ReaiUsersVo getUser(Serializable id);
     /**
      * 根据用户名查询
      *

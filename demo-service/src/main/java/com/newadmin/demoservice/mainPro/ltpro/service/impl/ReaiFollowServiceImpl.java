@@ -45,7 +45,7 @@ public class ReaiFollowServiceImpl extends DefaultService implements ReaiFollowS
         // 传入的是关注的用户id，根据这个id 去和 list 比较，如果list中存在，就删除
         list.forEach(follow -> {
             if (follow.getFollowUserId().equals(id)) {
-                super.delete(TABLE_NAME, "followUserId", new String[]{follow.getId()});
+                super.delete(TABLE_NAME, new String[]{follow.getId()});
             }
         });
         return null;
