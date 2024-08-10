@@ -13,6 +13,6 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         // 注册 WebSocket 处理程序，并设置 WebSocket 端点为 /websocket，允许所有来源
-        registry.addHandler(new MyWebSocketHandler(), "/websockets").setAllowedOrigins("*");
+        registry.addHandler(new MyWebSocketHandler(), "/websockets/").setAllowedOrigins("*");
     }
 }
