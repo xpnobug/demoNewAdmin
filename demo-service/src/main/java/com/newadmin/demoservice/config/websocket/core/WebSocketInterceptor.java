@@ -1,10 +1,8 @@
 package com.newadmin.demoservice.config.websocket.core;
 
 import com.newadmin.demoservice.config.websocket.autoconfigure.WebSocketProperties;
-import java.util.Map;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
-import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
 
@@ -26,18 +24,18 @@ public class WebSocketInterceptor extends HttpSessionHandshakeInterceptor {
     }
 
     // 在握手之前进行处理
-    @Override
-    public boolean beforeHandshake(ServerHttpRequest request,
-        ServerHttpResponse response,
-        WebSocketHandler wsHandler,
-        Map<String, Object> attributes) {
-        // 获取客户端 ID
-        String clientId = webSocketClientService.getClientId((ServletServerHttpRequest) request);
-        // 将客户端 ID 放入属性中
-        attributes.put(webSocketProperties.getClientIdKey(), clientId);
-        // 返回 true 表示继续握手
-        return true;
-    }
+//    @Override
+//    public boolean beforeHandshake(ServerHttpRequest request,
+//        ServerHttpResponse response,
+//        WebSocketHandler wsHandler,
+//        Map<String, Object> attributes) {
+//        // 获取客户端 ID
+//        String clientId = webSocketClientService.getClientId((ServletServerHttpRequest) request);
+//        // 将客户端 ID 放入属性中
+//        attributes.put(webSocketProperties.getClientIdKey(), clientId);
+//        // 返回 true 表示继续握手
+//        return true;
+//    }
 
     // 在握手之后进行处理
     @Override

@@ -37,4 +37,22 @@ public class UploadController {
         req.setDownloadUrl(upload.getDownloadUrl());
         return new JsonObject(upload);
     }
+
+    /**
+     * @param file 文件
+     * @Description 上传文件
+     */
+    @Operation(summary = "上传文件", description = "上传文件")
+    @PostMapping("/upload")
+    public JsonObject upload(@RequestParam("formDate") MultipartFile file) {
+        //上传文件
+        OssReq req = new OssReq();
+        req.setFileName(file.getOriginalFilename());
+        req.setFilePath(file.getContentType());
+        req.setUid("1");
+        req.setAutoPath(true);
+        OssResp upload = baseUploadService.upload(file, req);
+        req.setDownloadUrl(upload.getDownloadUrl());
+        return new JsonObject(upload);
+    }
 }

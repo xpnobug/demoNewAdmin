@@ -6,6 +6,7 @@ import com.newadmin.demoservice.config.websocket.core.WebSocketClientService;
 import com.newadmin.demoservice.config.websocket.core.WebSocketInterceptor;
 import com.newadmin.demoservice.config.websocket.dao.WebSocketSessionDao;
 import com.newadmin.demoservice.config.websocket.dao.WebSocketSessionDaoDefaultImpl;
+import com.newadmin.demoservice.mainPro.livepro.service.impl.SocketLiveImpl;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +50,7 @@ public class WebSocketAutoConfiguration {
     public WebSocketHandler webSocketHandler() {
         return new com.newadmin.demoservice.config.websocket.core.WebSocketHandler(properties,
             SpringUtil
-                .getBean(WebSocketSessionDao.class));
+                .getBean(WebSocketSessionDao.class), SpringUtil.getBean(SocketLiveImpl.class));
     }
 
     @Bean
