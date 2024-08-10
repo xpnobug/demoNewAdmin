@@ -324,4 +324,14 @@ public class ReaiUsersServiceImpl extends DefaultService implements
         return statistics;
     }
 
+    @Override
+    public ReaiUsers getUserInfo(String userId) {
+        ValueMap paramMap = new ValueMap();
+        paramMap.put(ReaiUsers.USER_ID, userId);
+        SelectBuilder selectBuilder = new SelectBuilder(paramMap);
+        selectBuilder.from("", super.getEntityDef(TABLE_NAME)).where()
+            .and("user_id", ConditionType.EQUALS, ReaiUsers.USER_ID);
+        return super.getForBean(selectBuilder.build(), null, ReaiUsers::new);
+    }
+
 }

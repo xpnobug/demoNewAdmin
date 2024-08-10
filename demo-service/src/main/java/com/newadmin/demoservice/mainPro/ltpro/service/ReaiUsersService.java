@@ -75,4 +75,6 @@ public interface ReaiUsersService {
      * @return 用户信息
      */
     ReaiUsers getByEmail(String email);
+
+    ReaiUsers getUserInfo(String userId);
 }

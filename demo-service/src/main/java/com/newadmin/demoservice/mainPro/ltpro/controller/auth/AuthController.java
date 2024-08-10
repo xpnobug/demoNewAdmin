@@ -2,6 +2,7 @@ package com.newadmin.demoservice.mainPro.ltpro.controller.auth;
 
 import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.bean.BeanUtil;
 import com.newadmin.democonfig.redisCommon.util.RedisUtils;
 import com.newadmin.democore.kduck.web.json.JsonObject;
 import com.newadmin.democore.util.validate.ValidationUtils;
@@ -11,7 +12,9 @@ import com.newadmin.demoservice.mainPro.ltpro.auth.model.req.PhoneLoginReq;
 import com.newadmin.demoservice.mainPro.ltpro.auth.model.resp.LoginResp;
 import com.newadmin.demoservice.mainPro.ltpro.auth.service.LoginService;
 import com.newadmin.demoservice.mainPro.ltpro.common.constant.CacheConstants;
-import com.newadmin.demoservice.mainPro.nas.service.UserService;
+import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiUsers;
+import com.newadmin.demoservice.mainPro.ltpro.entity.model.query.UserInfoQuery;
+import com.newadmin.demoservice.mainPro.ltpro.service.ReaiUsersService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -19,6 +22,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +40,7 @@ public class AuthController {
     private static final String CAPTCHA_EXPIRED = "验证码已失效";
     private static final String CAPTCHA_ERROR = "验证码错误";
     private final LoginService loginService;
-    private final UserService userService;
+    private final ReaiUsersService userService;
 
     /**
      * 账户登录 注解 @SaIgnore 表示该方法不需要认证 注解 @Operation 用于描述接口的操作信息，这里定义了接口的摘要和描述 注解 @PostMapping 指定该方法处理
@@ -125,6 +129,18 @@ public class AuthController {
         Object loginId = StpUtil.getLoginId(-1L);
         StpUtil.logout();
         return new JsonObject(loginId);
+    }
+
+    @Operation(summary = "获取用户信息", description = "获取当前登录用户的信息")
+    @Parameter(name = "Authorization", description = "令牌", required = true, example = "Bearer xxxx-xxxx-xxxx-xxxx", in = ParameterIn.HEADER)
+    @GetMapping("/user/info")
+    public JsonObject getUserInfo() {
+        // 获取当前登录用户的ID
+        String userId = StpUtil.getLoginIdAsString();
+        // 根据用户ID查询用户信息
+        ReaiUsers users = userService.getUserInfo(userId);
+        UserInfoQuery userInfoResp = BeanUtil.copyProperties(users, UserInfoQuery.class);
+        return new JsonObject(userInfoResp);
     }
 
 }
