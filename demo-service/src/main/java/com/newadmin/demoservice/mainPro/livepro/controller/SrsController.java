@@ -14,6 +14,7 @@ import com.newadmin.demoservice.mainPro.livepro.model.entity.SrsRequestBody;
 import com.newadmin.demoservice.mainPro.livepro.model.entity.UserLiveRoomDO;
 import com.newadmin.demoservice.mainPro.livepro.model.resp.LiveDetailResp;
 import com.newadmin.demoservice.mainPro.livepro.service.LiveService;
+import com.newadmin.demoservice.mainPro.livepro.service.impl.LiveServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
@@ -49,7 +50,6 @@ public class SrsController extends DefaultService {
     private final LiveService liveService;
 
     private static final Logger logger = LogManager.getLogger(SrsController.class);
-
 
     @Operation(summary = "webRtc推流", description = "webRtc推流")
     @PostMapping("/rtcV1Publish")
@@ -208,6 +208,7 @@ public class SrsController extends DefaultService {
         Pattern pattern = Pattern.compile("^roomId_(\\d+)$");
         Matcher matcher = pattern.matcher(roomIdStr);
         String roomId = null;
+        String liveId = null;
         if (matcher.find()) {
             roomId = matcher.group(1);  // 提取数字部分
         }
@@ -220,6 +221,12 @@ public class SrsController extends DefaultService {
             .where()
             .and("live_room_id", ConditionType.EQUALS, UserLiveRoomDO.LIVE_ROOM_ID);
         UserLiveRoomDO userLiveRoom = super.getForBean(selectBuilder.build(), UserLiveRoomDO::new);
+
+        SelectBuilder liveSelectBuilder = new SelectBuilder(params);
+        selectBuilder.from("", super.getEntityDef(LiveServiceImpl.TABLE_NAME))
+            .where()
+            .and("live_room_id", ConditionType.EQUALS, UserLiveRoomDO.LIVE_ROOM_ID);
+        LiveDetailResp liveInfo = super.getForBean(liveSelectBuilder.build(), LiveDetailResp::new);
 
         LiveDetailResp liveDetailResp = new LiveDetailResp();
         liveDetailResp.setUserId(userLiveRoom.getUserId());
@@ -243,7 +250,12 @@ public class SrsController extends DefaultService {
         liveDetailResp.setSrsStreamId(streamId);
         liveDetailResp.put("updatedTime", new Date());
         liveDetailResp.put("createdTime", new Date());
-        String liveId = liveService.add(liveDetailResp);
+        if (liveInfo == null) {
+            liveId = liveService.add(liveDetailResp);
+        } else {
+            liveDetailResp.put("id", liveInfo.getId());
+            super.update(LiveServiceImpl.TABLE_NAME, liveDetailResp);
+        }
         return new JsonObject(liveId, 0,
             "[on_publish] all success, pass");
     }
