@@ -284,7 +284,7 @@ public class SrsController extends DefaultService {
         }
 
         // 获取 WebSocketSession
-        WebSocketSession session = SESSION_DAO.get(clientId);
+        WebSocketSession session = SESSION_DAO.get("66666");
         logger.info("session: {}", session);
         if (session != null && session.isOpen()) {
             logger.info("session is open");
