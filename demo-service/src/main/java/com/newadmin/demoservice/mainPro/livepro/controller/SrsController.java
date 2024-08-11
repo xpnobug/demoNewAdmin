@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.socket.WebSocketSession;
 
 /**
  * srs API
@@ -192,10 +193,12 @@ public class SrsController extends DefaultService {
 
     @Operation(summary = "on_publish", description = "on_publish")
     @PostMapping("/on_publish")
-    public JsonObject onPublish(
+    public JsonObject onPublish(WebSocketSession session,
         @org.springframework.web.bind.annotation.RequestBody PublishRequest request) {
+        // 记录请求日志
         logger.info("on_publish: {}", request);
-        // 从request对象中提取字段
+
+        // 从request对象中提取相关字段
         String serverId = request.getServer_id();
         String serviceId = request.getService_id();
         String action = request.getAction();
@@ -207,18 +210,18 @@ public class SrsController extends DefaultService {
         String stream = request.getStream();
         String param = request.getParam();
         String streamUrl = request.getStream_url();
-        //
         String streamId = request.getStream_id();
-        String roomIdStr = request.getStream().replace(".m3u8", "");
-        Pattern pattern = Pattern.compile("^roomId_(\\d+)$");
-        Matcher matcher = pattern.matcher(roomIdStr);
+
+        // 提取直播房间ID，去除.m3u8后缀并匹配房间ID
+        String roomIdStr = stream.replace(".m3u8", "");
+        Matcher matcher = Pattern.compile("^roomId_(\\d+)$").matcher(roomIdStr);
         String roomId = null;
-        String liveId = null;
         if (matcher.find()) {
-            roomId = matcher.group(1);  // 提取数字部分
+            roomId = matcher.group(1);  // 提取数字部分作为房间ID
         }
         logger.info("liveRoomId: {}", roomId);
-        // 获取当前登录用户的ID
+
+        // 查询当前房间ID的用户直播信息
         ValueMap params = new ValueMap();
         params.put("liveRoomId", roomId);
         SelectBuilder selectBuilder = new SelectBuilder(params);
@@ -233,14 +236,16 @@ public class SrsController extends DefaultService {
             .and("live_room_id", ConditionType.EQUALS, UserLiveRoomDO.LIVE_ROOM_ID);
         LiveDetailResp liveInfo = super.getForBean(liveSelectBuilder.build(), LiveDetailResp::new);
 
+        // 创建并初始化直播详细信息响应对象
         LiveDetailResp liveDetailResp = new LiveDetailResp();
         liveDetailResp.setUserId(userLiveRoom.getUserId());
         liveDetailResp.setLiveRoomId(roomId);
-        liveDetailResp.setSocketId("-1");
-        liveDetailResp.setTrackAudio(1);
-        liveDetailResp.setTrackVideo(1);
+        liveDetailResp.setSocketId("-1"); // 默认Socket ID
+        liveDetailResp.setTrackAudio(1); // 音频轨道设置
+        liveDetailResp.setTrackVideo(1); // 视频轨道设置
         liveDetailResp.setFlagId(clientId);
 
+        // 设置SRS服务器相关信息
         liveDetailResp.setSrsServerId(serverId);
         liveDetailResp.setSrsServiceId(serviceId);
         liveDetailResp.setSrsAction(action);
@@ -253,8 +258,13 @@ public class SrsController extends DefaultService {
         liveDetailResp.setSrsParam(param);
         liveDetailResp.setSrsStreamUrl(streamUrl);
         liveDetailResp.setSrsStreamId(streamId);
+
+        // 设置创建和更新时间
         liveDetailResp.put("updatedTime", new Date());
         liveDetailResp.put("createdTime", new Date());
+
+        String liveId = null;
+        // 如果直播信息不存在，添加新的记录，否则更新现有记录
         if (liveInfo == null) {
             liveId = liveService.add(liveDetailResp);
         } else {
@@ -262,24 +272,27 @@ public class SrsController extends DefaultService {
             super.update(LiveServiceImpl.TABLE_NAME, liveDetailResp);
         }
 
-        LiveRoomDetailResp detail = null; // 获取或缓存房间详细信息
+        // 获取或缓存房间详细信息
+        LiveRoomDetailResp detail = null;
         if (roomId != null) {
             detail = socketLive.getCachedOrFetchRoomDetail(roomId);
         }
+
         // 创建并发送房间正在直播的消息
         ValueMap living = new ValueMap();
-        living.put("anchor_socket_id", ""); // 主播 Socket ID
+        living.put("anchor_socket_id", ""); // 主播的Socket ID
         living.put("live_room", detail); // 房间详细信息
+
         try {
-            String livingJson = OBJECT_MAPPER.writeValueAsString(living); // 转换为 JSON 字符串
-            String roomLiving = "42[\"roomLiving\", " + livingJson + "]"; // 构造消息
-            socketLive.sendMessage(null, roomLiving);
+            String livingJson = OBJECT_MAPPER.writeValueAsString(living); // 转换为JSON字符串
+            String roomLiving = "42[\"roomLiving\", " + livingJson + "]"; // 构造消息内容
+            socketLive.sendMessage(session, roomLiving); // 通过WebSocket发送消息
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e); // 捕获并抛出JSON处理异常
         }
 
-        return new JsonObject(liveId, 0,
-            "[on_publish] all success, pass");
+        // 返回成功响应
+        return new JsonObject(liveId, 0, "[on_publish] all success, pass");
     }
 
 }
