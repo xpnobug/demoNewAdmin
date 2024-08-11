@@ -1,13 +1,17 @@
 package com.newadmin.demoservice.mainPro.livepro.controller;
 
-import cn.dev33.satoken.stp.StpUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.newadmin.democore.kduck.service.DefaultService;
+import com.newadmin.democore.kduck.service.ValueMap;
+import com.newadmin.democore.kduck.sqlbuild.ConditionBuilder.ConditionType;
+import com.newadmin.democore.kduck.sqlbuild.SelectBuilder;
 import com.newadmin.democore.kduck.web.json.JsonObject;
 import com.newadmin.demoservice.config.srs.annotation.SrsProperties;
 import com.newadmin.demoservice.mainPro.livepro.model.entity.PublishRequest;
 import com.newadmin.demoservice.mainPro.livepro.model.entity.SrsRequestBody;
+import com.newadmin.demoservice.mainPro.livepro.model.entity.UserLiveRoomDO;
 import com.newadmin.demoservice.mainPro.livepro.model.resp.LiveDetailResp;
 import com.newadmin.demoservice.mainPro.livepro.service.LiveService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,7 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/srs")
-public class SrsController {
+public class SrsController extends DefaultService {
 
     private final SrsProperties srsProperties;
     private final LiveService liveService;
@@ -180,9 +184,6 @@ public class SrsController {
     public JsonObject onPublish(
         @org.springframework.web.bind.annotation.RequestBody PublishRequest request) {
 
-        // 获取当前登录用户的ID
-        String userId = StpUtil.getLoginIdAsString();
-
         // 从request对象中提取字段
         String serverId = request.getServer_id();
         String serviceId = request.getService_id();
@@ -204,8 +205,17 @@ public class SrsController {
         if (matcher.find()) {
             roomId = matcher.group(1);  // 提取数字部分
         }
+        // 获取当前登录用户的ID
+        ValueMap params = new ValueMap();
+        params.put("liveRoomId", roomId);
+        SelectBuilder selectBuilder = new SelectBuilder(params);
+        selectBuilder.from("", super.getEntityDef("user_live_room"))
+            .where()
+            .and("live_room_id", ConditionType.EQUALS, "liveRoomId");
+        UserLiveRoomDO userLiveRoom = super.getForBean(selectBuilder.build(), UserLiveRoomDO::new);
+
         LiveDetailResp liveDetailResp = new LiveDetailResp();
-        liveDetailResp.setUserId(userId);
+        liveDetailResp.setUserId(userLiveRoom.getUserId());
         liveDetailResp.setLiveRoomId(roomId);
         liveDetailResp.setSocketId("-1");
         liveDetailResp.setFlagId(clientId);
