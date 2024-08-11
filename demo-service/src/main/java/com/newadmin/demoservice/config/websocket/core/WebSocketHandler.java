@@ -42,10 +42,10 @@ public class WebSocketHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message)
         throws Exception {
-//        // 获取客户端 ID
-//        String clientId = this.getClientId(session);
-//        // 日志记录收到的消息
-//        log.info("WebSocket接收消息。clientId: {}, message: {}.", clientId, message.getPayload());
+        // 获取客户端 ID
+        String clientId = this.getClientId(session);
+        // 日志记录收到的消息
+        log.info("WebSocket接收消息。clientId: {}, message: {}.", clientId, message.getPayload());
 
         // 根据消息类型执行不同的处理逻辑
         socketLiveImpl.handleMethod(message, session);
@@ -88,26 +88,26 @@ public class WebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         // 获取客户端 ID
-//        String clientId = this.getClientId(session);
-        // 从 DAO 中删除连接会话
-//        webSocketSessionDao.delete(clientId);
+        String clientId = this.getClientId(session);
+//         从 DAO 中删除连接会话
+        webSocketSessionDao.delete(clientId);
         // 日志记录连接关闭
         log.info("WebSocket客户端连接关闭。clientId: {}.", status);
     }
 
     // 处理传输错误事件
-//    @Override
-//    public void handleTransportError(WebSocketSession session, Throwable exception)
-//        throws IOException {
-//        // 获取客户端 ID
-//        String clientId = this.getClientId(session);
-//        // 如果会话是打开状态，则关闭会话
-//        if (session.isOpen()) {
-//            session.close();
-//        }
-//        // 从 DAO 中删除连接会话
-//        webSocketSessionDao.delete(clientId);
-//    }
+    @Override
+    public void handleTransportError(WebSocketSession session, Throwable exception)
+        throws IOException {
+        // 获取客户端 ID
+        String clientId = this.getClientId(session);
+        // 如果会话是打开状态，则关闭会话
+        if (session.isOpen()) {
+            session.close();
+        }
+        // 从 DAO 中删除连接会话
+        webSocketSessionDao.delete(clientId);
+    }
 
     private String getClientId(WebSocketSession session) {
         // 从会话属性中获取客户端 ID
