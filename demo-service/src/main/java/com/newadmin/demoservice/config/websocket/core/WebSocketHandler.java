@@ -1,5 +1,6 @@
 package com.newadmin.demoservice.config.websocket.core;
 
+import cn.hutool.core.convert.Convert;
 import com.newadmin.demoservice.config.websocket.autoconfigure.WebSocketProperties;
 import com.newadmin.demoservice.config.websocket.dao.WebSocketSessionDao;
 import com.newadmin.demoservice.mainPro.livepro.service.impl.SocketLiveImpl;
@@ -56,18 +57,17 @@ public class WebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws IOException {
         // 获取客户端 ID
-//        String clientId = this.getClientId(session);
+        String clientId = this.getClientId(session);
         // 添加连接会话到 DAO
-//        webSocketSessionDao.add(clientId, session);
+        webSocketSessionDao.add(clientId, session);
         // 日志记录成功连接
         // 发送包含连接信息的消息
         String connectionInfo = "0{\"sid\": \"" + session.getId()
             + "\", \"upgrades\": [], \"pingInterval\": 25000, \"pingTimeout\": 20000, \"maxPayload\": 100000000}";
         session.sendMessage(new TextMessage(connectionInfo));
-        log.info("WebSocket客户端连接成功。clientId: {}.", session.getUri());
         // 启动心跳机制
         startHeartbeat(session);
-        WebSocketManager.storeSession(session);
+        log.info("WebSocket客户端连接成功。clientId: {}.", clientId);
     }
 
     private void startHeartbeat(WebSocketSession session) {
@@ -109,9 +109,9 @@ public class WebSocketHandler extends TextWebSocketHandler {
 //        webSocketSessionDao.delete(clientId);
 //    }
 
-//    private String getClientId(WebSocketSession session) {
-//        // 从会话属性中获取客户端 ID
-//        return Convert.toStr(session.getAttributes().get(webSocketProperties.getClientIdKey()));
-//    }
+    private String getClientId(WebSocketSession session) {
+        // 从会话属性中获取客户端 ID
+        return Convert.toStr(session.getAttributes().get(webSocketProperties.getClientIdKey()));
+    }
 
 }

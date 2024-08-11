@@ -1,5 +1,6 @@
 package com.newadmin.demoservice.mainPro.livepro.controller;
 
+import cn.hutool.extra.spring.SpringUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,7 +11,7 @@ import com.newadmin.democore.kduck.sqlbuild.ConditionBuilder.ConditionType;
 import com.newadmin.democore.kduck.sqlbuild.SelectBuilder;
 import com.newadmin.democore.kduck.web.json.JsonObject;
 import com.newadmin.demoservice.config.srs.annotation.SrsProperties;
-import com.newadmin.demoservice.config.websocket.core.WebSocketManager;
+import com.newadmin.demoservice.config.websocket.dao.WebSocketSessionDao;
 import com.newadmin.demoservice.mainPro.livepro.model.entity.PublishRequest;
 import com.newadmin.demoservice.mainPro.livepro.model.entity.SrsRequestBody;
 import com.newadmin.demoservice.mainPro.livepro.model.entity.UserLiveRoomDO;
@@ -57,6 +58,9 @@ public class SrsController extends DefaultService {
 
     private static final Logger logger = LogManager.getLogger(SrsController.class);
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper(); // 创建 ObjectMapper 实例
+
+    private static final WebSocketSessionDao SESSION_DAO = SpringUtil.getBean(
+        WebSocketSessionDao.class);
 
     @Operation(summary = "webRtc推流", description = "webRtc推流")
     @PostMapping("/rtcV1Publish")
@@ -280,7 +284,7 @@ public class SrsController extends DefaultService {
         }
 
         // 获取 WebSocketSession
-        WebSocketSession session = WebSocketManager.getSession();
+        WebSocketSession session = SESSION_DAO.get(clientId);
         logger.info("session: {}", session);
         if (session != null && session.isOpen()) {
             logger.info("session is open");
