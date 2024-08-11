@@ -223,7 +223,7 @@ public class SrsController extends DefaultService {
         UserLiveRoomDO userLiveRoom = super.getForBean(selectBuilder.build(), UserLiveRoomDO::new);
 
         SelectBuilder liveSelectBuilder = new SelectBuilder(params);
-        selectBuilder.from("", super.getEntityDef("live"))
+        liveSelectBuilder.from("", super.getEntityDef("live"))
             .where()
             .and("live_room_id", ConditionType.EQUALS, UserLiveRoomDO.LIVE_ROOM_ID);
         LiveDetailResp liveInfo = super.getForBean(liveSelectBuilder.build(), LiveDetailResp::new);
