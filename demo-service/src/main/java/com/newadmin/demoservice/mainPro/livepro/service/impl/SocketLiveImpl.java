@@ -112,9 +112,9 @@ public class SocketLiveImpl {
     private void handleNoLiveMessage(WebSocketSession session, LiveResp liveResp)
         throws IOException {
         JSONObject liveRoom = (JSONObject) liveResp.get("live_room");
-        String id = liveRoom.get("id").toString();
+//        String id = liveRoom.get("id").toString();
         sendMessage(session, "42[\"roomNoLive\"]");
-        liveService.updateLiveRoom(id, "roomNoLive");
+//        liveService.updateLiveRoom(id, "roomNoLive");
     }
 
     private void handleStartLiveMessage(WebSocketSession session, LiveResp liveResp)
@@ -131,39 +131,41 @@ public class SocketLiveImpl {
         living.put("live_room", detail); // 房间详细信息
         String livingJson = OBJECT_MAPPER.writeValueAsString(living); // 转换为 JSON 字符串
         String roomLiving = "42[\"roomLiving\", " + livingJson + "]"; // 构造消息
-        liveService.updateLiveRoom(detail.getId(), session.getId());
+//        liveService.updateLiveRoom(detail.getId(), session.getId());
         sendMessage(session, roomLiving); // 发送消息
     }
 
     private void handleJoinMessage(WebSocketSession session, LiveResp liveResp) throws IOException {
         // 格式化 Redis 缓存的键
         LiveDetailResp liveInfo = getCachedOrFetchLiveDetail(liveResp.getLiveRoomId()); // 获取或缓存直播信息
-        ReaiUsers user = getCachedOrFetchUserInfo(liveInfo.getUserId()); // 获取或缓存用户信息
-        LiveRoomDetailResp detail = getCachedOrFetchRoomDetail(
-            liveResp.getLiveRoomId()); // 获取或缓存房间详细信息
+        if (liveInfo != null) {
+            ReaiUsers user = getCachedOrFetchUserInfo(liveInfo.getUserId()); // 获取或缓存用户信息
+            LiveRoomDetailResp detail = getCachedOrFetchRoomDetail(
+                liveResp.getLiveRoomId()); // 获取或缓存房间详细信息
 
-        // 创建并发送用户加入房间的消息
-        UserInfoQuery userInfo = BeanUtil.copyProperties(user, UserInfoQuery.class); // 转换用户信息
-        ValueMap valueMap = new ValueMap();
-        valueMap.put("anchor_info", userInfo); // 主播信息
-        valueMap.put("live_room", detail); // 房间详细信息
-        valueMap.put("live_room_id", liveResp.getLiveRoomId()); // 房间 ID
-        valueMap.put("socket_id", liveResp.getSocketId()); // Socket ID
-        String userInfoJson = OBJECT_MAPPER.writeValueAsString(valueMap); // 转换为 JSON 字符串
-        String joined = "42[\"joined\", " + userInfoJson + "]"; // 构造消息
-        sendMessage(session, joined); // 发送消息
+            // 创建并发送用户加入房间的消息
+            UserInfoQuery userInfo = BeanUtil.copyProperties(user, UserInfoQuery.class); // 转换用户信息
+            ValueMap valueMap = new ValueMap();
+            valueMap.put("anchor_info", userInfo); // 主播信息
+            valueMap.put("live_room", detail); // 房间详细信息
+            valueMap.put("live_room_id", liveResp.getLiveRoomId()); // 房间 ID
+            valueMap.put("socket_id", liveResp.getSocketId()); // Socket ID
+            String userInfoJson = OBJECT_MAPPER.writeValueAsString(valueMap); // 转换为 JSON 字符串
+            String joined = "42[\"joined\", " + userInfoJson + "]"; // 构造消息
+            sendMessage(session, joined); // 发送消息
 
-        // 处理特殊情况：浏览器 URL 包含 "push"
-        String browserUrl = getBrowserUrlFromLiveResp(liveResp); // 获取浏览器 URL
-        if (browserUrl.contains("pull")) {
-            // 创建并发送房间正在直播的消息
-            ValueMap living = new ValueMap();
-            living.put("anchor_socket_id", liveResp.getLiveRoomId()); // 主播 Socket ID
-            living.put("live_room", detail); // 房间详细信息
-            living.put("socket_list", Arrays.asList(liveResp.getSocketId())); // Socket ID 列表
-            String livingJson = OBJECT_MAPPER.writeValueAsString(living); // 转换为 JSON 字符串
-            String roomLiving = "42[\"roomLiving\", " + livingJson + "]"; // 构造消息
-            sendMessage(session, roomLiving); // 发送消息
+            // 处理特殊情况：浏览器 URL 包含 "push"
+            String browserUrl = getBrowserUrlFromLiveResp(liveResp); // 获取浏览器 URL
+            if (browserUrl.contains("pull")) {
+                // 创建并发送房间正在直播的消息
+                ValueMap living = new ValueMap();
+                living.put("anchor_socket_id", liveResp.getLiveRoomId()); // 主播 Socket ID
+                living.put("live_room", detail); // 房间详细信息
+                living.put("socket_list", Arrays.asList(liveResp.getSocketId())); // Socket ID 列表
+                String livingJson = OBJECT_MAPPER.writeValueAsString(living); // 转换为 JSON 字符串
+                String roomLiving = "42[\"roomLiving\", " + livingJson + "]"; // 构造消息
+                sendMessage(session, roomLiving); // 发送消息
+            }
         }
     }
 

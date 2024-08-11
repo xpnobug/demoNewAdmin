@@ -1,5 +1,6 @@
 package com.newadmin.demoservice.mainPro.livepro.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -178,6 +179,10 @@ public class SrsController {
     @PostMapping("/on_publish")
     public JsonObject onPublish(
         @org.springframework.web.bind.annotation.RequestBody PublishRequest request) {
+
+        // 获取当前登录用户的ID
+        String userId = StpUtil.getLoginIdAsString();
+
         // 从request对象中提取字段
         String serverId = request.getServer_id();
         String serviceId = request.getService_id();
@@ -200,6 +205,7 @@ public class SrsController {
             roomId = matcher.group(1);  // 提取数字部分
         }
         LiveDetailResp liveDetailResp = new LiveDetailResp();
+        liveDetailResp.setUserId(userId);
         liveDetailResp.setLiveRoomId(roomId);
         liveDetailResp.setSocketId("-1");
         liveDetailResp.setFlagId(clientId);

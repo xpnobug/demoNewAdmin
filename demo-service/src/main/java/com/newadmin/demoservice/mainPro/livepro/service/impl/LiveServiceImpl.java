@@ -7,6 +7,7 @@ import com.newadmin.democore.kduck.service.ValueMap;
 import com.newadmin.democore.kduck.sqlbuild.ConditionBuilder.ConditionType;
 import com.newadmin.democore.kduck.sqlbuild.SelectBuilder;
 import com.newadmin.democore.kduck.utils.Page;
+import com.newadmin.demoservice.mainPro.livepro.model.entity.UserLiveRoomDO;
 import com.newadmin.demoservice.mainPro.livepro.model.query.LiveQuery;
 import com.newadmin.demoservice.mainPro.livepro.model.query.LiveRoomQuery;
 import com.newadmin.demoservice.mainPro.livepro.model.resp.LiveDetailResp;
@@ -100,22 +101,23 @@ public class LiveServiceImpl extends DefaultService implements LiveService {
         param.put("userId", userId); // 添加直播房间的显示状态条件
         // 创建查询构建器，并初始化参数
         SelectBuilder selectBuilder = new SelectBuilder(param);
-        selectBuilder.from("", super.getEntityDef(TABLE_NAME))
+        selectBuilder.from("", super.getEntityDef("user_live_room"))
             .where()
             .and("user_id", ConditionType.EQUALS, "userId");
-        LiveResp liveInfo = super.getForBean(selectBuilder.build(), LiveResp::new);
+        UserLiveRoomDO userLiveRoom = super.getForBean(selectBuilder.build(), UserLiveRoomDO::new);
 
-        if (liveInfo != null) {
-            LiveRoomDetailResp roomInfo = liveRoomService.getDetail(0, liveInfo.getLiveRoomId());
+        if (userLiveRoom != null) {
+            LiveRoomDetailResp roomInfo = liveRoomService.getDetail(0,
+                userLiveRoom.getLiveRoomId());
             // 获取用户信息
             ReaiUsers userInfo = usersService.getUserInfo(userId);
             UserInfoQuery userInfoResp = BeanUtil.copyProperties(userInfo, UserInfoQuery.class);
 
             LiveRoomQuery liveRoomQuery = new LiveRoomQuery();
-            liveRoomQuery.put("id", liveInfo.getId());
-            liveRoomQuery.put("liveRoomId", liveInfo.getLiveRoomId());
-            liveRoomQuery.put("created_at", liveInfo.getCreatedTime());
-            liveRoomQuery.put("updated_at", liveInfo.getUpdatedTime());
+            liveRoomQuery.put("id", roomInfo.getId());
+            liveRoomQuery.put("liveRoomId", userLiveRoom.getLiveRoomId());
+            liveRoomQuery.put("created_at", userLiveRoom.getCreateTime());
+            liveRoomQuery.put("updated_at", userLiveRoom.getUpdateTime());
             liveRoomQuery.put("live_room", roomInfo);
             liveRoomQuery.put("user", userInfoResp);
 
@@ -123,11 +125,11 @@ public class LiveServiceImpl extends DefaultService implements LiveService {
         }
         return null;
     }
-//
-//      @Override
-//      public String add(LiveReq req) {
-//            return super.add(TABLE_NAME, req).toString();
-//      }
+
+    @Override
+    public String add(LiveDetailResp req) {
+        return super.add(TABLE_NAME, req).toString();
+    }
 //
 //      @Override
 //      public void update(LiveReq req) {

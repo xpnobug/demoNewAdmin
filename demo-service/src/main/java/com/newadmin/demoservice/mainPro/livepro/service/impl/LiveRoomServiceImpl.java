@@ -8,6 +8,7 @@ import com.newadmin.democore.kduck.sqlbuild.ConditionBuilder.ConditionType;
 import com.newadmin.democore.kduck.sqlbuild.SelectBuilder;
 import com.newadmin.democore.kduck.utils.Page;
 import com.newadmin.demoservice.config.srs.annotation.SrsProperties;
+import com.newadmin.demoservice.mainPro.livepro.model.entity.UserLiveRoomDO;
 import com.newadmin.demoservice.mainPro.livepro.model.query.LiveRoomQuery;
 import com.newadmin.demoservice.mainPro.livepro.model.req.LiveRoomReq;
 import com.newadmin.demoservice.mainPro.livepro.model.resp.LiveResp;
@@ -104,16 +105,14 @@ public class LiveRoomServiceImpl extends DefaultService implements LiveRoomServi
             req.setUpdatedTime(new Date());
             String roomId = super.add(TABLE_NAME, req).toString();
 
-            LiveResp liveResp = new LiveResp();
-            liveResp.setLiveRoomId(roomId);
-            liveResp.setUserId(tokenInfo.loginId.toString());
-            liveResp.setTrackAudio(1);
-            liveResp.setTrackVideo(1);
-            liveResp.setIsTencentcloudCss(2);
-            liveResp.setUpdatedTime(new Date());
-            return super.add(LiveServiceImpl.TABLE_NAME, liveResp).toString();
-        } else {
-            String roomId = liveInfo.getLiveRoomId();
+            // 添加用户和直播房间的关系
+            UserLiveRoomDO userLiveRoomDO = new UserLiveRoomDO();
+            userLiveRoomDO.setUserId(tokenInfo.loginId.toString());
+            userLiveRoomDO.setLiveRoomId(roomId);
+            userLiveRoomDO.setCreateTime(new Date());
+            userLiveRoomDO.setUpdateTime(new Date());
+            super.add("user_live_room", userLiveRoomDO);
+            // 设置推流地址
             req.put("id", roomId);
             req.put("secretKey", req.get("key"));
             req.put("rtmpUrl", srsProperties.getPushUrl() + srsProperties.getPushPath() + "/roomId_"

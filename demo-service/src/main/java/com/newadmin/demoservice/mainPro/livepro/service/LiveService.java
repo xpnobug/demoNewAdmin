@@ -32,13 +32,13 @@ public interface LiveService {
      */
     LiveDetailResp getDetail(String id);
 
-//    /**
-//     * 新增直播记录
-//     *
-//     * @param req 新增参数
-//     * @return 新增
-//     */
-//    String add(LiveReq req);
+    /**
+     * 新增直播记录
+     *
+     * @param req 新增参数
+     * @return 新增
+     */
+    String add(LiveDetailResp req);
 //
 //    /**
 //     * 修改直播记录

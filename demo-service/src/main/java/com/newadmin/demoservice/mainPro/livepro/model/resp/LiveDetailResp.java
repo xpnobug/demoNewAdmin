@@ -152,7 +152,7 @@ public class LiveDetailResp extends ValueMap {
      *
      * @param liveRoomId 直播间ID
      */
-    public void setLiveRoomId(Integer liveRoomId) {
+    public void setLiveRoomId(String liveRoomId) {
         super.setValue(LIVE_ROOM_ID, liveRoomId);
     }
 
@@ -161,8 +161,8 @@ public class LiveDetailResp extends ValueMap {
      *
      * @return 直播间ID
      */
-    public Integer getLiveRoomId() {
-        return super.getValueAsInteger(LIVE_ROOM_ID);
+    public String getLiveRoomId() {
+        return super.getValueAsString(LIVE_ROOM_ID);
     }
 
     /**
@@ -170,7 +170,7 @@ public class LiveDetailResp extends ValueMap {
      *
      * @param userId 用户ID
      */
-    public void setUserId(Integer userId) {
+    public void setUserId(String userId) {
         super.setValue(USER_ID, userId);
     }
 
