@@ -211,13 +211,14 @@ public class SrsController extends DefaultService {
         if (matcher.find()) {
             roomId = matcher.group(1);  // 提取数字部分
         }
+        logger.info("liveRoomId: {}", roomId);
         // 获取当前登录用户的ID
         ValueMap params = new ValueMap();
         params.put("liveRoomId", roomId);
         SelectBuilder selectBuilder = new SelectBuilder(params);
         selectBuilder.from("", super.getEntityDef("user_live_room"))
             .where()
-            .and("live_room_id", ConditionType.EQUALS, "liveRoomId");
+            .and("live_room_id", ConditionType.EQUALS, UserLiveRoomDO.LIVE_ROOM_ID);
         UserLiveRoomDO userLiveRoom = super.getForBean(selectBuilder.build(), UserLiveRoomDO::new);
 
         LiveDetailResp liveDetailResp = new LiveDetailResp();
