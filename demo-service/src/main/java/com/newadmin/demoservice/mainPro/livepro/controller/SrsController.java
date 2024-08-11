@@ -225,6 +225,8 @@ public class SrsController extends DefaultService {
         liveDetailResp.setUserId(userLiveRoom.getUserId());
         liveDetailResp.setLiveRoomId(roomId);
         liveDetailResp.setSocketId("-1");
+        liveDetailResp.setTrackAudio(1);
+        liveDetailResp.setTrackVideo(1);
         liveDetailResp.setFlagId(clientId);
 
         liveDetailResp.setSrsServerId(serverId);
