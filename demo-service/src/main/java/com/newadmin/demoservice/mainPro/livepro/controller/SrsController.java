@@ -282,6 +282,7 @@ public class SrsController extends DefaultService {
 
         // 获取 WebSocketSession
         WebSocketSession session = sessions.get("roomId");
+        logger.info("session: {}", session);
         if (session != null && session.isOpen()) {
             logger.info("session is open");
             // 创建并发送房间正在直播的消息
