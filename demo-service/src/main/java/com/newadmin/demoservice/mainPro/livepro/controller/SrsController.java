@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.ehcache.impl.internal.concurrent.ConcurrentHashMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,7 +58,7 @@ public class SrsController extends DefaultService {
 
     private static final Logger logger = LogManager.getLogger(SrsController.class);
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper(); // 创建 ObjectMapper 实例
-
+    private Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
     @Operation(summary = "webRtc推流", description = "webRtc推流")
     @PostMapping("/rtcV1Publish")
     public JsonObject rtcV1Publish(
@@ -193,7 +195,7 @@ public class SrsController extends DefaultService {
 
     @Operation(summary = "on_publish", description = "on_publish")
     @PostMapping("/on_publish")
-    public JsonObject onPublish(WebSocketSession session,
+    public JsonObject onPublish(
         @org.springframework.web.bind.annotation.RequestBody PublishRequest request) {
         // 记录请求日志
         logger.info("on_publish: {}", request);
@@ -278,19 +280,23 @@ public class SrsController extends DefaultService {
             detail = socketLive.getCachedOrFetchRoomDetail(roomId);
         }
 
-        // 创建并发送房间正在直播的消息
-        ValueMap living = new ValueMap();
-        living.put("anchor_socket_id", ""); // 主播的Socket ID
-        living.put("live_room", detail); // 房间详细信息
+        // 获取 WebSocketSession
+        WebSocketSession session = sessions.get("roomId");
+        if (session != null && session.isOpen()) {
+            logger.info("session is open");
+            // 创建并发送房间正在直播的消息
+            ValueMap living = new ValueMap();
+            living.put("anchor_socket_id", ""); // 主播的Socket ID
+            living.put("live_room", detail); // 房间详细信息
 
-        try {
-            String livingJson = OBJECT_MAPPER.writeValueAsString(living); // 转换为JSON字符串
-            String roomLiving = "42[\"roomLiving\", " + livingJson + "]"; // 构造消息内容
-            socketLive.sendMessage(session, roomLiving); // 通过WebSocket发送消息
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e); // 捕获并抛出JSON处理异常
+            try {
+                String livingJson = OBJECT_MAPPER.writeValueAsString(living); // 转换为JSON字符串
+                String roomLiving = "42[\"roomLiving\", " + livingJson + "]"; // 构造消息内容
+                socketLive.sendMessage(session, roomLiving); // 通过WebSocket发送消息
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e); // 捕获并抛出JSON处理异常
+            }
         }
-
         // 返回成功响应
         return new JsonObject(liveId, 0, "[on_publish] all success, pass");
     }
