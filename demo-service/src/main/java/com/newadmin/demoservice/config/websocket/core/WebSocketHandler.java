@@ -4,8 +4,6 @@ import com.newadmin.demoservice.config.websocket.autoconfigure.WebSocketProperti
 import com.newadmin.demoservice.config.websocket.dao.WebSocketSessionDao;
 import com.newadmin.demoservice.mainPro.livepro.service.impl.SocketLiveImpl;
 import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -27,10 +25,10 @@ public class WebSocketHandler extends TextWebSocketHandler {
     private final WebSocketProperties webSocketProperties;
     // WebSocket 会话数据访问对象
     private final WebSocketSessionDao webSocketSessionDao;
-    private Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
 
     private final SocketLiveImpl socketLiveImpl;
     private ScheduledExecutorService heartbeatExecutor;
+
     // 构造函数，注入 WebSocket 配置属性和会话 DAO
     public WebSocketHandler(WebSocketProperties webSocketProperties,
         WebSocketSessionDao webSocketSessionDao, SocketLiveImpl socketLiveImpl) {
@@ -69,7 +67,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         log.info("WebSocket客户端连接成功。clientId: {}.", session.getUri());
         // 启动心跳机制
         startHeartbeat(session);
-        sessions.put("roomId", session);
+        WebSocketManager.storeSession(session);
     }
 
     private void startHeartbeat(WebSocketSession session) {
@@ -85,7 +83,6 @@ public class WebSocketHandler extends TextWebSocketHandler {
             }
         }, 0, 25, TimeUnit.SECONDS);
     }
-
 
     // 处理连接关闭事件
     @Override

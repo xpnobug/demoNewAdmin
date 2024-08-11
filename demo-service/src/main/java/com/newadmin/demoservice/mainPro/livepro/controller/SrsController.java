@@ -10,6 +10,7 @@ import com.newadmin.democore.kduck.sqlbuild.ConditionBuilder.ConditionType;
 import com.newadmin.democore.kduck.sqlbuild.SelectBuilder;
 import com.newadmin.democore.kduck.web.json.JsonObject;
 import com.newadmin.demoservice.config.srs.annotation.SrsProperties;
+import com.newadmin.demoservice.config.websocket.core.WebSocketManager;
 import com.newadmin.demoservice.mainPro.livepro.model.entity.PublishRequest;
 import com.newadmin.demoservice.mainPro.livepro.model.entity.SrsRequestBody;
 import com.newadmin.demoservice.mainPro.livepro.model.entity.UserLiveRoomDO;
@@ -22,7 +23,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,6 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.ehcache.impl.internal.concurrent.ConcurrentHashMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,7 +57,7 @@ public class SrsController extends DefaultService {
 
     private static final Logger logger = LogManager.getLogger(SrsController.class);
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper(); // 创建 ObjectMapper 实例
-    private Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
+
     @Operation(summary = "webRtc推流", description = "webRtc推流")
     @PostMapping("/rtcV1Publish")
     public JsonObject rtcV1Publish(
@@ -281,7 +280,7 @@ public class SrsController extends DefaultService {
         }
 
         // 获取 WebSocketSession
-        WebSocketSession session = sessions.get("roomId");
+        WebSocketSession session = WebSocketManager.getSession();
         logger.info("session: {}", session);
         if (session != null && session.isOpen()) {
             logger.info("session is open");
