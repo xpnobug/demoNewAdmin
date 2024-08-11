@@ -238,8 +238,8 @@ public class SrsController extends DefaultService {
         liveDetailResp.setSrsParam(param);
         liveDetailResp.setSrsStreamUrl(streamUrl);
         liveDetailResp.setSrsStreamId(streamId);
-        liveDetailResp.put("updated_time", new Date());
-        liveDetailResp.put("created_time", new Date());
+        liveDetailResp.put("updatedTime", new Date());
+        liveDetailResp.put("createdTime", new Date());
         String liveId = liveService.add(liveDetailResp);
         return new JsonObject(liveId, 0,
             "[on_publish] all success, pass");
