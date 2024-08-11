@@ -103,7 +103,7 @@ public class LiveServiceImpl extends DefaultService implements LiveService {
         SelectBuilder selectBuilder = new SelectBuilder(param);
         selectBuilder.from("", super.getEntityDef("user_live_room"))
             .where()
-            .and("user_id", ConditionType.EQUALS, "userId");
+            .and("user_id", ConditionType.EQUALS, UserLiveRoomDO.USER_ID);
         UserLiveRoomDO userLiveRoom = super.getForBean(selectBuilder.build(), UserLiveRoomDO::new);
 
         if (userLiveRoom != null) {
@@ -114,13 +114,14 @@ public class LiveServiceImpl extends DefaultService implements LiveService {
             UserInfoQuery userInfoResp = BeanUtil.copyProperties(userInfo, UserInfoQuery.class);
 
             LiveRoomQuery liveRoomQuery = new LiveRoomQuery();
-            liveRoomQuery.put("id", roomInfo.getId());
-            liveRoomQuery.put("liveRoomId", userLiveRoom.getLiveRoomId());
-            liveRoomQuery.put("created_at", userLiveRoom.getCreateTime());
-            liveRoomQuery.put("updated_at", userLiveRoom.getUpdateTime());
-            liveRoomQuery.put("live_room", roomInfo);
-            liveRoomQuery.put("user", userInfoResp);
-
+            if (roomInfo != null) {
+                liveRoomQuery.put("id", roomInfo.getId());
+                liveRoomQuery.put("liveRoomId", userLiveRoom.getLiveRoomId());
+                liveRoomQuery.put("created_at", userLiveRoom.getCreateTime());
+                liveRoomQuery.put("updated_at", userLiveRoom.getUpdateTime());
+                liveRoomQuery.put("live_room", roomInfo);
+                liveRoomQuery.put("user", userInfoResp);
+            }
             return liveRoomQuery;
         }
         return null;

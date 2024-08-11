@@ -95,10 +95,10 @@ public class SocketLiveImpl {
                 // 处理用户加入房间的消息
                 handleJoinMessage(session, liveResp);
                 break;
-            case "srsCandidate":
-                // 处理开始直播的消息
-                handleStartLiveMessage(session, liveResp);
-                break;
+//            case "srsCandidate":
+//                // 处理开始直播的消息
+//                handleStartLiveMessage(session, liveResp);
+//                break;
             case "roomNoLive":
                 // 处理房间没有直播的消息
                 handleNoLiveMessage(session, liveResp);
@@ -111,29 +111,29 @@ public class SocketLiveImpl {
 
     private void handleNoLiveMessage(WebSocketSession session, LiveResp liveResp)
         throws IOException {
-        JSONObject liveRoom = (JSONObject) liveResp.get("live_room");
+//        JSONObject liveRoom = (JSONObject) liveResp.get("live_room");
 //        String id = liveRoom.get("id").toString();
         sendMessage(session, "42[\"roomNoLive\"]");
 //        liveService.updateLiveRoom(id, "roomNoLive");
     }
 
-    private void handleStartLiveMessage(WebSocketSession session, LiveResp liveResp)
-        throws IOException {
-        // 格式化 Redis 缓存的键
-//        LiveDetailResp liveInfo = getCachedOrFetchLiveDetail(liveResp.getLiveRoomId()); // 获取或缓存直播信息
-//        ReaiUsers user = getCachedOrFetchUserInfo(liveInfo.getUserId()); // 获取或缓存用户信息
-        LiveRoomDetailResp detail = getCachedOrFetchRoomDetail(
-            liveResp.getLiveRoomId()); // 获取或缓存房间详细信息
-
-        // 创建并发送房间正在直播的消息
-        ValueMap living = new ValueMap();
-        living.put("anchor_socket_id", liveResp.getLiveRoomId()); // 主播 Socket ID
-        living.put("live_room", detail); // 房间详细信息
-        String livingJson = OBJECT_MAPPER.writeValueAsString(living); // 转换为 JSON 字符串
-        String roomLiving = "42[\"roomLiving\", " + livingJson + "]"; // 构造消息
-//        liveService.updateLiveRoom(detail.getId(), session.getId());
-        sendMessage(session, roomLiving); // 发送消息
-    }
+//    private void handleStartLiveMessage(WebSocketSession session, LiveResp liveResp)
+//        throws IOException {
+//        // 格式化 Redis 缓存的键
+////        LiveDetailResp liveInfo = getCachedOrFetchLiveDetail(liveResp.getLiveRoomId()); // 获取或缓存直播信息
+////        ReaiUsers user = getCachedOrFetchUserInfo(liveInfo.getUserId()); // 获取或缓存用户信息
+//        LiveRoomDetailResp detail = getCachedOrFetchRoomDetail(
+//            liveResp.getLiveRoomId()); // 获取或缓存房间详细信息
+//
+//        // 创建并发送房间正在直播的消息
+//        ValueMap living = new ValueMap();
+//        living.put("anchor_socket_id", liveResp.getLiveRoomId()); // 主播 Socket ID
+//        living.put("live_room", detail); // 房间详细信息
+//        String livingJson = OBJECT_MAPPER.writeValueAsString(living); // 转换为 JSON 字符串
+//        String roomLiving = "42[\"roomLiving\", " + livingJson + "]"; // 构造消息
+////        liveService.updateLiveRoom(detail.getId(), session.getId());
+//        sendMessage(session, roomLiving); // 发送消息
+//    }
 
     private void handleJoinMessage(WebSocketSession session, LiveResp liveResp) throws IOException {
         // 格式化 Redis 缓存的键
@@ -171,13 +171,16 @@ public class SocketLiveImpl {
 
     // 从 Redis 中获取或缓存房间详细信息
     private LiveDetailResp getCachedOrFetchLiveDetail(String liveRoomId) {
-        String liveInfoKey = RedisUtils.formatKey("liveInfo", liveRoomId);
-        LiveDetailResp liveInfo = RedisUtils.get(liveInfoKey);
-        if (liveInfo == null) {
-            liveInfo = liveService.getDetail(liveRoomId);
-            RedisUtils.set(liveInfoKey, liveInfo, Duration.ofMinutes(10)); // 设置缓存有效期为10分钟
+        if (!liveRoomId.isEmpty()) {
+            String liveInfoKey = RedisUtils.formatKey("liveInfo", liveRoomId);
+            LiveDetailResp liveInfo = RedisUtils.get(liveInfoKey);
+            if (liveInfo == null) {
+                liveInfo = liveService.getDetail(liveRoomId);
+                RedisUtils.set(liveInfoKey, liveInfo, Duration.ofMinutes(10)); // 设置缓存有效期为10分钟
+            }
+            return liveInfo;
         }
-        return liveInfo;
+        return null;
     }
 
     // 从 Redis 中获取或缓存用户信息
@@ -192,14 +195,17 @@ public class SocketLiveImpl {
     }
 
     // 从 Redis 中获取或缓存房间详细信息
-    private LiveRoomDetailResp getCachedOrFetchRoomDetail(String liveRoomId) {
-        String liveRoomDetailKey = RedisUtils.formatKey("liveRoomDetail", liveRoomId);
-        LiveRoomDetailResp detail = RedisUtils.get(liveRoomDetailKey);
-        if (detail == null) {
-            detail = liveRoomService.getDetail(0, liveRoomId);
-            RedisUtils.set(liveRoomDetailKey, detail, Duration.ofMinutes(10)); // 设置缓存有效期为10分钟
+    public LiveRoomDetailResp getCachedOrFetchRoomDetail(String liveRoomId) {
+        if (!liveRoomId.isEmpty()) {
+            String liveRoomDetailKey = RedisUtils.formatKey("liveRoomDetail", liveRoomId);
+            LiveRoomDetailResp detail = RedisUtils.get(liveRoomDetailKey);
+            if (detail == null) {
+                detail = liveRoomService.getDetail(0, liveRoomId);
+                RedisUtils.set(liveRoomDetailKey, detail, Duration.ofMinutes(10)); // 设置缓存有效期为10分钟
+            }
+            return detail;
         }
-        return detail;
+        return null;
     }
 
     // 从 LiveResp 中获取浏览器 URL
@@ -209,7 +215,11 @@ public class SocketLiveImpl {
     }
 
     // 发送 WebSocket 消息
-    private void sendMessage(WebSocketSession session, String message) throws IOException {
-        session.sendMessage(new TextMessage(message));
+    public void sendMessage(WebSocketSession session, String message) {
+        try {
+            session.sendMessage(new TextMessage(message));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
