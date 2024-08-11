@@ -96,6 +96,7 @@ sa-token.extension:
     - /*/*.css
     - /*/*.js
     - /websocket/**
+    - /websockets/**
     # 接口文档相关资源
     - /favicon.ico
     - /doc.html
@@ -115,7 +116,11 @@ sa-token.extension:
     - /channel/**
     - /message/**
     - /statistics/**
+    - /mock/**
+    - /qiniu_data/**
     - /srs/**
+    - /generator/**
+    - /live/**
 
 reai:
   show-sql:
