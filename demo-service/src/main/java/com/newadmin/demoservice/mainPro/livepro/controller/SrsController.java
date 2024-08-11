@@ -205,7 +205,7 @@ public class SrsController extends DefaultService {
         //
         String streamId = request.getStream_id();
         String roomIdStr = request.getStream().replace(".m3u8", "");
-        Pattern pattern = Pattern.compile("^roomId___(\\d+)$");
+        Pattern pattern = Pattern.compile("^roomId_(\\d+)$");
         Matcher matcher = pattern.matcher(roomIdStr);
         String roomId = null;
         if (matcher.find()) {
