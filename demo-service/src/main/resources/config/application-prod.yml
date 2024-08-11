@@ -262,7 +262,7 @@ justauth:
 ### WebSocket 配置
 new-admin.messaging.websocket:
   enabled: true
-  path: /websocket
+  path: /websocket/
   # 配置允许跨域的域名
   allowed-origins:
     - ${project.url}
