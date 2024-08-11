@@ -1,5 +1,6 @@
 package com.newadmin.demoservice.mainPro.livepro.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -13,8 +14,10 @@ import com.newadmin.demoservice.mainPro.livepro.model.entity.PublishRequest;
 import com.newadmin.demoservice.mainPro.livepro.model.entity.SrsRequestBody;
 import com.newadmin.demoservice.mainPro.livepro.model.entity.UserLiveRoomDO;
 import com.newadmin.demoservice.mainPro.livepro.model.resp.LiveDetailResp;
+import com.newadmin.demoservice.mainPro.livepro.model.resp.LiveRoomDetailResp;
 import com.newadmin.demoservice.mainPro.livepro.service.LiveService;
 import com.newadmin.demoservice.mainPro.livepro.service.impl.LiveServiceImpl;
+import com.newadmin.demoservice.mainPro.livepro.service.impl.SocketLiveImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
@@ -48,8 +51,10 @@ public class SrsController extends DefaultService {
 
     private final SrsProperties srsProperties;
     private final LiveService liveService;
+    private final SocketLiveImpl socketLive;
 
     private static final Logger logger = LogManager.getLogger(SrsController.class);
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper(); // 创建 ObjectMapper 实例
 
     @Operation(summary = "webRtc推流", description = "webRtc推流")
     @PostMapping("/rtcV1Publish")
@@ -256,6 +261,23 @@ public class SrsController extends DefaultService {
             liveDetailResp.put("id", liveInfo.getId());
             super.update(LiveServiceImpl.TABLE_NAME, liveDetailResp);
         }
+
+        LiveRoomDetailResp detail = null; // 获取或缓存房间详细信息
+        if (roomId != null) {
+            detail = socketLive.getCachedOrFetchRoomDetail(roomId);
+        }
+        // 创建并发送房间正在直播的消息
+        ValueMap living = new ValueMap();
+        living.put("anchor_socket_id", ""); // 主播 Socket ID
+        living.put("live_room", detail); // 房间详细信息
+        try {
+            String livingJson = OBJECT_MAPPER.writeValueAsString(living); // 转换为 JSON 字符串
+            String roomLiving = "42[\"roomLiving\", " + livingJson + "]"; // 构造消息
+            socketLive.sendMessage(null, roomLiving);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
         return new JsonObject(liveId, 0,
             "[on_publish] all success, pass");
     }
