@@ -5,10 +5,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.newadmin.democore.kduck.web.json.JsonObject;
 import com.newadmin.demoservice.config.srs.annotation.SrsProperties;
+import com.newadmin.demoservice.mainPro.livepro.model.entity.PublishRequest;
 import com.newadmin.demoservice.mainPro.livepro.model.entity.SrsRequestBody;
+import com.newadmin.demoservice.mainPro.livepro.model.resp.LiveDetailResp;
+import com.newadmin.demoservice.mainPro.livepro.service.LiveService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -19,7 +24,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * srs API
@@ -34,7 +38,7 @@ import org.springframework.web.client.RestTemplate;
 public class SrsController {
 
     private final SrsProperties srsProperties;
-    private final RestTemplate restTemplate;
+    private final LiveService liveService;
 
     @Operation(summary = "webRtc推流", description = "webRtc推流")
     @PostMapping("/rtcV1Publish")
@@ -172,9 +176,49 @@ public class SrsController {
 
     @Operation(summary = "on_publish", description = "on_publish")
     @PostMapping("/on_publish")
-    public JsonObject onPublish() {
-//        getApiV1StreamsDetail(body.getStreamId());
-        return new JsonObject(null, 0,
+    public JsonObject onPublish(
+        @org.springframework.web.bind.annotation.RequestBody PublishRequest request) {
+        // 从request对象中提取字段
+        String serverId = request.getServer_id();
+        String serviceId = request.getService_id();
+        String action = request.getAction();
+        String clientId = request.getClient_id();
+        String ip = request.getIp();
+        String vhost = request.getVhost();
+        String app = request.getApp();
+        String tcUrl = request.getTcUrl();
+        String stream = request.getStream();
+        String param = request.getParam();
+        String streamUrl = request.getStream_url();
+        //
+        String streamId = request.getStream_id();
+        String roomIdStr = request.getStream().replace(".m3u8", "");
+        Pattern pattern = Pattern.compile("^roomId___(\\d+)$");
+        Matcher matcher = pattern.matcher(roomIdStr);
+        String roomId = null;
+        if (matcher.find()) {
+            roomId = matcher.group(1);  // 提取数字部分
+        }
+        LiveDetailResp liveDetailResp = new LiveDetailResp();
+        liveDetailResp.setLiveRoomId(roomId);
+        liveDetailResp.setSocketId("-1");
+        liveDetailResp.setFlagId(clientId);
+
+        liveDetailResp.setSrsServerId(serverId);
+        liveDetailResp.setSrsServiceId(serviceId);
+        liveDetailResp.setSrsAction(action);
+        liveDetailResp.setSrsClientId(clientId);
+        liveDetailResp.setSrsIp(ip);
+        liveDetailResp.setSrsVhost(vhost);
+        liveDetailResp.setSrsApp(app);
+        liveDetailResp.setSrsTcurl(tcUrl);
+        liveDetailResp.setSrsStream(stream);
+        liveDetailResp.setSrsParam(param);
+        liveDetailResp.setSrsStreamUrl(streamUrl);
+        liveDetailResp.setSrsStreamId(streamId);
+
+        String liveId = liveService.add(liveDetailResp);
+        return new JsonObject(liveId, 0,
             "[on_publish] all success, pass");
     }
 
