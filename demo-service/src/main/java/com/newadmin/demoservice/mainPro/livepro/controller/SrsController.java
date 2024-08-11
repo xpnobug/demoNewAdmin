@@ -174,7 +174,7 @@ public class SrsController {
     @PostMapping("/on_publish")
     public JsonObject onPublish() {
 //        getApiV1StreamsDetail(body.getStreamId());
-        return new JsonObject("[on_publish] all success, pass", 0,
+        return new JsonObject(null, 0,
             "[on_publish] all success, pass");
     }
 
