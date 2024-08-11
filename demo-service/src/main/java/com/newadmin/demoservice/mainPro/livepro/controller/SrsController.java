@@ -17,6 +17,7 @@ import com.newadmin.demoservice.mainPro.livepro.service.LiveService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,6 +47,9 @@ public class SrsController extends DefaultService {
 
     private final SrsProperties srsProperties;
     private final LiveService liveService;
+
+    private static final Logger logger = LogManager.getLogger(SrsController.class);
+
 
     @Operation(summary = "webRtc推流", description = "webRtc推流")
     @PostMapping("/rtcV1Publish")
@@ -183,7 +189,7 @@ public class SrsController extends DefaultService {
     @PostMapping("/on_publish")
     public JsonObject onPublish(
         @org.springframework.web.bind.annotation.RequestBody PublishRequest request) {
-
+        logger.info("on_publish: {}", request);
         // 从request对象中提取字段
         String serverId = request.getServer_id();
         String serviceId = request.getService_id();
@@ -232,7 +238,8 @@ public class SrsController extends DefaultService {
         liveDetailResp.setSrsParam(param);
         liveDetailResp.setSrsStreamUrl(streamUrl);
         liveDetailResp.setSrsStreamId(streamId);
-
+        liveDetailResp.put("updated_time", new Date());
+        liveDetailResp.put("created_time", new Date());
         String liveId = liveService.add(liveDetailResp);
         return new JsonObject(liveId, 0,
             "[on_publish] all success, pass");
