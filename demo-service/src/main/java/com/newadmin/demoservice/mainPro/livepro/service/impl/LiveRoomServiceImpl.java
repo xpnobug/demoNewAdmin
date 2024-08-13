@@ -11,7 +11,6 @@ import com.newadmin.demoservice.config.srs.annotation.SrsProperties;
 import com.newadmin.demoservice.mainPro.livepro.model.entity.UserLiveRoomDO;
 import com.newadmin.demoservice.mainPro.livepro.model.query.LiveRoomQuery;
 import com.newadmin.demoservice.mainPro.livepro.model.req.LiveRoomReq;
-import com.newadmin.demoservice.mainPro.livepro.model.resp.LiveResp;
 import com.newadmin.demoservice.mainPro.livepro.model.resp.LiveRoomDetailResp;
 import com.newadmin.demoservice.mainPro.livepro.model.resp.LiveRoomResp;
 import com.newadmin.demoservice.mainPro.livepro.service.LiveRoomService;
@@ -98,33 +97,34 @@ public class LiveRoomServiceImpl extends DefaultService implements LiveRoomServi
             .where()
             .and("user_id", ConditionType.EQUALS, "userId"); // 添加ID的条件);
 
-        LiveResp liveInfo = super.getForBean(selectBuilder.build(), LiveResp::new);
-        if (liveInfo == null) {
-            req.put("name", req.getName());
-            req.setCreatedTime(new Date());
-            req.setUpdatedTime(new Date());
-            String roomId = super.add(TABLE_NAME, req).toString();
+//        LiveResp liveInfo = super.getForBean(selectBuilder.build(), LiveResp::new);
+//        if (liveInfo == null) {
+//
+//        }
+        req.put("name", req.getName());
+        req.setCreatedTime(new Date());
+        req.setUpdatedTime(new Date());
+        String roomId = super.add(TABLE_NAME, req).toString();
 
-            // 添加用户和直播房间的关系
-            UserLiveRoomDO userLiveRoomDO = new UserLiveRoomDO();
-            userLiveRoomDO.setUserId(tokenInfo.loginId.toString());
-            userLiveRoomDO.setLiveRoomId(roomId);
-            userLiveRoomDO.setCreateTime(new Date());
-            userLiveRoomDO.setUpdateTime(new Date());
-            super.add("user_live_room", userLiveRoomDO);
-            // 设置推流地址
-            req.put("id", roomId);
-            req.put("secretKey", req.get("key"));
-            req.put("rtmpUrl", srsProperties.getPushUrl() + srsProperties.getPushPath() + "/roomId_"
-                + roomId); // 设置拉流地址
-            req.put("flvUrl",
-                srsProperties.getPullUrl() + srsProperties.getPushPath() + "/roomId_" + roomId
-                    + ".flv"); // 设置拉流地址
-            req.put("hlsUrl",
-                srsProperties.getPullUrl() + srsProperties.getPushPath() + "/roomId_" + roomId
-                    + ".m3u8"); // 设置拉流地址
-            super.update(TABLE_NAME, req);
-        }
+        // 添加用户和直播房间的关系
+        UserLiveRoomDO userLiveRoomDO = new UserLiveRoomDO();
+        userLiveRoomDO.setUserId(tokenInfo.loginId.toString());
+        userLiveRoomDO.setLiveRoomId(roomId);
+        userLiveRoomDO.setCreateTime(new Date());
+        userLiveRoomDO.setUpdateTime(new Date());
+        super.add("user_live_room", userLiveRoomDO);
+        // 设置推流地址
+        req.put("id", roomId);
+        req.put("secretKey", req.get("key"));
+        req.put("rtmpUrl", srsProperties.getPushUrl() + srsProperties.getPushPath() + "/roomId_"
+            + roomId); // 设置拉流地址
+        req.put("flvUrl",
+            srsProperties.getPullUrl() + srsProperties.getPushPath() + "/roomId_" + roomId
+                + ".flv"); // 设置拉流地址
+        req.put("hlsUrl",
+            srsProperties.getPullUrl() + srsProperties.getPushPath() + "/roomId_" + roomId
+                + ".m3u8"); // 设置拉流地址
+        super.update(TABLE_NAME, req);
         return null;
     }
 
