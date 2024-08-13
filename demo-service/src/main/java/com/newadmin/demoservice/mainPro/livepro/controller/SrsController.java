@@ -72,7 +72,7 @@ public class SrsController extends DefaultService {
         Integer post = srsProperties.getPost();
 
         // 构建请求 URL
-        String url = String.format("http://182.92.201.19:1985/rtc/v1/publish/", pushUrl, post);
+        String url = String.format("http://localhost:1985/rtc/v1/publish/", pushUrl, post);
 
         // 构建 OkHttpClient
         OkHttpClient client = new OkHttpClient().newBuilder().build();
