@@ -10,6 +10,7 @@ import com.newadmin.democore.kduck.service.ValueMap;
 import com.newadmin.democore.kduck.sqlbuild.ConditionBuilder.ConditionType;
 import com.newadmin.democore.kduck.sqlbuild.SelectBuilder;
 import com.newadmin.democore.kduck.web.json.JsonObject;
+import com.newadmin.democore.util.validate.CheckUtils;
 import com.newadmin.demoservice.config.srs.annotation.SrsProperties;
 import com.newadmin.demoservice.config.websocket.dao.WebSocketSessionDao;
 import com.newadmin.demoservice.mainPro.livepro.model.entity.PublishRequest;
@@ -23,7 +24,11 @@ import com.newadmin.demoservice.mainPro.livepro.service.impl.SocketLiveImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +39,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -305,4 +311,101 @@ public class SrsController extends DefaultService {
         return new JsonObject(liveId, 0, "[on_publish] all success, pass");
     }
 
+    @Operation(summary = "on_unpublish", description = "on_unpublish")
+    @PostMapping("/on_unpublish")
+    public JsonObject on_unpublish(
+        @org.springframework.web.bind.annotation.RequestBody PublishRequest request) {
+        // 记录请求日志
+        logger.info("on_unpublish: {}", request);
+
+        // 从request对象中提取相关字段
+        String serverId = request.getServer_id();
+        String serviceId = request.getService_id();
+        String action = request.getAction();
+        String clientId = request.getClient_id();
+        String ip = request.getIp();
+        String vhost = request.getVhost();
+        String app = request.getApp();
+        String tcUrl = request.getTcUrl();
+        String stream = request.getStream();
+        String param = request.getParam();
+        String streamUrl = request.getStream_url();
+        String streamId = request.getStream_id();
+
+        // 提取直播房间ID，去除.m3u8后缀并匹配房间ID
+        String roomIdStr = stream.replace(".m3u8", "");
+        Matcher matcher = Pattern.compile("^roomId_(\\d+)$").matcher(roomIdStr);
+        String roomId = null;
+        if (matcher.find()) {
+            roomId = matcher.group(1);  // 提取数字部分作为房间ID
+        }
+        logger.info("liveRoomId: {}", roomId);
+
+        if (!StringUtils.hasText(roomId)) {
+            CheckUtils.throwIfNull(roomId, "房间id不存在");
+            return new JsonObject(0, 1, "[on_unpublish] fail, roomId is not exist");
+        }
+        //    // body.param格式：?pushtype=0&pushkey=xxxxx
+        Map<String, String> stringStringMap = parseQueryString(param);
+        String pushKey = stringStringMap.get("pushkey");
+        if (!StringUtils.hasText(pushKey)) {
+            CheckUtils.throwIfNull(pushKey, "推流token不存在");
+            return new JsonObject(0, 1, "[on_unpublish] fail, no token");
+        }
+
+        ValueMap liveRoomParam = new ValueMap();
+        liveRoomParam.put(LiveRoomDetailResp.ID, roomId); // 房间id
+        SelectBuilder liveRoomSelectBuilder = new SelectBuilder(liveRoomParam);
+        liveRoomSelectBuilder.from("", super.getEntityDef("live_room"))
+            .where()
+            .and("id", ConditionType.EQUALS, LiveRoomDetailResp.ID);
+        LiveRoomDetailResp liveRoomInfo = super.getForBean(liveRoomSelectBuilder.build(),
+            LiveRoomDetailResp::new);
+        if (liveRoomInfo != null) {
+            String token = liveRoomInfo.getKey();
+            if (!token.equals(pushKey)) {
+                logger.error("[on_unpublish] 房间id：{}，鉴权失败", roomId);
+                return new JsonObject(0, 1, "[on_unpublish] fail, auth fail");
+            }
+        } else {
+            return new JsonObject(0, 1, "[on_unpublish] fail, userLiveRoomInfo is not exist");
+        }
+
+        // 删除直播信息
+        super.delete("live_room", new String[]{roomId});
+        //todo 修改直播记录
+
+        //wsSocket.io?.to(roomId).emit(WsMsgTypeEnum.roomNoLive);
+        //    console.log(chalkSUCCESS(`[on_unpublish] 房间id：${roomId}，成功`));
+        //    ctx.body = { code: 0, msg: '[on_unpublish] success' };
+        //    nodeSchedule.cancelJob(`${SCHEDULE_TYPE.blobIsExist}___${roomId}`);
+        //    await next();
+        // 获取 WebSocketSession
+        WebSocketSession session = SESSION_DAO.get("66666");
+        logger.info("session: {}", session);
+        if (session != null && session.isOpen()) {
+            // 通过WebSocket发送消息
+            socketLive.sendMessage(session, "42[\"roomNoLive\"]");
+        }
+        return new JsonObject(0, 0, "[on_unpublish] success");
+    }
+
+    // 解析查询字符串为 Map
+    private static Map<String, String> parseQueryString(String query) {
+        Map<String, String> params = new HashMap<>();
+        if (query == null || query.isEmpty()) {
+            return params;
+        }
+        String[] pairs = query.substring(1).split("&");
+        for (String pair : pairs) {
+            String[] keyValue = pair.split("=");
+            if (keyValue.length == 2) {
+                params.put(
+                    URLDecoder.decode(keyValue[0], StandardCharsets.UTF_8),
+                    URLDecoder.decode(keyValue[1],
+                        StandardCharsets.UTF_8));
+            }
+        }
+        return params;
+    }
 }

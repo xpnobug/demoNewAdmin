@@ -64,9 +64,9 @@ public class SocketLiveImpl {
         if (payload.contains("srsCandidate")) {
             payload = "srsCandidate";
         }
-        if (payload.contains("roomNoLive")) {
-            payload = "roomNoLive";
-        }
+//        if (payload.contains("roomNoLive")) {
+//            payload = "roomNoLive";
+//        }
         handleMessage(payload, session, liveResp);
 
     }
@@ -99,10 +99,10 @@ public class SocketLiveImpl {
 //                // 处理开始直播的消息
 //                handleStartLiveMessage(session, liveResp);
 //                break;
-            case "roomNoLive":
-                // 处理房间没有直播的消息
-                handleNoLiveMessage(session, liveResp);
-                break;
+//            case "roomNoLive":
+//                // 处理房间没有直播的消息
+//                handleNoLiveMessage(session, liveResp);
+//                break;
             default:
                 // 处理未知类型的消息
                 break;
