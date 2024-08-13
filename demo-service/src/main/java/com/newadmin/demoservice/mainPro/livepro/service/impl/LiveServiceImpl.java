@@ -28,6 +28,7 @@ import java.util.Objects;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * 直播记录业务实现
@@ -184,18 +185,21 @@ public class LiveServiceImpl extends DefaultService implements LiveService {
 
     @Override
     public Object findLiveRoomOnlineUser(String roomId) {
-        // 使用房间ID作为Redis键的一部分来查找用户信息
-        String redisKey = RedisUtils.formatKey("join", roomId, "room");
-        // 从 Redis 中获取与房间 ID 相关的用户信息
-        String info = RedisUtils.get(redisKey).toString();
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            return mapper.readTree(info);
-        } catch (JsonMappingException e) {
-            throw new RuntimeException(e);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+        if (!StringUtils.isEmpty(roomId)) {
+            // 使用房间ID作为Redis键的一部分来查找用户信息
+            String redisKey = RedisUtils.formatKey("join", roomId, "room");
+            // 从 Redis 中获取与房间 ID 相关的用户信息
+            String info = RedisUtils.get(redisKey).toString();
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                return mapper.readTree(info);
+            } catch (JsonMappingException e) {
+                throw new RuntimeException(e);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         }
+        return null;
     }
 
     // 查询直播房间信息
