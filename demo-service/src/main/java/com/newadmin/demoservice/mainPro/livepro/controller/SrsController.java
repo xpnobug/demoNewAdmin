@@ -362,7 +362,7 @@ public class SrsController extends DefaultService {
         LiveRoomDetailResp liveRoomInfo = super.getForBean(liveRoomSelectBuilder.build(),
             LiveRoomDetailResp::new);
         if (liveRoomInfo != null) {
-            String token = liveRoomInfo.getKey();
+            String token = liveRoomInfo.getSecretKey();
             if (!token.equals(pushKey)) {
                 logger.error("[on_unpublish] 房间id：{}，鉴权失败", roomId);
                 return new JsonObject(0, 1, "[on_unpublish] fail, auth fail");

@@ -16,11 +16,11 @@ import java.util.Map;
 @Schema(description = "直播间详情信息")
 public class LiveRoomDetailResp extends ValueMap {
 
-    /***/
-    public static final String ID = "id";
     /**
-     * 房间名称
+     * id
      */
+    public static final String ID = "id";
+    /**房间名称*/
     public static final String NAME = "name";
 
     /**
@@ -218,6 +218,11 @@ public class LiveRoomDetailResp extends ValueMap {
      */
     public static final String DELETED_TIME = "deletedTime";
 
+    /**
+     * token
+     */
+    public static final String SECRET_KEY = "secretKey";
+
     public LiveRoomDetailResp() {
     }
 
@@ -225,23 +230,7 @@ public class LiveRoomDetailResp extends ValueMap {
         super(map);
     }
 
-    /**
-     * 设置 房间名称
-     *
-     * @param name 房间名称
-     */
-    public void setName(String name) {
-        super.setValue(NAME, name);
-    }
 
-    /**
-     * 获取 房间名称
-     *
-     * @return 房间名称
-     */
-    public String getName() {
-        return super.getValueAsString(NAME);
-    }
 
     /**
      * 设置 房间描述
@@ -946,18 +935,54 @@ public class LiveRoomDetailResp extends ValueMap {
     }
 
     /**
-     * 设置
+     * 设置 token
      *
-     * @param id
+     * @param secretKey token
+     */
+    public void setSecretKey(String secretKey) {
+        super.setValue(SECRET_KEY, secretKey);
+    }
+
+    /**
+     * 获取 token
+     *
+     * @return token
+     */
+    public String getSecretKey() {
+        return super.getValueAsString(SECRET_KEY);
+    }
+
+    /**
+     * 设置 房间名称
+     *
+     * @param name 房间名称
+     */
+    public void setName(String name) {
+        super.setValue(NAME, name);
+    }
+
+    /**
+     * 获取 房间名称
+     *
+     * @return 房间名称
+     */
+    public String getName() {
+        return super.getValueAsString(NAME);
+    }
+
+    /**
+     * 设置 id
+     *
+     * @param id id
      */
     public void setId(String id) {
         super.setValue(ID, id);
     }
 
     /**
-     * 获取
+     * 获取 id
      *
-     * @return
+     * @return id
      */
     public String getId() {
         return super.getValueAsString(ID);
