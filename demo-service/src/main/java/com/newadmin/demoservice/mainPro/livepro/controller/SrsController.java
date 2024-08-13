@@ -17,6 +17,7 @@ import com.newadmin.demoservice.mainPro.livepro.model.entity.PublishRequest;
 import com.newadmin.demoservice.mainPro.livepro.model.entity.SrsRequestBody;
 import com.newadmin.demoservice.mainPro.livepro.model.entity.UserLiveRoomDO;
 import com.newadmin.demoservice.mainPro.livepro.model.resp.LiveDetailResp;
+import com.newadmin.demoservice.mainPro.livepro.model.resp.LiveResp;
 import com.newadmin.demoservice.mainPro.livepro.model.resp.LiveRoomDetailResp;
 import com.newadmin.demoservice.mainPro.livepro.service.LiveService;
 import com.newadmin.demoservice.mainPro.livepro.service.impl.LiveServiceImpl;
@@ -372,14 +373,9 @@ public class SrsController extends DefaultService {
         }
 
         // 删除直播信息
-        super.delete("live_room", new String[]{roomId});
+        super.delete("live", LiveResp.LIVE_ROOM_ID, new String[]{roomId});
         //todo 修改直播记录
 
-        //wsSocket.io?.to(roomId).emit(WsMsgTypeEnum.roomNoLive);
-        //    console.log(chalkSUCCESS(`[on_unpublish] 房间id：${roomId}，成功`));
-        //    ctx.body = { code: 0, msg: '[on_unpublish] success' };
-        //    nodeSchedule.cancelJob(`${SCHEDULE_TYPE.blobIsExist}___${roomId}`);
-        //    await next();
         // 获取 WebSocketSession
         WebSocketSession session = SESSION_DAO.get("66666");
         logger.info("session: {}", session);
