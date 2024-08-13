@@ -27,6 +27,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -384,6 +386,140 @@ public class SrsController extends DefaultService {
             socketLive.sendMessage(session, "42[\"roomNoLive\"]");
         }
         return new JsonObject(0, 0, "[on_unpublish] success");
+    }
+
+    @Operation(summary = "on_play", description = "on_play")
+    @PostMapping("/on_play")
+    public JsonObject onPlay(
+        @org.springframework.web.bind.annotation.RequestBody PublishRequest request) {
+        // 记录请求日志
+        logger.info("on_play: {}", request);
+
+        // 从request对象中提取相关字段
+        String serverId = request.getServer_id();
+        String serviceId = request.getService_id();
+        String action = request.getAction();
+        String clientId = request.getClient_id();
+        String ip = request.getIp();
+        String vhost = request.getVhost();
+        String app = request.getApp();
+        String tcUrl = request.getTcUrl();
+        String stream = request.getStream();
+        String param = request.getParam();
+        String streamUrl = request.getStream_url();
+        String streamId = request.getStream_id();
+
+        // 提取直播房间ID，去除.m3u8后缀并匹配房间ID
+        String roomIdStr = stream.replace(".m3u8", "");
+        Matcher matcher = Pattern.compile("^roomId_(\\d+)$").matcher(roomIdStr);
+        String roomId = null;
+        if (matcher.find()) {
+            roomId = matcher.group(1);  // 提取数字部分作为房间ID
+        }
+        logger.info("liveRoomId: {}", roomId);
+
+        // 记录开始时间
+        Instant startTime = Instant.now();
+        long duration = -1;
+
+        if (!StringUtils.hasText(roomId)) {
+            // 计算从开始到现在的持续时间（毫秒）
+            duration = Duration.between(startTime, Instant.now()).toMillis();
+            // 输出错误信息
+            logger.error("[on_play] 耗时：{}，房间id不存在！", duration);
+            return new JsonObject(0, 1,
+                "[on_play] fail, duration: " + duration + " , roomId is not exist");
+        }
+
+        ValueMap liveRoomParam = new ValueMap();
+        liveRoomParam.put(LiveRoomDetailResp.ID, roomId); // 房间id
+        SelectBuilder liveRoomSelectBuilder = new SelectBuilder(liveRoomParam);
+        liveRoomSelectBuilder.from("", super.getEntityDef("live_room"))
+            .where()
+            .and("id", ConditionType.EQUALS, LiveRoomDetailResp.ID);
+        LiveRoomDetailResp liveRoomInfo = super.getForBean(liveRoomSelectBuilder.build(),
+            LiveRoomDetailResp::new);
+
+        if (liveRoomInfo == null) {
+            // 计算从开始到现在的持续时间（毫秒）
+            duration = Duration.between(startTime, Instant.now()).toMillis();
+            // 输出错误信息
+            logger.error("[on_play] 耗时：{}，liveRoomInfo为空！", duration);
+            return new JsonObject(0, 1,
+                "[on_play] fail, duration: " + duration + " , liveRoomInfo is not exist");
+        }
+
+        //    // body.param格式：?pushtype=0&pushkey=xxxxx
+//        Map<String, String> stringStringMap = parseQueryString(param);
+//        String pushKey = stringStringMap.get("pushkey");
+//        if (!StringUtils.hasText(pushKey)) {
+//            CheckUtils.throwIfNull(pushKey, "推流token不存在");
+//            return new JsonObject(0, 1, "[on_unpublish] fail, no token");
+//        }
+
+        duration = Duration.between(startTime, Instant.now()).toMillis();
+        logger.info("[on_play] 耗时：{}，房间id：{}，所有验证通过，允许拉流", duration, roomId);
+        return new JsonObject(0, 0, "[on_play] duration: " + duration + ", all success, pass");
+    }
+
+    @Operation(summary = "on_stop", description = "on_stop")
+    @PostMapping("/on_stop")
+    public JsonObject on_stop(
+        @org.springframework.web.bind.annotation.RequestBody PublishRequest request) {
+        // 记录请求日志
+        logger.info("on_stop: {}", request);
+
+        // 从request对象中提取相关字段
+        String serverId = request.getServer_id();
+        String serviceId = request.getService_id();
+        String action = request.getAction();
+        String clientId = request.getClient_id();
+        String ip = request.getIp();
+        String vhost = request.getVhost();
+        String app = request.getApp();
+        String tcUrl = request.getTcUrl();
+        String stream = request.getStream();
+        String param = request.getParam();
+        String streamUrl = request.getStream_url();
+        String streamId = request.getStream_id();
+
+        // 提取直播房间ID，去除.m3u8后缀并匹配房间ID
+        String roomIdStr = stream.replace(".m3u8", "");
+        Matcher matcher = Pattern.compile("^roomId_(\\d+)$").matcher(roomIdStr);
+        String roomId = null;
+        if (matcher.find()) {
+            roomId = matcher.group(1);  // 提取数字部分作为房间ID
+        }
+        logger.info("liveRoomId: {}", roomId);
+
+        if (!StringUtils.hasText(roomId)) {
+            CheckUtils.throwIfNull(roomId, "房间id不存在");
+            return new JsonObject(0, 1, "[on_unpublish] fail, roomId is not exist");
+        }
+
+        ValueMap liveRoomParam = new ValueMap();
+        liveRoomParam.put(LiveRoomDetailResp.ID, roomId); // 房间id
+        SelectBuilder liveRoomSelectBuilder = new SelectBuilder(liveRoomParam);
+        liveRoomSelectBuilder.from("", super.getEntityDef("live_room"))
+            .where()
+            .and("id", ConditionType.EQUALS, LiveRoomDetailResp.ID);
+        LiveRoomDetailResp liveRoomInfo = super.getForBean(liveRoomSelectBuilder.build(),
+            LiveRoomDetailResp::new);
+
+        if (liveRoomInfo == null) {
+            return new JsonObject(0, 1,
+                "[on_play] fail, liveRoomInfo is not exist");
+        }
+
+        //    // body.param格式：?pushtype=0&pushkey=xxxxx
+//        Map<String, String> stringStringMap = parseQueryString(param);
+//        String pushKey = stringStringMap.get("pushkey");
+//        if (!StringUtils.hasText(pushKey)) {
+//            CheckUtils.throwIfNull(pushKey, "推流token不存在");
+//            return new JsonObject(0, 1, "[on_unpublish] fail, no token");
+//        }
+
+        return new JsonObject(0, 0, "[on_stop] all success, pass");
     }
 
     // 解析查询字符串为 Map
