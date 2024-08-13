@@ -272,3 +272,16 @@ new-admin.messaging.websocket:
   allowed-origins:
     - ${project.url}
 
+### srs推流 配置
+new-admin.srs:
+  # 推流地址
+  pushUrl: rtmp://srs-pull.reaicc.com
+  # 拉流地址
+  pull-url: https://srs-pull.reaicc.com
+  # 推流密钥
+  push-key: 1234567890
+  # 拉流密钥
+  pull-key: 1234567890
+  # 统一路径
+  push-path: /live/livestream
+  post: 1935
