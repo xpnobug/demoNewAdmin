@@ -1,6 +1,5 @@
 package com.newadmin.demoservice.config.websocket.dao;
 
-import com.newadmin.demoservice.config.websocket.heart.WsHeartbeatType;
 import org.springframework.web.socket.WebSocketSession;
 
 /**
@@ -30,10 +29,4 @@ public interface WebSocketSessionDao {
      * @return 会话信息
      */
     WebSocketSession get(String key);
-
-    // 初始化心跳定时器
-    void initHeartbeat();
-
-    // 处理收到的心跳消息
-    void handleHeartbeat(WsHeartbeatType data);
 }

@@ -45,7 +45,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         // 获取客户端 ID
         String clientId = this.getClientId(session);
         // 日志记录收到的消息
-        log.info("WebSocket接收消息。clientId: {}, message: {}.", clientId, message.getPayload());
+//        log.info("WebSocket接收消息。clientId: {}, message: {}.", clientId, message.getPayload());
 
         // 根据消息类型执行不同的处理逻辑
         socketLiveImpl.handleMethod(message, session);
