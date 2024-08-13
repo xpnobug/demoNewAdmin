@@ -3,6 +3,7 @@ package com.newadmin.demoservice.mainPro.livepro.controller;
 import com.newadmin.democore.kduck.utils.Page;
 import com.newadmin.democore.kduck.web.json.JsonObject;
 import com.newadmin.democore.kduck.web.json.JsonPageObject;
+import com.newadmin.demolog.log.core.annotation.Log;
 import com.newadmin.demoservice.mainPro.livepro.model.query.LiveQuery;
 import com.newadmin.demoservice.mainPro.livepro.service.LiveService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -72,6 +74,20 @@ public class LiveController {
         @PathVariable String id) {
         liveService.delete(id);
         return new JsonObject();
+    }
+
+    @Operation(summary = "根据房间ID查询直播", description = "根据房间ID查询直播")
+    @GetMapping("/findLiveRoom/{roomId}")
+    public JsonObject findLiveRoom(@PathVariable String roomId) {
+        return new JsonObject(liveService.findByRoomId(roomId));
+    }
+
+    //live_room_online_user
+    @Log(ignore = true)
+    @Operation(summary = "根据房间ID查询在线用户", description = "根据房间ID查询在线用户")
+    @GetMapping("/liveRoomOnlineUser")
+    public JsonObject findLiveRoomOnlineUser(@RequestParam String liveRoomId) {
+        return new JsonObject(liveService.findLiveRoomOnlineUser(liveRoomId));
     }
 
 }

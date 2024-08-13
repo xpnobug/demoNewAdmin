@@ -1,6 +1,9 @@
 package com.newadmin.demoservice.mainPro.livepro.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newadmin.democonfig.redisCommon.util.RedisUtils;
 import com.newadmin.democore.kduck.service.DefaultService;
 import com.newadmin.democore.kduck.service.ValueMap;
@@ -20,7 +23,9 @@ import com.newadmin.demoservice.mainPro.ltpro.entity.model.query.UserInfoQuery;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiUsersService;
 import java.time.Duration;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -160,4 +165,46 @@ public class LiveServiceImpl extends DefaultService implements LiveService {
         super.update(TABLE_NAME, liveResp);
     }
 
+    @Override
+    public LiveRoomDetailResp findByRoomId(String roomId) {
+        LiveRoomDetailResp roomDetailResp = liveRoomService.getDetail(0, roomId);
+        //房间信息
+        LiveDetailResp detail = getDetail(roomId);
+        //user_live_room 信息
+        UserLiveRoomDO userLiveRoomDO = queryInfo(roomId, "user_live_room", UserLiveRoomDO::new);
+        //用户信息
+        // 获取用户信息
+        ReaiUsers userInfo = usersService.getUserInfo(userLiveRoomDO.getUserId());
+        UserInfoQuery userInfoResp = BeanUtil.copyProperties(userInfo, UserInfoQuery.class);
+        roomDetailResp.put("user_live_room", userLiveRoomDO);
+        userLiveRoomDO.put("user", userInfoResp);
+        roomDetailResp.put("live", detail);
+        return roomDetailResp;
+    }
+
+    @Override
+    public Object findLiveRoomOnlineUser(String roomId) {
+        // 使用房间ID作为Redis键的一部分来查找用户信息
+        String redisKey = RedisUtils.formatKey("join", roomId, "room");
+        // 从 Redis 中获取与房间 ID 相关的用户信息
+        String info = RedisUtils.get(redisKey).toString();
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readTree(info);
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // 查询直播房间信息
+    private <T> T queryInfo(String roomId, String tableName, Function<Map, T> bean) {
+        ValueMap params = new ValueMap();
+        params.put("liveRoomId", roomId);
+        SelectBuilder selectBuilder = new SelectBuilder(params);
+        selectBuilder.from("", super.getEntityDef(tableName)).where()
+            .and("live_room_id", ConditionType.EQUALS, UserLiveRoomDO.LIVE_ROOM_ID);
+        return super.getForBean(selectBuilder.build(), bean);
+    }
 }

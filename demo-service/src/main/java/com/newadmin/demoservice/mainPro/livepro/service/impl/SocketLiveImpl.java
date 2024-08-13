@@ -1,6 +1,7 @@
 package com.newadmin.demoservice.mainPro.livepro.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,6 +18,8 @@ import com.newadmin.demoservice.mainPro.ltpro.service.ReaiUsersService;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,6 +37,7 @@ public class SocketLiveImpl {
     public void handleMethod(TextMessage message, WebSocketSession session) throws IOException {
         String payload = message.getPayload();
         LiveResp liveResp = new LiveResp();
+        ValueMap valueMap = new ValueMap();
         // 如果消息格式不正确，跳过处理
         if (payload.contains("[")) {
             String jsonString = payload.replaceAll("^\\d+", "").trim();
@@ -42,6 +46,7 @@ public class SocketLiveImpl {
             JSONObject data = json.getJSONObject("data");
             liveResp = BeanUtil.copyProperties(data, LiveResp.class);
             liveResp.put("browserUrl", json.get("browser_url"));
+            valueMap.put("joinDate", json);
 //            ObjectMapper objectMapper = new ObjectMapper();
 //            JsonNode rootNode = objectMapper.readTree(jsonString);
 //            JsonNode jsonNode = rootNode.get(1);
@@ -67,7 +72,7 @@ public class SocketLiveImpl {
 //        if (payload.contains("roomNoLive")) {
 //            payload = "roomNoLive";
 //        }
-        handleMessage(payload, session, liveResp);
+        handleMessage(payload, session, liveResp, valueMap);
 
     }
 
@@ -81,7 +86,8 @@ public class SocketLiveImpl {
         return sid;
     }
 
-    private void handleMessage(String payload, WebSocketSession session, LiveResp liveResp)
+    private void handleMessage(String payload, WebSocketSession session, LiveResp liveResp,
+        ValueMap valueMap)
         throws IOException {
         switch (payload) {
             case "heartbeat":
@@ -94,6 +100,7 @@ public class SocketLiveImpl {
             case "join":
                 // 处理用户加入房间的消息
                 handleJoinMessage(session, liveResp);
+                handleOnLineUser(valueMap);
                 break;
 //            case "srsCandidate":
 //                // 处理开始直播的消息
@@ -106,6 +113,42 @@ public class SocketLiveImpl {
             default:
                 // 处理未知类型的消息
                 break;
+        }
+    }
+
+    private void handleOnLineUser(ValueMap valueMap) {
+        String liveRoomId = null;
+        String socketId = null;
+        List joinDate = valueMap.getValueAsList("joinDate");
+        // 遍历 joinDate 列表中的每个元素
+        for (Object o : joinDate) {
+            // 将元素转换为 Map 类型，假设每个元素都是一个 Map
+            Map<String, Object> joinDateMap = (Map<String, Object>) o;
+
+            // 从 joinDateMap 中获取键为 "data" 的列表
+            Object data = joinDateMap.get("data");
+            if (data instanceof Map) {
+                liveRoomId = ((Map<?, ?>) data).get("liveRoomId").toString();
+                socketId = ((Map<?, ?>) data).get("socketId").toString();
+            }
+
+            // 从 joinDateMap 中获取键为 "user_id" 的字符串
+            String userId = (String) joinDateMap.get("user_id");
+
+            //存入Redis
+            ValueMap params = new ValueMap();
+            params.put("joinRoomId", liveRoomId);
+            params.put("socketId", socketId);
+            params.put("userId", userId);
+
+            // 将 ValueMap 序列化为 JSON 字符串
+            String jsonString = JSON.toJSONString(params);
+
+            // 格式化 Redis 键
+            String redisKey = RedisUtils.formatKey("join", liveRoomId, "room");
+
+            // 将序列化的 JSON 字符串存入 Redis
+            RedisUtils.set(redisKey, jsonString);
         }
     }
 

@@ -5,6 +5,7 @@ import com.newadmin.demoservice.mainPro.livepro.model.query.LiveQuery;
 import com.newadmin.demoservice.mainPro.livepro.model.query.LiveRoomQuery;
 import com.newadmin.demoservice.mainPro.livepro.model.resp.LiveDetailResp;
 import com.newadmin.demoservice.mainPro.livepro.model.resp.LiveResp;
+import com.newadmin.demoservice.mainPro.livepro.model.resp.LiveRoomDetailResp;
 import java.util.List;
 
 /**
@@ -59,4 +60,8 @@ public interface LiveService {
     void delete(String id);
 
     void updateLiveRoom(String id, String socketId);
+
+    LiveRoomDetailResp findByRoomId(String roomId);
+
+    Object findLiveRoomOnlineUser(String roomId);
 }
