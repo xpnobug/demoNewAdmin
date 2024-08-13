@@ -5,6 +5,7 @@ import com.newadmin.democore.constant.PropertiesConstants;
 import com.newadmin.demoservice.config.websocket.core.WebSocketClientService;
 import com.newadmin.demoservice.config.websocket.core.WebSocketInterceptor;
 import com.newadmin.demoservice.config.websocket.dao.WebSocketSessionDao;
+import com.newadmin.demoservice.config.websocket.dao.WebSocketSessionDaoDefaultImpl;
 import com.newadmin.demoservice.mainPro.livepro.service.impl.SocketLiveImpl;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
@@ -57,6 +58,15 @@ public class WebSocketAutoConfiguration {
     public HandshakeInterceptor handshakeInterceptor() {
         return new WebSocketInterceptor(properties,
             SpringUtil.getBean(WebSocketClientService.class));
+    }
+
+    /**
+     * WebSocket 会话 DAO
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public WebSocketSessionDao webSocketSessionDao() {
+        return new WebSocketSessionDaoDefaultImpl();
     }
 
     /**
