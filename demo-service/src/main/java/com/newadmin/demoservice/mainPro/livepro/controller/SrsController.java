@@ -51,7 +51,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.WebSocketSession;
 
 /**
- * SRS API控制器，负责处理SRS相关的API请求 主要涉及WebRTC推流、拉流和流的发布与取消发布
+ * SRS API控制器，负责处理SRS相关的API请求
+ * 主要涉及WebRTC推流、拉流和流的发布与取消发布
  *
  * @author couei
  * @since 2024/08/05 21:29
