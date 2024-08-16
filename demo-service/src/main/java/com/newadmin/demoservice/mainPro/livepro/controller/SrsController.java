@@ -82,7 +82,7 @@ public class SrsController extends DefaultService {
         Integer post = srsProperties.getPost();
 
         // 构建请求 URL
-        String url = String.format("https://srs-pull.reaicc.com/rtc/v1/publish/", pushUrl, post);
+        String url = String.format("http://182.92.201.19:1985/rtc/v1/publish/", pushUrl, post);
 
         // 使用 OkHttpClient 发送 POST 请求
         JsonNode jsonNode = getJsonNode(requestBody, url);
