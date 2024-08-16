@@ -88,14 +88,22 @@ public class LiveRoomServiceImpl extends DefaultService implements LiveRoomServi
         SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
         Assert.notNull(tokenInfo.loginId, "用户未登录");
 
-        // 构建参数映射，用于WHERE条件
+        // 构建参数映射，用于WHERE条件，先查用户和直播间 有没有绑定过
         ValueMap param = new ValueMap();
         param.put("userId", tokenInfo.loginId.toString()); // 添加直播房间的显示状态条件
         // 创建查询构建器，并初始化参数
         SelectBuilder selectBuilder = new SelectBuilder(param);
-        selectBuilder.from("", super.getEntityDef(LiveServiceImpl.TABLE_NAME))
+        selectBuilder.from("", super.getEntityDef("user_live_room"))
             .where()
             .and("user_id", ConditionType.EQUALS, "userId"); // 添加ID的条件);
+        //如果有数据代表用户已经创建过直播间，没有数据代表用户没有创建过直播间
+        //绑定信息只能有一个，所以查询出来一个就返回
+        UserLiveRoomDO userLiveRoomInfo = super.getForBean(selectBuilder.build(),
+            UserLiveRoomDO::new);
+        if (userLiveRoomInfo != null) {
+            // 已经有数据,不再创建直播间，直接返回直播间id
+            return userLiveRoomInfo.getLiveRoomId();
+        }
 
 //        LiveResp liveInfo = super.getForBean(selectBuilder.build(), LiveResp::new);
 //        if (liveInfo == null) {
@@ -104,6 +112,7 @@ public class LiveRoomServiceImpl extends DefaultService implements LiveRoomServi
         req.put("name", req.getName());
         req.setCreatedTime(new Date());
         req.setUpdatedTime(new Date());
+        //第一次会先创建一个直播间，还没有有推流地址
         String roomId = super.add(TABLE_NAME, req).toString();
 
         // 添加用户和直播房间的关系
@@ -112,6 +121,7 @@ public class LiveRoomServiceImpl extends DefaultService implements LiveRoomServi
         userLiveRoomDO.setLiveRoomId(roomId);
         userLiveRoomDO.setCreateTime(new Date());
         userLiveRoomDO.setUpdateTime(new Date());
+        // 用户和直播间信息绑定
         super.add("user_live_room", userLiveRoomDO);
         // 设置推流地址
         req.put("id", roomId);
