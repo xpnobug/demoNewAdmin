@@ -2,7 +2,7 @@ package com.newadmin.demoservice.mainPro.ltpro.service.impl;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
-import com.newadmin.democore.kduck.id.IdGenerator;
+import com.newadmin.democore.kduck.definition.BeanEntityDef;
 import com.newadmin.democore.kduck.query.QuerySupport;
 import com.newadmin.democore.kduck.service.DefaultService;
 import com.newadmin.democore.kduck.service.ParamMap;
@@ -13,6 +13,7 @@ import com.newadmin.democore.kduck.utils.ConversionUtils;
 import com.newadmin.democore.kduck.utils.Page;
 import com.newadmin.democore.kduck.web.json.JsonObject;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiArticle;
+import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiChannel;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiLikes;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiMusic;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiUsers;
@@ -55,7 +56,6 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
 
     public static final String TABLE_NAME = "reai_article";
 
-    private final IdGenerator idGenerator;
     private final ReaiUsersService usersService;
     private final FileService fileService;
     private final ReaiMusicService songService;
@@ -63,52 +63,54 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
     @Override
     public List<ReaiArticle> articleList(String userId) {
         Map<String, Object> paramMap = ParamMap.create("userId", userId)
-            .set("publishPlatform", "friendCircle").
+            .set(ReaiArticle.CHANNEL_ID, "friendCircle").
             toMap();
         QuerySupport query = super.getQuery(ArticleQuery.class, paramMap);
         List<ReaiArticle> infolist = super.listForBean(query, ReaiArticle::new);
         return infolist;
     }
 
+    /**
+     * 首页展示的各版块文章列表
+     *
+     * @return
+     */
     @Override
     public List<ReaiArticleList> getArticleList() {
-        // 获取文章列表
-        QuerySupport query = super.getQuery(ArticleQuery.class, null);
-        List<ReaiArticle> infolist = super.listForBean(query, ReaiArticle::new);
+        //获取官方版块列表 根据发布平台进行分组 is_official 是否官方
+        ValueMap params = new ValueMap();
+//        params.put(ReaiChannel.IS_OFFICIAL,"1");
+
+        SelectBuilder selectBuilder = new SelectBuilder(params);
+        BeanEntityDef articleBean = super.getEntityDef(TABLE_NAME);
+        BeanEntityDef channelBean = super.getEntityDef(ReaiChannelServiceImpl.TABLE_NAME);
+        BeanEntityDef userBean = super.getEntityDef(ReaiUsersServiceImpl.TABLE_NAME);
+
+        selectBuilder.bindFields("article")
+            .bindFields("channel", "name")
+            .bindFields("user", "userId", "nickName", "avatar");
+
+        selectBuilder.from("article", articleBean)
+            .innerJoinOn("channel", channelBean, "channelId")
+            .innerJoinOn("user", userBean, "userId", articleBean)
+            .where()
+            .and("article.channel_id", ConditionType.EQUALS, "channelId")
+            .and("channel.is_official", ConditionType.EQUALS, ReaiChannel.IS_OFFICIAL)
+            .and("article.user_id", ConditionType.EQUALS, "userId")
+            .orderBy().desc("publish_date");
+        //官方版块文章列表
+        List<ReaiArticle> infolist = super.listForBean(selectBuilder.build(), ReaiArticle::new);
 
         List<ReaiArticleList> list = new ArrayList<>();
-        // 根据发布平台对文章进行分组,并根据发布时间进行降序排序
-        infolist.sort((o1, o2) -> o2.getPublishDate().compareTo(o1.getPublishDate()));
-
-        //获取用户id
-        //筛选出每个文章中的userid,存放在一个数组中,去重
-        List<String> userIdList = infolist.stream().map(ReaiArticle::getUserId).distinct()
-            .collect(Collectors.toList());
-        //根据userid获取用户信息
-
-        List<ReaiUsers> usersList = usersService.usersListById(userIdList);
-
         //根据发布板块分组,如果发布板块为空不加入分组
         Map<String, List<ReaiArticle>> listMap = infolist.stream()
-            .filter(item -> item.getPublishPlatform() != null)
-            .collect(Collectors.groupingBy(ReaiArticle::getPublishPlatform));
+            .filter(item -> item.getChannelId() != null)
+            .collect(Collectors.groupingBy(ReaiArticle::getName));
 
-        // 遍历分组后的文章列表
         //将用户信息存放在文章中
         listMap.forEach((category, itemsInCategory) -> {
             ReaiArticleList articleList = new ReaiArticleList();
             articleList.put(ReaiArticleList.TYPE_NAME, category);
-            //获取用户id
-            itemsInCategory.forEach(users -> {
-                //获取用户信息
-                ReaiUsers user = usersList.stream()
-                    .filter(item -> item.getUserId().equals(users.getUserId()))
-                    .findFirst().orElse(null);
-                if (user != null) {
-                    users.setAuthor(user.getNickName());
-                    users.setAvatar(user.getAvatar());
-                }
-            });
             articleList.put(ReaiArticleList.ARTICLE_LIST, itemsInCategory);
             list.add(articleList);
         });
@@ -276,7 +278,7 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
         //查询发布平台为 friendCircle：朋友圈 的数据
         //筛选发布版块为朋友圈的文章
         List<ReaiArticle> filterAfterList = articleList.stream().filter(
-                item -> item.getPublishPlatform() != null && item.getPublishPlatform()
+                item -> item.getChannelId() != null && item.getChannelId()
                     .equals("friendCircle"))
             .toList();
         //如果过滤后的列表为空，则修改page
@@ -383,12 +385,12 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
     public List<ReaiArticle> friendArticleList(Page page, String userId) {
         ValueMap param = new ValueMap();
         param.put(ReaiArticle.USER_ID, userId);
-        param.put(ReaiArticle.PUBLISH_PLATFORM, "friendCircle");
+        param.put(ReaiArticle.CHANNEL_ID, "friendCircle");
         SelectBuilder selectBuilder = new SelectBuilder(param);
         selectBuilder.from("", super.getEntityDef(TABLE_NAME))
             .where()
             .and("user_id", ConditionType.EQUALS, ReaiArticle.USER_ID)
-            .and("publish_platform", ConditionType.EQUALS, ReaiArticle.PUBLISH_PLATFORM)
+            .and("channel_id", ConditionType.EQUALS, ReaiArticle.CHANNEL_ID)
             .orderBy().desc("publish_date");
         return super.listForBean(selectBuilder.build(), page, ReaiArticle::new);
     }

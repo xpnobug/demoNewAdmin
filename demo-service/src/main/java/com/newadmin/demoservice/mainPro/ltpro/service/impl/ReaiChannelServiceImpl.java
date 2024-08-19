@@ -64,7 +64,7 @@ public class ReaiChannelServiceImpl extends DefaultService implements ReaiChanne
         List<ReaiChannel> channelList = getChannel(isOfficial);
 
         // 获取所有加入版块的用户，根据版块id查询 根据channelList中的id
-        List<String> channelId = channelList.stream().map(ReaiChannel::getId).toList();
+        List<String> channelId = channelList.stream().map(ReaiChannel::getChannelId).toList();
         List<ReaiFollow> followList = getFollowList(channelId);
 
         // 批量获取用户id

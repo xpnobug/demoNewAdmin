@@ -141,6 +141,8 @@ public class ReaiArticle extends ValueMap {
      * 发布平台
      */
     public static final String PUBLISH_PLATFORM = "publishPlatform";
+    /***/
+    public static final String CHANNEL_ID = "channelId";
 
     /**
      * 用户id
@@ -167,6 +169,8 @@ public class ReaiArticle extends ValueMap {
      * 地址
      */
     public static final String ADDRESS = "address";
+    /***/
+    public static final String NAME = "name";
 
     public ReaiArticle() {
     }
@@ -749,5 +753,41 @@ public class ReaiArticle extends ValueMap {
      */
     public Date getUpdateTime() {
         return super.getValueAsDate(UPDATE_TIME);
+    }
+
+    /**
+     * 设置
+     *
+     * @param channelId
+     */
+    public void setChannelId(String channelId) {
+        super.setValue(CHANNEL_ID, channelId);
+    }
+
+    /**
+     * 获取
+     *
+     * @return
+     */
+    public String getChannelId() {
+        return super.getValueAsString(CHANNEL_ID);
+    }
+
+    /**
+     * 设置
+     *
+     * @param name
+     */
+    public void setName(String name) {
+        super.setValue(NAME, name);
+    }
+
+    /**
+     * 获取
+     *
+     * @return
+     */
+    public String getName() {
+        return super.getValueAsString(NAME);
     }
 }

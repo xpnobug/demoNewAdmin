@@ -22,6 +22,8 @@ public class ReaiChannel extends ValueMap {
      * 唯一标识符
      */
     public static final String ID = "id";
+    /***/
+    public static final String CHANNEL_ID = "channelId";
 
     /**
      * 版块名称
@@ -966,5 +968,23 @@ public class ReaiChannel extends ValueMap {
      */
     public Integer getPayForumType() {
         return super.getValueAsInteger(PAY_FORUM_TYPE);
+    }
+
+    /**
+     * 设置
+     *
+     * @param channelId
+     */
+    public void setChannelId(String channelId) {
+        super.setValue(CHANNEL_ID, channelId);
+    }
+
+    /**
+     * 获取
+     *
+     * @return
+     */
+    public String getChannelId() {
+        return super.getValueAsString(CHANNEL_ID);
     }
 }
