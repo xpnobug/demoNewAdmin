@@ -22,7 +22,7 @@ public interface ReaiChannelService {
      */
     List<ReaiChannel> list(Page page);
 
-    List<ChannelQuery> listQuery(Integer isOfficial);
+    List<ChannelQuery> listQuery(Page page, Integer isOfficial);
 
     Object getById(String id);
 

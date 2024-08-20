@@ -19,8 +19,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class RecommendServiceImpl implements
-    RecommendService {
+public class RecommendServiceImpl implements RecommendService {
 
     private final ReaiFollowService followService;
     private final ReaiUsersService usersService;
@@ -46,7 +45,7 @@ public class RecommendServiceImpl implements
             list.sort((o1, o2) -> o2.getRegistrationTime().compareTo(o1.getRegistrationTime()));
             // 只返回10条数据
             List<ReaiUsers> reaiUsersList = new ArrayList<>(list.stream()
-                .filter(user -> user.getRegistrationTime() != null).limit(10).toList());
+                .filter(user -> user.getRegistrationTime() != null).limit(5).toList());
             Recommend recommend = new Recommend();
             recommend.setType("1");
             // 排除当前登录的自己
@@ -77,7 +76,7 @@ public class RecommendServiceImpl implements
                 .sorted(
                     (o1, o2) -> countMap.get(o2.getUserId())
                         .compareTo(countMap.get(o1.getUserId())))
-                .limit(10)
+                .limit(5)
                 .toList();
 
             zshyUsersList.forEach(user -> {
@@ -95,7 +94,7 @@ public class RecommendServiceImpl implements
             list.sort((o1, o2) -> o2.getRegistrationTime().compareTo(o1.getRegistrationTime()));
             // 只返回10条数据
             List<ReaiUsers> reaiUsersList = new ArrayList<>(list.stream()
-                .filter(user -> user.getRegistrationTime() != null).limit(10).toList());
+                .filter(user -> user.getRegistrationTime() != null).limit(5).toList());
             Recommend recommend = new Recommend();
             recommend.setType("1");
 
@@ -122,7 +121,7 @@ public class RecommendServiceImpl implements
                 .sorted(
                     (o1, o2) -> countMap.get(o2.getUserId())
                         .compareTo(countMap.get(o1.getUserId())))
-                .limit(10)
+                .limit(5)
                 .toList();
 
             zshyUsersList.forEach(user -> {

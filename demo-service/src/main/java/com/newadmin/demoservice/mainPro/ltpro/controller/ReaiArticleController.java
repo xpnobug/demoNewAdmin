@@ -37,7 +37,7 @@ public class ReaiArticleController {
     private ReaiArticleService reaiArticleService;
 
     /**
-     * 分页查询所有数据
+     * 分页查询所有数据（首页）
      *
      * @return 所有数据
      */
@@ -47,7 +47,13 @@ public class ReaiArticleController {
         return new JsonObject(reaiArticleService.getArticleList());
     }
 
-    @Operation(summary = "分页查询文章数据", description = "分页查询文章数据")
+    /**
+     * 分页查询所有数据（社区列表）
+     *
+     * @param page
+     * @return
+     */
+    @Operation(summary = "分页查询文章数据（社区列表）", description = "分页查询文章数据（社区列表）")
     @GetMapping("/list")
     public JsonPageObject selectAllList(Page page) {
         return new JsonPageObject(page, reaiArticleService.selectAllList(page));

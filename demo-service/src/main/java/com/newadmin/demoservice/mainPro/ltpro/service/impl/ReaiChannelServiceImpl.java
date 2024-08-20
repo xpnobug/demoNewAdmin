@@ -59,9 +59,9 @@ public class ReaiChannelServiceImpl extends DefaultService implements ReaiChanne
     }
 
     @Override
-    public List<ChannelQuery> listQuery(Integer isOfficial) {
+    public List<ChannelQuery> listQuery(Page page, Integer isOfficial) {
         // 根据是否是官方版块获取版块列表，1: 官方版块，2：用户版块
-        List<ReaiChannel> channelList = getChannel(isOfficial);
+        List<ReaiChannel> channelList = getChannel(page, isOfficial);
 
         // 获取所有加入版块的用户，根据版块id查询 根据channelList中的id
         List<String> channelId = channelList.stream().map(ReaiChannel::getChannelId).toList();
@@ -127,7 +127,7 @@ public class ReaiChannelServiceImpl extends DefaultService implements ReaiChanne
      * @param isOfficial
      * @return
      */
-    public List<ReaiChannel> getChannel(Integer isOfficial) {
+    public List<ReaiChannel> getChannel(Page page, Integer isOfficial) {
         ValueMap params = new ValueMap();
         params.put(ReaiChannel.IS_OFFICIAL, isOfficial);
         // 创建查询构建器
@@ -136,7 +136,7 @@ public class ReaiChannelServiceImpl extends DefaultService implements ReaiChanne
         selectBuilder.from("", super.getEntityDef(TABLE_NAME)).where()
             .and("is_official", ConditionType.EQUALS, ReaiChannel.IS_OFFICIAL)
             .orderBy().desc("create_time"); // 添加排序
-        return listForBean(selectBuilder.build(), ReaiChannel::new);
+        return listForBean(selectBuilder.build(), page, ReaiChannel::new);
     }
 
     public List<ReaiFollow> getFollowList(List<String> channelId) {

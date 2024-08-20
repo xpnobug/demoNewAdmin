@@ -49,7 +49,7 @@ public class ReaiChannelController {
     @Operation(summary = "分页查询频道数据", description = "分页查询频道数据")
     @GetMapping("/channelList")
     public JsonPageObject listQuery(Page page, Integer isOfficial) {
-        return new JsonPageObject(page, reaiChannelService.listQuery(isOfficial));
+        return new JsonPageObject(page, reaiChannelService.listQuery(page, isOfficial));
     }
 
     /**
