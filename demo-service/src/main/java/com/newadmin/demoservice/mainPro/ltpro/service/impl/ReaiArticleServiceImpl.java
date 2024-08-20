@@ -79,15 +79,16 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
     public List<ReaiArticleList> getArticleList() {
         //获取官方版块列表 根据发布平台进行分组 is_official 是否官方
         ValueMap params = new ValueMap();
-//        params.put(ReaiChannel.IS_OFFICIAL,"1");
+        params.put(ReaiChannel.IS_OFFICIAL, "1");
 
         SelectBuilder selectBuilder = new SelectBuilder(params);
         BeanEntityDef articleBean = super.getEntityDef(TABLE_NAME);
         BeanEntityDef channelBean = super.getEntityDef(ReaiChannelServiceImpl.TABLE_NAME);
         BeanEntityDef userBean = super.getEntityDef(ReaiUsersServiceImpl.TABLE_NAME);
 
-        selectBuilder.bindFields("article")
-            .bindFields("channel", "name")
+        selectBuilder.bindFields("article", false, "seoInformation", "editorialSuggestions",
+                "recommendations")
+            .bindFields("channel", "name", "type")
             .bindFields("user", "userId", "nickName", "avatar");
 
         selectBuilder.from("article", articleBean)
@@ -104,8 +105,8 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
         List<ReaiArticleList> list = new ArrayList<>();
         //根据发布板块分组,如果发布板块为空不加入分组
         Map<String, List<ReaiArticle>> listMap = infolist.stream()
-            .filter(item -> item.getChannelId() != null)
-            .collect(Collectors.groupingBy(ReaiArticle::getName));
+            .filter(item -> item.getChannelId() != null && item.getType() != null)
+            .collect(Collectors.groupingBy(ReaiArticle::getType));
 
         //将用户信息存放在文章中
         listMap.forEach((category, itemsInCategory) -> {

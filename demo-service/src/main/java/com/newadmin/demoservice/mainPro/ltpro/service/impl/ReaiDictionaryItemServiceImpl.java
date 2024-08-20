@@ -80,6 +80,25 @@ public class ReaiDictionaryItemServiceImpl extends DefaultService implements
         }
     }
 
+    @Override
+    public Map<String, String> dictMap(String dictCode) {
+        // 根据字典code获取字典
+        ReaiDictionary dictionary = dictionaryService.getDictByCode(dictCode);
+        // 如果字典存在，则获取字典项列表
+        if (dictionary != null) {
+            Map<String, String> dictionaryItemMap = new HashMap<>();
+            List<ReaiDictionaryItem> dictionaryItems = getDictionItemById(dictionary.getDictId());
+
+            for (ReaiDictionaryItem item : dictionaryItems) {
+                dictionaryItemMap.put(item.getItemCode(), item.getItemName());
+            }
+
+            return dictionaryItemMap;
+        } else {
+            throw new RuntimeException("字典不存在");
+        }
+    }
+
     /**
      * 根据字典code获取字典项列表，以Map<code, name>格式返回
      *
