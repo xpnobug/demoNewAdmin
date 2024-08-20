@@ -32,7 +32,7 @@ public class ReaiDictionaryItemController {
      */
     @GetMapping("/dictItem")
     public JsonObject getDictItem(@RequestParam String dictCode) {
-        return new JsonObject(reaiDictionaryItemService.getDictionaryItemList(dictCode));
+        return new JsonObject(reaiDictionaryItemService.dictMap(dictCode));
     }
 
     /**
