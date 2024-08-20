@@ -109,7 +109,7 @@ sa-token.extension:
     # 无需token 验证的接口
     - /users/**
     - /article/**
-    - /dict/getDictByItemCode
+    - /dict/**
     - /comment/**
     - /likes/**
     - /recommend/**
