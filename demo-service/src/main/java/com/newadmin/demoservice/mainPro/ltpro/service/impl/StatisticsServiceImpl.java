@@ -19,10 +19,10 @@ public class StatisticsServiceImpl implements StatisticsService {
         //1.获取用户发布的文章数量
         int articleCount = articleService.articleList(userId).size();
         //2.获取用户关注的用户数量
-        int followCount = followService.getFollowList(userId, null)
+        int followCount = followService.getFollowList(userId, null, null)
             .size();
         //3.获取用户的粉丝数量
-        int followerCount = followService.getFollowList(null, userId).size();
+        int followerCount = followService.getFollowList(null, userId, null).size();
 
         //返回统计结果
         Statistics statistics = new Statistics();

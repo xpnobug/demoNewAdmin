@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @author couei
  * @since 2024-03-31
  */
-public interface FileService {
+public interface NasFileService {
 
     List<File> getFileList(String articleId, Page page);
 

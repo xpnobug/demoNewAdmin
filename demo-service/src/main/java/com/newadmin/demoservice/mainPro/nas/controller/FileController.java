@@ -21,7 +21,7 @@
 //import com.newadmin.democore.kduck.utils.Page;
 //import java.util.List;
 //import com.newadmin.demoservice.nas.entity.File;
-//import com.newadmin.demoservice.nas.service.FileService;
+//import com.newadmin.demoservice.nas.service.NasFileService;
 //import org.springframework.web.bind.annotation.RestController;
 //import org.springframework.web.multipart.MultipartFile;
 //
@@ -38,7 +38,7 @@
 //public class FileController {
 //
 //    @Autowired
-//    private FileService fileService;
+//    private NasFileService fileService;
 //    @Autowired
 //    private UserService userService;
 //

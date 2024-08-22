@@ -23,4 +23,11 @@ public class RecommendController {
         List<Recommend> reaiUsers = recommendService.showRecommend();
         return new JsonObject(reaiUsers);
     }
+
+    @GetMapping("/showChannel")
+    public JsonObject showChannel() {
+        List<Recommend> showChannel = recommendService.showChannel();
+        return new JsonObject(showChannel);
+    }
+
 }

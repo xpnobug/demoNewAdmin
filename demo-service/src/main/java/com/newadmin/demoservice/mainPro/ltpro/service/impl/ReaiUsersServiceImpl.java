@@ -169,7 +169,7 @@ public class ReaiUsersServiceImpl extends DefaultService implements
             String userId = tokenInfo.loginId.toString();
 
             // 获取当前用户关注的用户列表
-            List<ReaiFollow> followList = followService.getFollowList(userId, null);
+            List<ReaiFollow> followList = followService.getFollowList(userId, null, null);
 
             // 排除当前登录的自己
             reaiUsers.removeIf(user -> user.getUserId().equals(userId));
@@ -209,7 +209,7 @@ public class ReaiUsersServiceImpl extends DefaultService implements
     @Override
     public List<ReaiUsers> getFollowListById(String id) {
         // 获取当前用户关注的用户列表
-        List<ReaiFollow> followList = followService.getFollowList(id, null);
+        List<ReaiFollow> followList = followService.getFollowList(id, null, null);
         List<ReaiUsers> list = new ArrayList<>();
 
         for (ReaiFollow reaiFollow : followList) {
@@ -240,7 +240,7 @@ public class ReaiUsersServiceImpl extends DefaultService implements
             String userId = tokenInfo.loginId.toString();
             if (!id.equals(userId)) {
                 // 获取当前用户关注的用户列表
-                List<ReaiFollow> followList = followService.getFollowList(userId, null);
+                List<ReaiFollow> followList = followService.getFollowList(userId, null, null);
                 // 对比reaiUsers 中userid 和 followList 中 followUserId是否一致
                 // 判断当前用户是否关注了该用户
                 boolean isFollow = followList.stream()
@@ -261,7 +261,7 @@ public class ReaiUsersServiceImpl extends DefaultService implements
             String userId = tokenInfo.loginId.toString();
             if (!id.equals(userId)) {
                 // 获取当前用户关注的用户列表
-                List<ReaiFollow> followList = followService.getFollowList(userId, null);
+                List<ReaiFollow> followList = followService.getFollowList(userId, null, null);
                 // 对比reaiUsers 中userid 和 followList 中 followUserId是否一致
                 // 判断当前用户是否关注了该用户
                 boolean isFollow = followList.stream()
@@ -311,9 +311,9 @@ public class ReaiUsersServiceImpl extends DefaultService implements
         //1.获取用户发布的文章数量
         int articleCount = articleService.articleList(userId).size();
         //2.获取用户关注的用户数量
-        int followCount = followService.getFollowList(userId, null).size();
+        int followCount = followService.getFollowList(userId, null, null).size();
         //3.获取用户的粉丝数量
-        int followerCount = followService.getFollowList(null, userId).size();
+        int followerCount = followService.getFollowList(null, userId, null).size();
 
         //返回统计结果
         Statistics statistics = new Statistics();

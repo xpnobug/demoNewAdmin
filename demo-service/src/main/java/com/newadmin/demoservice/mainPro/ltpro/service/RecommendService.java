@@ -9,4 +9,6 @@ public interface RecommendService {
      * 展示推荐模块 最近加入，最受欢迎， 最近活跃的用户
      */
     List<Recommend> showRecommend();
+
+    List<Recommend> showChannel();
 }

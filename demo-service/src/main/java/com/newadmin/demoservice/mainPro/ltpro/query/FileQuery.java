@@ -8,7 +8,7 @@ import com.newadmin.democore.kduck.sqlbuild.ConditionBuilder.ConditionType;
 import com.newadmin.democore.kduck.sqlbuild.SelectBuilder;
 import com.newadmin.democore.kduck.utils.BeanDefUtils;
 import com.newadmin.demoservice.mainPro.ltpro.service.impl.ReaiArticleServiceImpl;
-import com.newadmin.demoservice.mainPro.nas.service.impl.FileServiceImpl;
+import com.newadmin.demoservice.mainPro.nas.service.impl.NasFileServiceImpl;
 import java.util.Map;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +20,7 @@ public class FileQuery implements QueryCreator {
         BeanEntityDef article = depository.getEntityDef(
             ReaiArticleServiceImpl.TABLE_NAME);//获取学生表的对象的实体表示对象，CODE_STUDENT为接口中定义的实体编码
         BeanEntityDef file = depository.getEntityDef(
-            FileServiceImpl.TABLE_NAME);//获取班级表的对象的实体表示对象，CODE_CLASS为接口中定义的实体编码
+            NasFileServiceImpl.TABLE_NAME);//获取班级表的对象的实体表示对象，CODE_CLASS为接口中定义的实体编码
 
         SelectBuilder selectBuilder = new SelectBuilder(paramMap);
         selectBuilder.bindFields("a",

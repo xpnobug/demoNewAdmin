@@ -23,7 +23,7 @@ import com.newadmin.demoservice.mainPro.ltpro.service.ReaiMusicService;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiUsersService;
 import com.newadmin.demoservice.mainPro.ltpro.vo.ReaiArticleList;
 import com.newadmin.demoservice.mainPro.nas.entity.File;
-import com.newadmin.demoservice.mainPro.nas.service.FileService;
+import com.newadmin.demoservice.mainPro.nas.service.NasFileService;
 import com.newadmin.demoservice.util.FileTypeUtil;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -57,7 +57,7 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
     public static final String TABLE_NAME = "reai_article";
 
     private final ReaiUsersService usersService;
-    private final FileService fileService;
+    private final NasFileService fileService;
     private final ReaiMusicService songService;
 
     @Override

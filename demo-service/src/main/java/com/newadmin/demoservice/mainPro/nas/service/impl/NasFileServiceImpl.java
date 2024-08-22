@@ -15,7 +15,7 @@ import com.newadmin.democore.oss.domain.OssReq;
 import com.newadmin.democore.oss.domain.OssResp;
 import com.newadmin.demoservice.mainPro.ltpro.query.FileQuery;
 import com.newadmin.demoservice.mainPro.nas.entity.File;
-import com.newadmin.demoservice.mainPro.nas.service.FileService;
+import com.newadmin.demoservice.mainPro.nas.service.NasFileService;
 import com.newadmin.demoservice.util.FileTypeUtil;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
@@ -48,7 +48,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Service
 @RequiredArgsConstructor
-public class FileServiceImpl extends DefaultService implements FileService {
+public class NasFileServiceImpl extends DefaultService implements NasFileService {
 
     public static final String TABLE_NAME = "file";
 

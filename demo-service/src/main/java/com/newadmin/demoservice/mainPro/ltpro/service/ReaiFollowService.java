@@ -19,5 +19,5 @@ public interface ReaiFollowService {
 
     String quitFollow(String channelId);
 
-    List<ReaiFollow> getFollowList(String userId, String followId);
+    List<ReaiFollow> getFollowList(String userId, String followId, String channelId);
 }

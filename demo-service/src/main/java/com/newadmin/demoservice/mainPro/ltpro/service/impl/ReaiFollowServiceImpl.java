@@ -44,7 +44,7 @@ public class ReaiFollowServiceImpl extends DefaultService implements ReaiFollowS
         Assert.notNull(tokenInfo.loginId, "请先登录");
         String userId = tokenInfo.loginId.toString();
         //根据userid 查询关注列表
-        List<ReaiFollow> list = getFollowList(userId, null);
+        List<ReaiFollow> list = getFollowList(userId, null, null);
         // 传入的是关注的用户id，根据这个id 去和 list 比较，如果list中存在，就删除
         list.forEach(follow -> {
             if (follow.getFollowUserId().equals(id)) {
@@ -89,10 +89,11 @@ public class ReaiFollowServiceImpl extends DefaultService implements ReaiFollowS
      * @return
      */
     @Override
-    public List<ReaiFollow> getFollowList(String userId, String followId) {
+    public List<ReaiFollow> getFollowList(String userId, String followId, String channelId) {
         ValueMap params = new ValueMap();
         params.put(ReaiFollow.USER_ID, userId);
         params.put(ReaiFollow.FOLLOW_USER_ID, followId);
+        params.put(ReaiFollow.FOLLOW_CHANNEL_ID, channelId);
         SelectBuilder selectBuilder = new SelectBuilder(params);
         selectBuilder.from("", super.getEntityDef(TABLE_NAME));
         selectBuilder.from("", super.getEntityDef(TABLE_NAME))
