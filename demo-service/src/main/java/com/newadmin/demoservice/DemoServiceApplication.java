@@ -2,6 +2,7 @@ package com.newadmin.demoservice;
 
 import cn.dev33.satoken.SaManager;
 import lombok.RequiredArgsConstructor;
+import org.dromara.x.file.storage.spring.EnableFileStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -16,6 +17,7 @@ import org.springframework.core.env.Environment;
  * @author 86136
  */
 
+@EnableFileStorage
 @ComponentScan(basePackages = {"com.newadmin.*"})
 @SpringBootApplication
 @RequiredArgsConstructor
