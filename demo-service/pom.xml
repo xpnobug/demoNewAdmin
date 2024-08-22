@@ -22,6 +22,8 @@
     <bin-path>bin</bin-path>
     <!-- 依赖 jar 输出目录 -->
     <lib-path>lib</lib-path>
+    <x-file-storage.version>2.2.0</x-file-storage.version>
+    <aws-s3.version>1.12.761</aws-s3.version>
   </properties>
 
   <!-- 引入父工程的spring boot依赖 -->
@@ -89,6 +91,21 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
+    </dependency>
+
+
+    <!-- X File Storage（一行代码将文件存储到本地、FTP、SFTP、WebDAV、阿里云 OSS、华为云 OBS...等其它兼容 S3 协议的存储平台） -->
+    <dependency>
+      <groupId>org.dromara.x-file-storage</groupId>
+      <artifactId>x-file-storage-spring</artifactId>
+      <version>${x-file-storage.version}</version>
+    </dependency>
+
+    <!-- Amazon S3（Amazon Simple Storage Service，亚马逊简单存储服务，通用存储协议 S3，兼容主流云厂商对象存储） -->
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-java-sdk-s3</artifactId>
+      <version>${aws-s3.version}</version>
     </dependency>
   </dependencies>
 
