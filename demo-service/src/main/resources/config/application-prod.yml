@@ -121,6 +121,7 @@ sa-token.extension:
     - /srs/**
     - /generator/**
     - /live/**
+    - /common/**
 
 reai:
   show-sql:
