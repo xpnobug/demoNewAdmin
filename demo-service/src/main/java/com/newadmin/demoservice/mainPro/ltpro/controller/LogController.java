@@ -1,6 +1,5 @@
 package com.newadmin.demoservice.mainPro.ltpro.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.newadmin.democore.kduck.utils.Page;
 import com.newadmin.democore.kduck.web.json.JsonObject;
 import com.newadmin.democore.kduck.web.json.JsonPageObject;
@@ -31,29 +30,29 @@ public class LogController {
     private final LogService logService;
 
     @Operation(summary = "分页查询列表", description = "分页查询列表")
-    @SaCheckPermission("monitor:log:list")
+//    @SaCheckPermission("monitor:log:list")
     @GetMapping
     public JsonPageObject page(LogQuery query, @Validated Page page) {
-        return new JsonPageObject(page, logService.page(query));
+        return new JsonPageObject(page, logService.page(page, query));
     }
 
     @Operation(summary = "查询详情", description = "查询详情")
     @Parameter(name = "id", description = "ID", example = "1", in = ParameterIn.PATH)
-    @SaCheckPermission("monitor:log:list")
+//    @SaCheckPermission("monitor:log:list")
     @GetMapping("/{id}")
     public JsonObject get(@PathVariable String id) {
         return new JsonObject(logService.get(id));
     }
 
     @Operation(summary = "导出登录日志", description = "导出登录日志")
-    @SaCheckPermission("monitor:log:export")
+//    @SaCheckPermission("monitor:log:export")
     @GetMapping("/export/login")
     public void exportLoginLog(LogQuery query, SortQuery sortQuery, HttpServletResponse response) {
         logService.exportLoginLog(query, sortQuery, response);
     }
 
     @Operation(summary = "导出操作日志", description = "导出操作日志")
-    @SaCheckPermission("monitor:log:export")
+//    @SaCheckPermission("monitor:log:export")
     @GetMapping("/export/operation")
     public void exportOperationLog(LogQuery query, SortQuery sortQuery,
         HttpServletResponse response) {

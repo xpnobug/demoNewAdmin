@@ -8,6 +8,7 @@ import com.newadmin.democore.kduck.service.DefaultService;
 import com.newadmin.democore.kduck.service.ValueMap;
 import com.newadmin.democore.kduck.sqlbuild.ConditionBuilder.ConditionType;
 import com.newadmin.democore.kduck.sqlbuild.SelectBuilder;
+import com.newadmin.democore.kduck.utils.Page;
 import com.newadmin.democore.util.validate.CheckUtils;
 import com.newadmin.demoservice.config.excel.util.ExcelUtils;
 import com.newadmin.demoservice.mainPro.ltpro.entity.LogDO;
@@ -48,13 +49,18 @@ public class LogServiceImpl extends DefaultService implements LogService {
     }
 
     @Override
-    public List<LogResp> page(LogQuery query) {
+    public List<LogResp> page(Page page, LogQuery query) {
+        Date start = query.getCreateTime().get(0);
+        Date end = query.getCreateTime().get(1);
+        long createTimeStart = start.getTime();
+        long createTimeEnd = end.getTime();
         ValueMap params = new ValueMap();
         params.put(LogResp.DESCRIPTION, query.getDescription());
         params.put(LogResp.MODULE, query.getModule());
         params.put(LogResp.IP, query.getIp());
         params.put(LogResp.CREATE_USER_STRING, query.getCreateUserString());
-        params.put(LogResp.CREATE_TIME, query.getCreateTime());
+        params.put(LogResp.CREATE_TIME, createTimeStart);
+        params.put("createTimeEnd", createTimeEnd);
         params.put(LogResp.STATUS, query.getStatus());
         SelectBuilder selectBuilder = new SelectBuilder(params);
         selectBuilder.from("", super.getEntityDef(TABLE_NAME))
@@ -63,10 +69,11 @@ public class LogServiceImpl extends DefaultService implements LogService {
             .and("module", ConditionType.EQUALS, LogResp.MODULE)
             .and("ip", ConditionType.EQUALS, LogResp.IP)
             .and("create_user_string", ConditionType.EQUALS, LogResp.CREATE_USER_STRING)
-            .and("create_time", ConditionType.EQUALS, LogResp.CREATE_TIME)
+            .and("create_time", ConditionType.GREATER_OR_EQUALS, LogResp.CREATE_TIME)
+            .and("create_time", ConditionType.LESS_OR_EQUALS, "createTimeEnd")
             .and("status", ConditionType.EQUALS, LogResp.STATUS)
             .orderBy().desc("create_time");
-        return super.listForBean(selectBuilder.build(), LogResp::new);
+        return super.listForBean(selectBuilder.build(), page, LogResp::new);
     }
 
     @Override

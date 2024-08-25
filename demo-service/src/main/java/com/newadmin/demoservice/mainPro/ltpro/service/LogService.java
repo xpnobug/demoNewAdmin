@@ -1,5 +1,6 @@
 package com.newadmin.demoservice.mainPro.ltpro.service;
 
+import com.newadmin.democore.kduck.utils.Page;
 import com.newadmin.demoservice.mainPro.ltpro.entity.LogDO;
 import com.newadmin.demoservice.mainPro.ltpro.entity.model.resp.DashboardAccessTrendResp;
 import com.newadmin.demoservice.mainPro.ltpro.entity.model.resp.DashboardPopularModuleResp;
@@ -25,7 +26,7 @@ public interface LogService {
      * @param query 查询条件
      * @return 分页列表信息
      */
-    List<LogResp> page(LogQuery query);
+    List<LogResp> page(Page page, LogQuery query);
 
     /**
      * 查询详情

@@ -14,7 +14,7 @@ public class SaTokenPermissionImpl implements StpInterface {
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
         LoginUser loginUser = LoginHelper.getLoginUser();
-        return new ArrayList<>(loginUser.getPermissions());
+        return new ArrayList<>();
     }
 
     @Override

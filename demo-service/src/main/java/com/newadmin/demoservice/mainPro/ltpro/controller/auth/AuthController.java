@@ -6,6 +6,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.newadmin.democonfig.redisCommon.util.RedisUtils;
 import com.newadmin.democore.kduck.web.json.JsonObject;
 import com.newadmin.democore.util.validate.ValidationUtils;
+import com.newadmin.demolog.log.core.annotation.Log;
 import com.newadmin.demoservice.mainPro.ltpro.auth.model.req.AccountLoginReq;
 import com.newadmin.demoservice.mainPro.ltpro.auth.model.req.EmailLoginReq;
 import com.newadmin.demoservice.mainPro.ltpro.auth.model.req.PhoneLoginReq;
@@ -16,8 +17,6 @@ import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiUsers;
 import com.newadmin.demoservice.mainPro.ltpro.entity.model.query.UserInfoQuery;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiUsersService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  *
  */
+@Log(module = "登录")
 @Tag(name = "认证 API")
 @RestController
 @RequiredArgsConstructor
@@ -122,8 +122,8 @@ public class AuthController {
         return new JsonObject(LoginResp.builder().token(token).build());
     }
 
+    @Log(ignore = true)
     @Operation(summary = "用户退出", description = "注销用户的当前登录")
-    @Parameter(name = "Authorization", description = "令牌", required = true, example = "Bearer xxxx-xxxx-xxxx-xxxx", in = ParameterIn.HEADER)
     @PostMapping("/logout")
     public JsonObject logout() {
         Object loginId = StpUtil.getLoginId(-1L);
@@ -131,8 +131,8 @@ public class AuthController {
         return new JsonObject(loginId);
     }
 
+    @Log(ignore = true)
     @Operation(summary = "获取用户信息", description = "获取当前登录用户的信息")
-    @Parameter(name = "Authorization", description = "令牌", required = true, example = "Bearer xxxx-xxxx-xxxx-xxxx", in = ParameterIn.HEADER)
     @GetMapping("/user/info")
     public JsonObject getUserInfo() {
         // 获取当前登录用户的ID
