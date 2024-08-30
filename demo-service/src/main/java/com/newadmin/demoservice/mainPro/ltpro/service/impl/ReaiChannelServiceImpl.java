@@ -15,6 +15,7 @@ import com.newadmin.demoservice.mainPro.ltpro.entity.model.query.ChannelQuery;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiChannelService;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiFollowService;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -82,7 +83,7 @@ public class ReaiChannelServiceImpl extends DefaultService implements ReaiChanne
 
             // 获取当前版块的关注记录
             List<ReaiFollow> currentChannelFollows = followList.stream()
-                .filter(follow -> follow.getFollowChannelId().equals(reaiChannel.getId()))
+                .filter(follow -> follow.getFollowChannelId().equals(reaiChannel.getChannelId()))
                 .collect(Collectors.toList());
 
             // 设置成员数量
@@ -170,18 +171,68 @@ public class ReaiChannelServiceImpl extends DefaultService implements ReaiChanne
      * @return 查询结果
      */
     @Override
-    public Object getById(String id) {
+    public ReaiChannel getById(String id) {
         // 创建参数映射并添加 ID 参数
         ValueMap params = new ValueMap();
-        params.put(ReaiChannel.ID, id);
+        params.put(ReaiChannel.CHANNEL_ID, id);
         // 创建查询构建器
         SelectBuilder selectBuilder = new SelectBuilder(params);
         // 构建查询语句
         selectBuilder.from("", super.getEntityDef(TABLE_NAME)).where()
-            .and("id", ConditionType.EQUALS, ReaiChannel.ID) // 添加条件
+            .and("channel_id", ConditionType.EQUALS, ReaiChannel.CHANNEL_ID) // 添加条件
             .orderBy().desc("create_time"); // 添加排序
         // 执行查询并返回结果
         return getForBean(selectBuilder.build(), ReaiChannel::new);
+    }
+
+    @Override
+    public ChannelQuery getChannelInfo(String channelId) {
+        ReaiChannel channel = getById(channelId);
+        List<ReaiFollow> followList = getFollowList(Collections.singletonList(channelId));
+        // 批量获取用户id
+        List<String> userIdList = followList.stream().map(ReaiFollow::getUserId)
+            .collect(Collectors.toList());
+        // 根据用户id批量查询用户信息
+        List<ReaiUsers> userList = getUserList(userIdList);
+        // 构建ChannelQuery对象列表
+        ChannelQuery channelQuery = new ChannelQuery();
+        // 将查询结果转换为ChannelQuery对象并添加到列表中
+        BeanUtils.copyProperties(channel, channelQuery);
+
+        // 获取当前版块的关注记录
+        List<ReaiFollow> currentChannelFollows = followList.stream()
+            .filter(follow -> follow.getFollowChannelId().equals(channelId))
+            .collect(Collectors.toList());
+
+        // 设置成员数量
+        channelQuery.setMemberCount(currentChannelFollows.size());
+
+        boolean isJoined = false; // 默认值为false
+        //是否登录
+        boolean login = StpUtil.isLogin();
+        if (login) {
+            // 获取当前登录人
+            SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
+            String currentUserId = tokenInfo.getLoginId().toString();
+            // 判断当前用户是否已加入版块
+            isJoined = currentChannelFollows.stream()
+                .anyMatch(follow -> follow.getUserId().equals(currentUserId));
+        }
+        channelQuery.setIsJoin(isJoined);
+
+        // 将用户信息添加到ChannelQuery对象中
+        List<UserInfoResp> userInfoRespList = userList.stream()
+            .filter(user -> currentChannelFollows.stream()
+                .anyMatch(follow -> follow.getUserId().equals(user.getUserId())))
+            .map(user -> {
+                UserInfoResp userInfoResp = new UserInfoResp();
+                BeanUtils.copyProperties(user, userInfoResp);
+                return userInfoResp;
+            })
+            .collect(Collectors.toList());
+
+        channelQuery.setUserList(userInfoRespList);
+        return channelQuery;
     }
 
     /**
@@ -212,7 +263,7 @@ public class ReaiChannelServiceImpl extends DefaultService implements ReaiChanne
         }
         ReaiFollow follow = new ReaiFollow();
         follow.setUserId(channel.getCreator());
-        follow.setFollowChannelId(channel.getId());
+        follow.setFollowChannelId(channel.getChannelId());
         reaiFollowService.add(follow);
         return true;
     }

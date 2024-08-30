@@ -18,10 +18,6 @@ import java.util.Map;
 @TableName("reai_channel")
 public class ReaiChannel extends ValueMap {
 
-    /**
-     * 唯一标识符
-     */
-    public static final String ID = "id";
     /***/
     public static final String CHANNEL_ID = "channelId";
 
@@ -232,23 +228,7 @@ public class ReaiChannel extends ValueMap {
         super(map);
     }
 
-    /**
-     * 设置 唯一标识符
-     *
-     * @param id 唯一标识符
-     */
-    public void setId(String id) {
-        super.setValue(ID, id);
-    }
 
-    /**
-     * 获取 唯一标识符
-     *
-     * @return 唯一标识符
-     */
-    public String getId() {
-        return super.getValueAsString(ID);
-    }
 
     /**
      * 设置 版块名称

@@ -58,10 +58,16 @@ public class ReaiChannelController {
      * @param id 主键
      * @return 单条数据
      */
+//    @Log(ignore = true)
+//    @GetMapping("{id}")
+//    public JsonObject selectOne(@PathVariable String id) {
+//        return new JsonObject(reaiChannelService.getById(id));
+//    }
+
     @Log(ignore = true)
     @GetMapping("{id}")
-    public JsonObject selectOne(@PathVariable String id) {
-        return new JsonObject(reaiChannelService.getById(id));
+    public JsonObject getChannelInfo(@PathVariable String id) {
+        return new JsonObject(reaiChannelService.getChannelInfo(id));
     }
 
     /**

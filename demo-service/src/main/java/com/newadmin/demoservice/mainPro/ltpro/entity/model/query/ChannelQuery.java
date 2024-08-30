@@ -10,7 +10,7 @@ import lombok.Data;
 public class ChannelQuery {
 
     @Schema(description = "版块id", example = "1")
-    private String id;
+    private String channelId;
     @Schema(description = "版块名称", example = "name")
     private String name;
 
