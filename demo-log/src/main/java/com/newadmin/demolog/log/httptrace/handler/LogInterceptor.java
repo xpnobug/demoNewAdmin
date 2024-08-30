@@ -1,14 +1,11 @@
 package com.newadmin.demolog.log.httptrace.handler;
 
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.newadmin.demolog.log.core.annotation.Log;
 import com.newadmin.demolog.log.core.dao.LogDao;
 import com.newadmin.demolog.log.core.enums.Include;
 import com.newadmin.demolog.log.core.model.LogRecord;
-import com.newadmin.demolog.log.core.model.LogRecord.Started;
-import com.newadmin.demolog.log.core.model.LogResponse;
 import com.newadmin.demolog.log.httptrace.autoconfigure.LogProperties;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,10 +13,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.Clock;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.lang.NonNull;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -35,7 +34,8 @@ public class LogInterceptor implements HandlerInterceptor {
     private static final Logger log = LoggerFactory.getLogger(LogInterceptor.class);
     private final LogDao logDao;
     private final LogProperties logProperties;
-    private final TransmittableThreadLocal<Started> timestampTtl = new TransmittableThreadLocal<>();
+    private final TransmittableThreadLocal<Clock> timeTtl = new TransmittableThreadLocal<>();
+    private final TransmittableThreadLocal<LogRecord.Started> logTtl = new TransmittableThreadLocal<>();
 
     public LogInterceptor(LogDao logDao, LogProperties logProperties) {
         this.logDao = logDao;
@@ -46,14 +46,15 @@ public class LogInterceptor implements HandlerInterceptor {
     public boolean preHandle(@NonNull HttpServletRequest request,
         @NonNull HttpServletResponse response,
         @NonNull Object handler) {
-        Clock timestamp = Clock.systemUTC();
+        Clock startTime = Clock.systemUTC();
+        if (Boolean.TRUE.equals(logProperties.getIsPrint())) {
+            log.info("[{}] {}", request.getMethod(), request.getRequestURI());
+            timeTtl.set(startTime);
+        }
         if (this.isRequestRecord(handler, request)) {
-            if (Boolean.TRUE.equals(logProperties.getIsPrint())) {
-                log.info("[{}] {}", request.getMethod(), request.getRequestURI());
-            }
-            LogRecord.Started startedLogRecord = LogRecord.start(timestamp,
+            LogRecord.Started startedLogRecord = LogRecord.start(startTime,
                 new RecordableServletHttpRequest(request));
-            timestampTtl.set(startedLogRecord);
+            logTtl.set(startedLogRecord);
         }
         return true;
     }
@@ -63,19 +64,25 @@ public class LogInterceptor implements HandlerInterceptor {
         @NonNull HttpServletResponse response,
         @NonNull Object handler,
         Exception e) {
-        LogRecord.Started startedLogRecord = timestampTtl.get();
-        if (null == startedLogRecord) {
-            return;
-        }
-        timestampTtl.remove();
         try {
+            Clock endTime = Clock.systemUTC();
+            if (Boolean.TRUE.equals(logProperties.getIsPrint())) {
+                Duration timeTaken = Duration.between(Instant.now(timeTtl.get()),
+                    Instant.now(endTime));
+                log.info("[{}] {} {} {}ms", request.getMethod(), request.getRequestURI(), response
+                    .getStatus(), timeTaken.toMillis());
+            }
+            LogRecord.Started startedLogRecord = logTtl.get();
+            if (null == startedLogRecord) {
+                return;
+            }
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             Log methodLog = handlerMethod.getMethodAnnotation(Log.class);
             Log classLog = handlerMethod.getBeanType().getDeclaredAnnotation(Log.class);
             Set<Include> includeSet = this.getIncludes(methodLog, classLog);
-            LogRecord finishedLogRecord = startedLogRecord.finish(
-                new RecordableServletHttpResponse(response, response
-                    .getStatus()), includeSet);
+            LogRecord finishedLogRecord = startedLogRecord
+                .finish(endTime, new RecordableServletHttpResponse(response, response.getStatus()),
+                    includeSet);
             // 记录日志描述
             if (includeSet.contains(Include.DESCRIPTION)) {
                 this.logDescription(finishedLogRecord, methodLog, handlerMethod);
@@ -84,15 +91,12 @@ public class LogInterceptor implements HandlerInterceptor {
             if (includeSet.contains(Include.MODULE)) {
                 this.logModule(finishedLogRecord, methodLog, classLog, handlerMethod);
             }
-            if (Boolean.TRUE.equals(logProperties.getIsPrint())) {
-                LogResponse logResponse = finishedLogRecord.getResponse();
-                log.info("[{}] {} {} {}ms", request.getMethod(), request.getRequestURI(),
-                    logResponse
-                        .getStatus(), finishedLogRecord.getTimeTaken().toMillis());
-            }
             logDao.add(finishedLogRecord);
         } catch (Exception ex) {
             log.error("Logging http log occurred an error: {}.", ex.getMessage(), ex);
+        } finally {
+            timeTtl.remove();
+            logTtl.remove();
         }
     }
 
@@ -104,7 +108,7 @@ public class LogInterceptor implements HandlerInterceptor {
      * @return 日志包含信息
      */
     private Set<Include> getIncludes(Log methodLog, Log classLog) {
-        Set<Include> includeSet = logProperties.getIncludes();
+        Set<Include> includeSet = new HashSet<>(logProperties.getIncludes());
         if (null != classLog) {
             this.processInclude(includeSet, classLog);
         }
@@ -184,16 +188,14 @@ public class LogInterceptor implements HandlerInterceptor {
      * 是否要记录日志
      *
      * @param handler 处理器
-     * @param request 请求对象
      * @return true：需要记录；false：不需要记录
      */
     private boolean isRequestRecord(Object handler, HttpServletRequest request) {
         if (!(handler instanceof HandlerMethod handlerMethod)) {
             return false;
         }
-        // 不拦截 /error
-        ServerProperties serverProperties = SpringUtil.getBean(ServerProperties.class);
-        if (request.getRequestURI().equals(serverProperties.getError().getPath())) {
+        // 如果接口匹配排除列表，不记录日志
+        if (logProperties.isMatch(request.getRequestURI())) {
             return false;
         }
         // 如果接口被隐藏，不记录日志

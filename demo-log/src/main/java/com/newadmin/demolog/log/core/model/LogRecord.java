@@ -97,9 +97,9 @@ public class LogRecord {
          * @param includes 包含信息
          * @return 日志记录
          */
-        public LogRecord finish(RecordableHttpResponse response, Set<Include> includes) {
-            return finish(Clock.systemUTC(), response, includes);
-        }
+//        public LogRecord finish(RecordableHttpResponse response, Set<Include> includes) {
+//            return finish(Clock.systemUTC(), response, includes);
+//        }
 
         /**
          * 结束日志记录
