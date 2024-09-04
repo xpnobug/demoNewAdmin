@@ -124,6 +124,23 @@
           <outputDirectory>${project.build.directory}/app/${bin-path}</outputDirectory>
         </configuration>
       </plugin>
+      <!-- 拷贝依赖 jar -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/app/${lib-path}</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <!-- 拷贝配置文件 -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
