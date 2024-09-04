@@ -309,13 +309,13 @@ snail-job:
   # 命名空间 ID
   namespace: 764d604ec6fc45f68cd92514c40e9e1a
   # 分组名
-  group: continew-admin
+  group: demo-admin
   # 令牌
   token: SJ_Wyz3dmsdbDOkDujOTSSoBjGQP1BMsVnj
   ## 服务端配置（任务调度中心）
   server:
     # 服务端地址，若服务端集群部署则此处配置域名
-    host: 127.0.0.1
+    host: pc.reaicc.com
     # Netty 端口号
     port: 1788
     # API 配置
