@@ -1,7 +1,7 @@
 package com.newadmin.demoservice.base.common;
 
-import com.newadmin.democore.project.ProjectProperties;
-import com.newadmin.democore.util.validate.ValidationUtils;
+import com.newadmin.democonfig.project.ProjectProperties;
+import com.newadmin.democonfig.util.validate.ValidationUtils;
 import com.newadmin.demolog.log.core.annotation.Log;
 import com.newadmin.demoservice.mainPro.filepro.resp.FileUploadResp;
 import com.newadmin.demoservice.mainPro.filepro.service.FileService;

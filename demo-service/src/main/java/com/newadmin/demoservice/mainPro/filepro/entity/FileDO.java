@@ -1,9 +1,9 @@
 package com.newadmin.demoservice.mainPro.filepro.entity;
 
 import cn.hutool.core.util.StrUtil;
-import com.newadmin.democore.constant.StringConstants;
+import com.newadmin.democonfig.constant.StringConstants;
 import com.newadmin.democore.kduck.service.ValueMap;
-import com.newadmin.democore.util.StrUtils;
+import com.newadmin.democonfig.util.StrUtils;
 import com.newadmin.demoservice.mainPro.filepro.enums.FileTypeEnum;
 import java.util.Date;
 import java.util.Map;

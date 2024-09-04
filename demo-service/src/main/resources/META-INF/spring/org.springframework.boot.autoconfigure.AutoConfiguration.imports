@@ -3,8 +3,6 @@
 #文件中声明的自动配置类，并将这些类作为自动配置的一部分加载。
 #与 spring.factories 文件不同，这种方式更加显式，并且可以帮助提升启动性能。
 
-com.newadmin.demoservice.config.justauth.autoconfigure.JustAuthAutoConfiguration
-com.xkcoding.justauth.autoconfigure.JustAuthAutoConfiguration
 com.newadmin.demoservice.config.websocket.autoconfigure.WebSocketAutoConfiguration
-com.newadmin.demoservice.config.messaging.mail.autoconfigure.MailAutoConfiguration
 com.newadmin.demoservice.config.satoken.autoconfigure.SaTokenAutoConfiguration
+com.newadmin.democonfig.project.ProjectAutoConfiguration

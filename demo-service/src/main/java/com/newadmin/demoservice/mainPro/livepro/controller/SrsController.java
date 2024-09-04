@@ -10,7 +10,7 @@ import com.newadmin.democore.kduck.service.ValueMap;
 import com.newadmin.democore.kduck.sqlbuild.ConditionBuilder.ConditionType;
 import com.newadmin.democore.kduck.sqlbuild.SelectBuilder;
 import com.newadmin.democore.kduck.web.json.JsonObject;
-import com.newadmin.democore.util.validate.CheckUtils;
+import com.newadmin.democonfig.util.validate.CheckUtils;
 import com.newadmin.demoservice.config.srs.annotation.SrsProperties;
 import com.newadmin.demoservice.config.websocket.dao.WebSocketSessionDao;
 import com.newadmin.demoservice.mainPro.livepro.model.entity.PublishRequest;

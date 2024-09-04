@@ -1,7 +1,7 @@
 
 package com.newadmin.demoservice.config.prop;
 
-import com.newadmin.demoservice.config.security.crypto.encryptor.IEncryptor;
+import com.newadmin.democonfig.security.crypto.encryptor.IEncryptor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**

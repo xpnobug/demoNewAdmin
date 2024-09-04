@@ -4,7 +4,7 @@ import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.newadmin.demoservice.mainPro.ltpro.auth.service.UserPasswordHistoryService;
-import com.newadmin.demoservice.mainPro.ltpro.common.constant.RegexConstants;
+import com.newadmin.demogenerator.constant.RegexConstants;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiUsers;
 import java.util.Map;
 import lombok.Getter;

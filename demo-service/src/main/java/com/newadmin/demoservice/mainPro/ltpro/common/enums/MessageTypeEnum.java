@@ -1,7 +1,7 @@
 
 package com.newadmin.demoservice.mainPro.ltpro.common.enums;
 
-import com.newadmin.demoservice.mainPro.ltpro.common.constant.UiConstants;
+import com.newadmin.demogenerator.constant.UiConstants;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

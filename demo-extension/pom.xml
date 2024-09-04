@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>demoNewAdmin</artifactId>
+    <groupId>com.newadmin</groupId>
+    <version>${revision}</version>
+  </parent>
+
+  <artifactId>demo-extension</artifactId>
+  <packaging>pom</packaging>
+  <description>扩展模块（存放其他扩展模块）</description>
+
+
+  <modules>
+    <module>demo-generator</module>
+    <module>demo-job</module>
+    <module>demo-job-server</module>
+  </modules>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.reai</groupId>
+      <artifactId>demo-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.newadmin</groupId>
+      <artifactId>demo-config</artifactId>
+    </dependency>
+
+  </dependencies>
+</project>

@@ -7,6 +7,7 @@ import java.util.Set;
 /**
  * 响应信息
  *
+ * @author couei
  * @author Charles7c
  * @since 1.1.0
  */

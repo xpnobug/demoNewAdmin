@@ -3,7 +3,7 @@ package com.newadmin.demolog.log.util;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.newadmin.democore.constant.StringConstants;
+import com.newadmin.democonfig.constant.StringConstants;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,6 +26,7 @@ import org.springframework.web.util.pattern.PathPatternParser;
 /**
  * Spring Web 工具类
  *
+ * @author couei
  * @author Charles7c
  * @since 1.1.1
  */

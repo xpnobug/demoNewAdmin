@@ -4,7 +4,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.EscapeUtil;
 import cn.hutool.core.util.StrUtil;
-import com.newadmin.democore.constant.StringConstants;
+import com.newadmin.democonfig.constant.StringConstants;
 import com.newadmin.democore.kduck.service.DefaultService;
 import com.newadmin.democore.kduck.service.ValueMap;
 import com.newadmin.democore.kduck.sqlbuild.ConditionBuilder.ConditionType;

@@ -1,7 +1,7 @@
 package com.newadmin.demoservice.config.websocket.autoconfigure;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.newadmin.democore.constant.PropertiesConstants;
+import com.newadmin.democonfig.constant.PropertiesConstants;
 import com.newadmin.demoservice.config.websocket.core.WebSocketClientService;
 import com.newadmin.demoservice.config.websocket.core.WebSocketInterceptor;
 import com.newadmin.demoservice.config.websocket.dao.WebSocketSessionDao;

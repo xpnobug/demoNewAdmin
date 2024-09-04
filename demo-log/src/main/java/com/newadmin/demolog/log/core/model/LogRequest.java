@@ -1,9 +1,9 @@
 package com.newadmin.demolog.log.core.model;
 
 import cn.hutool.core.text.CharSequenceUtil;
-import com.newadmin.democore.util.ExceptionUtils;
-import com.newadmin.democore.util.IpUtils;
-import com.newadmin.democore.util.ServletUtils;
+import com.newadmin.democonfig.mail.util.IpUtils;
+import com.newadmin.democonfig.util.ExceptionUtils;
+import com.newadmin.democonfig.util.ServletUtils;
 import com.newadmin.demolog.log.core.enums.Include;
 import java.net.URI;
 import java.util.Map;
@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 /**
  * 请求信息
  *
+ * @author couei
  * @author Charles7c
  * @since 1.1.0
  */

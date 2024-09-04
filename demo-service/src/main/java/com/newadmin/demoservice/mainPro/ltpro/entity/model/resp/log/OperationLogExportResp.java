@@ -2,7 +2,7 @@ package com.newadmin.demoservice.mainPro.ltpro.entity.model.resp.log;
 
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
-import com.newadmin.demoservice.config.excel.converter.ExcelBaseEnumConverter;
+import com.newadmin.democonfig.excel.converter.ExcelBaseEnumConverter;
 import com.newadmin.demoservice.mainPro.ltpro.common.enums.LogStatusEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serial;

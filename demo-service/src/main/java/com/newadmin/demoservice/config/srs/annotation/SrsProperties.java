@@ -1,6 +1,6 @@
 package com.newadmin.demoservice.config.srs.annotation;
 
-import com.newadmin.democore.constant.PropertiesConstants;
+import com.newadmin.democonfig.constant.PropertiesConstants;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,6 @@
 package com.newadmin.demoservice.mainPro.mai.entity;
 
-import com.newadmin.democore.util.excelExport.ExcelName;
+import com.newadmin.democonfig.util.excelExport.ExcelName;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;

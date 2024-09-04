@@ -8,7 +8,7 @@ import com.newadmin.democore.kduck.service.ValueMap;
 import com.newadmin.democore.kduck.sqlbuild.ConditionBuilder.ConditionType;
 import com.newadmin.democore.kduck.sqlbuild.SelectBuilder;
 import com.newadmin.democore.kduck.utils.Page;
-import com.newadmin.democore.util.validate.CheckUtils;
+import com.newadmin.democonfig.util.validate.CheckUtils;
 import com.newadmin.demoservice.mainPro.ltpro.entity.MessageDO;
 import com.newadmin.demoservice.mainPro.ltpro.entity.MessageUserDO;
 import com.newadmin.demoservice.mainPro.ltpro.entity.model.query.MessageQuery;

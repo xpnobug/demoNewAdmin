@@ -1,0 +1,72 @@
+server:
+  port: 8001
+
+--- ### 数据源配置
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    url: jdbc:mysql://${DB_HOST:182.92.201.19}:${DB_PORT:3306}/${DB_NAME:demo_job}?characterEncoding=utf-8&useSSL=false&nullCatalogMeansCurrent=true&serverTimezone=Asia/Shanghai
+    username: ${DB_USER:root}
+    password: ${DB_PWD:1919101871.Cxp}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      minimum-idle: 3
+      maximum-pool-size: 10
+      max-lifetime: 30000   #不能小于30秒，否则默认回到1800秒
+      connection-test-query: SELECT 1
+  jackson:
+    # 时区配置
+    time-zone: GMT+8
+    # 日期格式化（针对 java.util.Date）
+    date-format: yyyy-MM-dd HH:mm:ss
+    # 序列化配置（Bean -> JSON）
+    serialization:
+      # 允许序列化无属性的 Bean
+      FAIL_ON_EMPTY_BEANS: false
+    # 反序列化配置（JSON -> Bean）
+    deserialization:
+      # 允许反序列化不存在的属性
+      FAIL_ON_UNKNOWN_PROPERTIES: false
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+## Liquibase 配置
+spring.liquibase:
+  # 是否启用
+  enabled: false
+  # 配置文件路径
+  change-log: classpath:/db/changelog/db.changelog-master.yaml
+
+### Snail Job 服务端配置
+snail-job:
+  # Netty 端口
+  netty-port: 1788
+  # 合并日志默认保存天数
+  merge-Log-days: 1
+  # 合并日志默认的条数
+  merge-Log-num: 500
+  # 配置日志保存时间（单位：天）
+  log-storage: 90
+  # 配置每批次拉取重试数据的大小
+  retry-pull-page-size: 100
+  # 配置一个客户端每秒最多接收的重试数量指令
+  limiter: 10
+  # 配置号段模式下的步长
+  step: 100
+  # bucket 的总数量
+  bucket-total: 128
+  # Dashboard 任务容错天数
+  summary-day: 7
+  # 配置负载均衡周期时间
+  load-balance-cycle-time: 10
+  ## 回调配置
+  callback:
+    # 回调 uniqueId 前缀
+    prefix: CB
+    # 配置回调的最大执行次数
+    max-count: 288
+    # 配置回调触发的间隔时间
+    trigger-interval: 900
+

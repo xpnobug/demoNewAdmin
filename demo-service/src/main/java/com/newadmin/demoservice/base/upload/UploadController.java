@@ -1,8 +1,8 @@
 package com.newadmin.demoservice.base.upload;
 
 import com.newadmin.democore.kduck.web.json.JsonObject;
-import com.newadmin.democore.oss.domain.OssReq;
-import com.newadmin.democore.oss.domain.OssResp;
+import com.newadmin.democonfig.oss.domain.OssReq;
+import com.newadmin.democonfig.oss.domain.OssResp;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

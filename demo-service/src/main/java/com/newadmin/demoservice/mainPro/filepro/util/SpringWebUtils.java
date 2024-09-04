@@ -3,7 +3,7 @@ package com.newadmin.demoservice.mainPro.filepro.util;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.newadmin.democore.constant.StringConstants;
+import com.newadmin.democonfig.constant.StringConstants;
 import jakarta.servlet.ServletContext;
 import java.util.Map;
 import org.springframework.context.ApplicationContext;

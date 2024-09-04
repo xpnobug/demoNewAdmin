@@ -2,9 +2,9 @@ package com.newadmin.demoservice.mainPro.ltpro.controller.auth;
 
 import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.StpUtil;
-import com.newadmin.democore.exception.BadRequestException;
+import com.newadmin.democonfig.exception.BadRequestException;
 import com.newadmin.democore.kduck.web.json.JsonObject;
-import com.newadmin.democore.util.validate.ValidationUtils;
+import com.newadmin.democonfig.util.validate.ValidationUtils;
 import com.newadmin.demoservice.mainPro.ltpro.auth.model.resp.LoginResp;
 import com.newadmin.demoservice.mainPro.ltpro.auth.model.resp.SocialAuthAuthorizeResp;
 import com.newadmin.demoservice.mainPro.ltpro.auth.service.LoginService;

@@ -26,6 +26,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 /**
  * 日志拦截器
  *
+ * @author couei
  * @author Charles7c
  * @since 1.1.0
  */

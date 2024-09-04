@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>demo-extension</artifactId>
+    <groupId>com.newadmin</groupId>
+    <version>${revision}</version>
+  </parent>
+
+  <artifactId>demo-job</artifactId>
+  <name>${project.artifactId}</name>
+  <description>任务调度服务模块</description>
+
+  <properties>
+    <!-- SnailJob 服务端 -->
+    <snail-job.version>1.1.0</snail-job.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.newadmin</groupId>
+      <artifactId>demo-config</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.reai</groupId>
+      <artifactId>demo-core</artifactId>
+    </dependency>
+
+    <!-- SnailJob（灵活，可靠和快速的分布式任务重试和分布式任务调度平台） -->
+    <dependency>
+      <groupId>com.aizuda</groupId>
+      <artifactId>snail-job-client-starter</artifactId>
+      <version>${snail-job.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.aizuda</groupId>
+      <artifactId>snail-job-client-retry-core</artifactId>
+      <version>${snail-job.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.aizuda</groupId>
+      <artifactId>snail-job-client-job-core</artifactId>
+      <version>${snail-job.version}</version>
+    </dependency>
+
+    <!-- Spring WebFlux（异步非阻塞 Web 框架） -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webflux</artifactId>
+      <version>6.1.10</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.projectreactor.netty</groupId>
+      <artifactId>reactor-netty-http</artifactId>
+      <version>1.1.20</version>
+    </dependency>
+  </dependencies>
+</project>

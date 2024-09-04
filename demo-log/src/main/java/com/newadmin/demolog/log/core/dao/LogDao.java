@@ -7,6 +7,7 @@ import java.util.List;
 /**
  * 日志持久层接口
  *
+ * @author couei
  * @author Charles7c
  * @since 1.1.0
  */

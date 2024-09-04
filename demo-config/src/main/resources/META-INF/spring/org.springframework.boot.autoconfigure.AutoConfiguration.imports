@@ -1,0 +1,10 @@
+com.newadmin.democonfig.apidoc.autoconfigure.SpringDocAutoConfiguration
+com.newadmin.democonfig.justauth.autoconfigure.JustAuthAutoConfiguration
+com.newadmin.democonfig.mail.autoconfigure.MailAutoConfiguration
+com.xkcoding.justauth.autoconfigure.JustAuthAutoConfiguration
+
+com.newadmin.democonfig.captcha.behavior.autoconfigure.BehaviorCaptchaAutoConfiguration
+com.newadmin.democonfig.captcha.behavior.autoconfigure.cache.BehaviorCaptchaCacheAutoConfiguration
+com.newadmin.democonfig.captcha.graphic.autoconfigure.GraphicCaptchaAutoConfiguration
+
+com.newadmin.democonfig.project.ProjectAutoConfiguration

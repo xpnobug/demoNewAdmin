@@ -1,6 +1,6 @@
 package com.newadmin.demolog.log.httptrace.autoconfigure;
 
-import com.newadmin.democore.constant.PropertiesConstants;
+import com.newadmin.democonfig.constant.PropertiesConstants;
 import com.newadmin.demolog.log.core.enums.Include;
 import com.newadmin.demolog.log.util.SpringWebUtils;
 import java.util.ArrayList;
@@ -11,6 +11,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 /**
  * 日志配置属性
  *
+ * @author couei
  * @author Charles7c
  * @since 1.1.0
  */

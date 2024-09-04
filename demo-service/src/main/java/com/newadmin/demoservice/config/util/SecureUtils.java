@@ -5,11 +5,11 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.extra.spring.SpringUtil;
-import com.newadmin.democore.util.validate.ValidationUtils;
+import com.newadmin.democonfig.util.validate.ValidationUtils;
 import com.newadmin.demoservice.config.properties.RsaProperties;
-import com.newadmin.demoservice.config.security.crypto.autoconfigure.CryptoProperties;
-import com.newadmin.demoservice.config.security.crypto.encryptor.AesEncryptor;
-import com.newadmin.demoservice.config.security.crypto.encryptor.IEncryptor;
+import com.newadmin.democonfig.security.crypto.autoconfigure.CryptoProperties;
+import com.newadmin.democonfig.security.crypto.encryptor.AesEncryptor;
+import com.newadmin.democonfig.security.crypto.encryptor.IEncryptor;
 import java.util.List;
 import java.util.stream.Collectors;
 

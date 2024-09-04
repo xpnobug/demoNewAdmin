@@ -6,6 +6,7 @@ import java.util.Map;
  * 可记录的 HTTP 响应信息
  *
  * @author Andy Wilkinson（Spring Boot Actuator）
+ * @author couei
  * @author Charles7c
  * @see RecordableHttpRequest
  * @since 1.1.0

@@ -4,7 +4,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.servlet.JakartaServletUtil;
 import cn.hutool.json.JSONUtil;
-import com.newadmin.democore.constant.StringConstants;
+import com.newadmin.democonfig.constant.StringConstants;
 import com.newadmin.demolog.log.core.model.RecordableHttpRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
@@ -20,6 +20,7 @@ import org.springframework.web.util.WebUtils;
  * 可记录的 HTTP 请求信息适配器
  *
  * @author Andy Wilkinson（Spring Boot Actuator）
+ * @author couei
  * @author Charles7c
  */
 public final class RecordableServletHttpRequest implements RecordableHttpRequest {

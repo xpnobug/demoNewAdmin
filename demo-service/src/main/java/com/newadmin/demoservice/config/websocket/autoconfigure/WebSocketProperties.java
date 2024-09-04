@@ -1,7 +1,7 @@
 package com.newadmin.demoservice.config.websocket.autoconfigure;
 
-import com.newadmin.democore.constant.PropertiesConstants;
-import com.newadmin.democore.constant.StringConstants;
+import com.newadmin.democonfig.constant.PropertiesConstants;
+import com.newadmin.democonfig.constant.StringConstants;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

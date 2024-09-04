@@ -3,8 +3,8 @@ package com.newadmin.demolog.log.httptrace.handler;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import com.newadmin.democore.constant.StringConstants;
-import com.newadmin.democore.util.ServletUtils;
+import com.newadmin.democonfig.constant.StringConstants;
+import com.newadmin.democonfig.util.ServletUtils;
 import com.newadmin.demolog.log.core.model.RecordableHttpResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Map;
@@ -15,6 +15,7 @@ import org.springframework.web.util.WebUtils;
  * 可记录的 HTTP 响应信息适配器
  *
  * @author Andy Wilkinson（Spring Boot Actuator）
+ * @author couei
  * @author Charles7c
  */
 public final class RecordableServletHttpResponse implements RecordableHttpResponse {

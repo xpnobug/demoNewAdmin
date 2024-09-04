@@ -6,9 +6,9 @@ import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpLogic;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.newadmin.democore.constant.PropertiesConstants;
-import com.newadmin.democore.constant.StringConstants;
-import com.newadmin.democore.util.GeneralPropertySourceFactory;
+import com.newadmin.democonfig.constant.PropertiesConstants;
+import com.newadmin.democonfig.constant.StringConstants;
+import com.newadmin.democonfig.util.GeneralPropertySourceFactory;
 import com.newadmin.demoservice.config.satoken.autoconfigure.dao.SaTokenDaoConfiguration;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
@@ -81,6 +81,6 @@ public class SaTokenAutoConfiguration implements WebMvcConfigurer {
 
     @PostConstruct
     public void postConstruct() {
-        log.debug("[New Admin] - Auto Configuration 'SaToken' completed initialization.");
+        log.debug("[New Admin] -自动配置'SaToken'完成初始化.");
     }
 }

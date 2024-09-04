@@ -33,7 +33,7 @@ public class SaTokenDaoConfiguration {
 
         static {
             log.debug(
-                "[New Admin] - Auto Configuration 'SaToken-Dao-Default' completed initialization.");
+                "[New Admin] - 自动配置'SaToken-Dao-Default'完成初始化.");
         }
 
         @Bean
@@ -53,7 +53,7 @@ public class SaTokenDaoConfiguration {
 
         static {
             log.debug(
-                "[New Admin] - Auto Configuration 'SaToken-Dao-Redis' completed initialization.");
+                "[New Admin] - 自动配置'SaToken-Dao-Redis'完成初始化。");
         }
 
         @Bean

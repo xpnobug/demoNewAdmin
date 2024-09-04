@@ -18,6 +18,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 /**
  * 日志自动配置
  *
+ * @author couei
  * @author Charles7c
  * @since 1.1.0
  */

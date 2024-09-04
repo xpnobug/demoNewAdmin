@@ -1,6 +1,6 @@
 package com.newadmin.demolog.log.httptrace.autoconfigure;
 
-import com.newadmin.democore.constant.PropertiesConstants;
+import com.newadmin.democonfig.constant.PropertiesConstants;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 /**
  * 是否启用日志记录注解
  *
+ * @author couei
  * @author Charles7c
  * @since 1.1.0
  */
