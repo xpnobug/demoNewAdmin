@@ -315,13 +315,13 @@ snail-job:
   ## 服务端配置（任务调度中心）
   server:
     # 服务端地址，若服务端集群部署则此处配置域名
-    host: pc.reaicc.com
+    host: 182.92.201.19
     # Netty 端口号
     port: 1788
     # API 配置
     api:
       # URL
-      url: http://127.0.0.1:8001/snail-job
+      url: http://182.92.201.19:8001/snail-job
       # 用户名
       username: admin
       # 密码
