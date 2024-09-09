@@ -17,7 +17,6 @@
   <modules>
     <module>demo-generator</module>
     <module>demo-job</module>
-    <module>demo-job-server</module>
   </modules>
 
   <dependencies>

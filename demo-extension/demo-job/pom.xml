@@ -19,16 +19,6 @@
   </properties>
 
   <dependencies>
-    <dependency>
-      <groupId>com.newadmin</groupId>
-      <artifactId>demo-config</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.reai</groupId>
-      <artifactId>demo-core</artifactId>
-    </dependency>
-
     <!-- SnailJob（灵活，可靠和快速的分布式任务重试和分布式任务调度平台） -->
     <dependency>
       <groupId>com.aizuda</groupId>

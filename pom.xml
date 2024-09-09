@@ -58,11 +58,6 @@
       </dependency>
       <dependency>
         <groupId>com.newadmin</groupId>
-        <artifactId>demo-job</artifactId>
-        <version>${revision}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.newadmin</groupId>
         <artifactId>demo-generator</artifactId>
         <version>${revision}</version>
       </dependency>
@@ -70,7 +65,8 @@
   </dependencyManagement>
 
   <dependencies>
-    <!-- Hutool（小而全的 Java 工具类库，通过静态方法封装，降低相关 API 的学习成本，提高工作效率，使 Java 拥有函数式语言般的优雅，让 Java 语言也可以“甜甜的”） -->
+
+  <!-- Hutool（小而全的 Java 工具类库，通过静态方法封装，降低相关 API 的学习成本，提高工作效率，使 Java 拥有函数式语言般的优雅，让 Java 语言也可以“甜甜的”） -->
     <dependency>
       <groupId>cn.hutool</groupId>
       <artifactId>hutool-all</artifactId>

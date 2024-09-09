@@ -45,12 +45,13 @@
 
     <dependency>
       <groupId>com.newadmin</groupId>
-      <artifactId>demo-job</artifactId>
+      <artifactId>demo-generator</artifactId>
     </dependency>
 
     <dependency>
       <groupId>com.newadmin</groupId>
-      <artifactId>demo-generator</artifactId>
+      <artifactId>demo-job</artifactId>
+      <version>${revision}</version>
     </dependency>
 
     <dependency>
