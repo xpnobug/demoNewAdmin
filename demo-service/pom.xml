@@ -29,11 +29,6 @@
   <!-- 引入父工程的spring boot依赖 -->
   <dependencies>
     <dependency>
-      <groupId>com.reai</groupId>
-      <artifactId>demo-core</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>com.newadmin</groupId>
       <artifactId>demo-config</artifactId>
     </dependency>

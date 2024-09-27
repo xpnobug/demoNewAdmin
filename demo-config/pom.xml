@@ -78,6 +78,16 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-undertow</artifactId>
       <version>3.2.7</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>jakarta.websocket-api</artifactId>
+          <groupId>jakarta.websocket</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>undertow-websockets-jsr</artifactId>
+          <groupId>io.undertow</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- Knife4j（前身是 swagger-bootstrap-ui，集 Swagger2 和 OpenAPI3 为一体的增强解决方案） -->
