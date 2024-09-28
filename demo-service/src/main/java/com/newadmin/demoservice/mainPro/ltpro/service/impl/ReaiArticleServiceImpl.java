@@ -2,6 +2,8 @@ package com.newadmin.demoservice.mainPro.ltpro.service.impl;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
+import com.newadmin.democonfig.redisCommon.constant.CacheConstants;
+import com.newadmin.democonfig.redisCommon.util.RedisUtils;
 import com.newadmin.democore.kduck.definition.BeanEntityDef;
 import com.newadmin.democore.kduck.query.QuerySupport;
 import com.newadmin.democore.kduck.service.DefaultService;
@@ -26,6 +28,7 @@ import com.newadmin.demoservice.mainPro.nas.entity.File;
 import com.newadmin.demoservice.mainPro.nas.service.NasFileService;
 import com.newadmin.demoservice.util.FileTypeUtil;
 import java.io.Serializable;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -77,10 +80,35 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
      */
     @Override
     public List<ReaiArticleList> getArticleList() {
-        //获取官方版块列表 根据发布平台进行分组 is_official 是否官方
+        // 尝试从 Redis 缓存中获取数据
+        List<ReaiArticle> infolist = RedisUtils.get(CacheConstants.HOME_ARTICLE_LIST_KEY);
+
+        // 如果缓存中有数据，直接返回处理结果
+        if (infolist != null && !infolist.isEmpty()) {
+            return buildArticleList(infolist);
+        }
+
+        // 如果缓存中没有数据，从数据库中查询
+        infolist = queryArticleListFromDatabase();
+
+        // 如果查询结果不为空，将数据存入 Redis，设置过期时间为10分钟
+        if (infolist != null && !infolist.isEmpty()) {
+            RedisUtils.set(CacheConstants.HOME_ARTICLE_LIST_KEY, infolist, Duration.ofMinutes(10));
+        }
+
+        // 构建并返回文章列表
+        return buildArticleList(infolist);
+    }
+
+    /**
+     * 从数据库查询文章列表
+     */
+    private List<ReaiArticle> queryArticleListFromDatabase() {
+        // 获取官方版块列表，根据发布平台进行分组 is_official 是否为官方
         ValueMap params = new ValueMap();
         params.put(ReaiChannel.IS_OFFICIAL, "1");
 
+        // 构建查询构造器
         SelectBuilder selectBuilder = new SelectBuilder(params);
         BeanEntityDef articleBean = super.getEntityDef(TABLE_NAME);
         BeanEntityDef channelBean = super.getEntityDef(ReaiChannelServiceImpl.TABLE_NAME);
@@ -91,6 +119,7 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
             .bindFields("channel", "name", "type")
             .bindFields("user", "userId", "nickName", "avatar");
 
+        // 设置表连接和条件
         selectBuilder.from("article", articleBean)
             .innerJoinOn("channel", channelBean, "channelId")
             .innerJoinOn("user", userBean, "userId", articleBean)
@@ -99,22 +128,33 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
             .and("channel.is_official", ConditionType.EQUALS, ReaiChannel.IS_OFFICIAL)
             .and("article.user_id", ConditionType.EQUALS, "userId")
             .orderBy().desc("publish_date");
-        //官方版块文章列表
-        List<ReaiArticle> infolist = super.listForBean(selectBuilder.build(), ReaiArticle::new);
 
+        // 执行数据库查询并返回结果
+        return super.listForBean(selectBuilder.build(), ReaiArticle::new);
+    }
+
+    /**
+     * 构建文章列表返回结果
+     *
+     * @param infolist 查询到的文章数据
+     * @return 构建好的文章列表
+     */
+    private List<ReaiArticleList> buildArticleList(List<ReaiArticle> infolist) {
         List<ReaiArticleList> list = new ArrayList<>();
-        //根据发布板块分组,如果发布板块为空不加入分组
+
+        // 根据发布板块分组, 如果发布板块为空则不加入分组
         Map<String, List<ReaiArticle>> listMap = infolist.stream()
             .filter(item -> item.getChannelId() != null && item.getType() != null)
             .collect(Collectors.groupingBy(ReaiArticle::getType));
 
-        //将用户信息存放在文章中
+        // 将文章分组信息存放到 ReaiArticleList
         listMap.forEach((category, itemsInCategory) -> {
             ReaiArticleList articleList = new ReaiArticleList();
             articleList.put(ReaiArticleList.TYPE_NAME, category);
             articleList.put(ReaiArticleList.ARTICLE_LIST, itemsInCategory);
             list.add(articleList);
         });
+
         return list;
     }
 

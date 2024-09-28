@@ -1,5 +1,5 @@
 
-package com.newadmin.demogenerator.constant;
+package com.newadmin.democonfig.redisCommon.constant;
 
 /**
  * 缓存相关常量
@@ -59,6 +59,15 @@ public class CacheConstants {
      * 数据导入临时会话key
      */
     public static final String DATA_IMPORT_KEY = "SYSTEM" + DELIMITER + "DATA_IMPORT" + DELIMITER;
+
+    /**
+     * 首页文章列表缓存键
+     */
+    public static final String HOME_ARTICLE_LIST_KEY = "home:article:list";
+
+    /**
+     *
+     */
 
     private CacheConstants() {
     }
