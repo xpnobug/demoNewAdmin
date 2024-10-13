@@ -5,30 +5,29 @@ import com.newadmin.democore.kduck.service.DefaultService;
 import com.newadmin.democore.kduck.service.ValueMap;
 import com.newadmin.democore.kduck.sqlbuild.ConditionBuilder.ConditionType;
 import com.newadmin.democore.kduck.sqlbuild.SelectBuilder;
-import com.newadmin.demoservice.mainPro.filepro.entity.FileDO;
-import com.newadmin.demoservice.mainPro.filepro.service.impl.FileServiceImpl;
-import java.util.List;
+import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiChannel;
+import com.newadmin.demoservice.mainPro.ltpro.service.impl.ReaiChannelServiceImpl;
 import org.springframework.stereotype.Service;
 
 @Service
-public class FileQuery extends DefaultService {
+public class ChannelQuery extends DefaultService {
 
     /**
-     * 根据fileid 获取文件
+     * 根据渠道id查询渠道信息
      *
-     * @param fileIds
+     * @param channelId
      * @return
      */
-    public List<FileDO> fileDOList(String[] fileIds) {
+    public ReaiChannel queryChannel(String channelId) {
         ValueMap params = new ValueMap();
-        params.put(FileDO.FILE_ID, fileIds);
+        params.put(ReaiChannel.CHANNEL_ID, channelId);
         // 构建查询构造器
         SelectBuilder selectBuilder = new SelectBuilder(params);
-        BeanEntityDef fileBean = super.getEntityDef(FileServiceImpl.TABLE_NAME);
-        selectBuilder.from("", fileBean)
+        BeanEntityDef channelBean = super.getEntityDef(ReaiChannelServiceImpl.TABLE_NAME);
+        selectBuilder.from("", channelBean)
             .where()
-            .and("file_id", ConditionType.IN, FileDO.FILE_ID)
+            .and("channel_id", ConditionType.IN, ReaiChannel.CHANNEL_ID)
             .orderBy().desc("create_time");
-        return super.listForBean(selectBuilder.build(), FileDO::new);
+        return super.getForBean(selectBuilder.build(), ReaiChannel::new);
     }
 }

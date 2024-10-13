@@ -6,10 +6,10 @@ import com.newadmin.democore.kduck.sqlbuild.ConditionBuilder.ConditionType;
 import com.newadmin.democore.kduck.sqlbuild.SelectBuilder;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiArticle;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiLikes;
-import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiUsers;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiArticleService;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiLikesService;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiUsersService;
+import com.newadmin.demoservice.mainPro.ltpro.vo.ReaiUsersParamVo;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
@@ -149,11 +149,11 @@ public class ReaiLikesServiceImpl extends DefaultService implements ReaiLikesSer
         articleList.forEach(item -> {
             userIds.add(item.getUserId());
         });
-        List<ReaiUsers> usersList = usersService.usersListById(userIds);
+        List<ReaiUsersParamVo> usersList = usersService.usersListById(userIds);
 
         list.forEach(item -> {
             //获取用户信息
-            ReaiUsers users = usersList.stream()
+            ReaiUsersParamVo users = usersList.stream()
                 .filter(user -> user.getUserId().equals(item.getUserId())).findFirst().orElse(null);
             if (users != null) {
                 item.put("userName", users.getUsername());

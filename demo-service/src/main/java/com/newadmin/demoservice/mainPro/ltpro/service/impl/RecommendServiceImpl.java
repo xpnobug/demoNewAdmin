@@ -8,10 +8,10 @@ import com.newadmin.democore.kduck.sqlbuild.ConditionBuilder.ConditionType;
 import com.newadmin.democore.kduck.sqlbuild.SelectBuilder;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiChannel;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiFollow;
-import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiUsers;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiFollowService;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiUsersService;
 import com.newadmin.demoservice.mainPro.ltpro.service.RecommendService;
+import com.newadmin.demoservice.mainPro.ltpro.vo.ReaiUsersParamVo;
 import com.newadmin.demoservice.mainPro.ltpro.vo.ReaiUsersVo;
 import com.newadmin.demoservice.mainPro.ltpro.vo.Recommend;
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class RecommendServiceImpl extends DefaultService implements RecommendSer
         boolean login = StpUtil.isLogin();
 
         //1. 根据用户注册时间查询最近10名创建的用户
-        List<ReaiUsers> list = usersService.usersList(null);
+        List<ReaiUsersParamVo> list = usersService.usersListByPage(null);
         if (login) {
             //获取当前登录的用户信息
             SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
@@ -48,7 +48,7 @@ public class RecommendServiceImpl extends DefaultService implements RecommendSer
             // 根据用户注册时间排序
             list.sort((o1, o2) -> o2.getRegistrationTime().compareTo(o1.getRegistrationTime()));
             // 只返回10条数据
-            List<ReaiUsers> reaiUsersList = new ArrayList<>(list.stream()
+            List<ReaiUsersParamVo> reaiUsersList = new ArrayList<>(list.stream()
                 .filter(user -> user.getRegistrationTime() != null).limit(5).toList());
             Recommend recommend = new Recommend();
             recommend.setType("1");
@@ -75,7 +75,7 @@ public class RecommendServiceImpl extends DefaultService implements RecommendSer
                 .collect(Collectors.groupingBy(ReaiFollow::getFollowUserId, Collectors.counting()));
             //根据总数 排序，展示最受欢迎的用户
             // 注意：这里假设list中的ReaiUsers的userId都在countMap的键中存在
-            List<ReaiUsers> zshyUsersList = list.stream()
+            List<ReaiUsersParamVo> zshyUsersList = list.stream()
                 .filter(user -> countMap.containsKey(user.getUserId())) // 过滤掉不在countMap中的用户
                 .sorted(
                     (o1, o2) -> countMap.get(o2.getUserId())
@@ -97,7 +97,7 @@ public class RecommendServiceImpl extends DefaultService implements RecommendSer
             // 根据用户注册时间排序
             list.sort((o1, o2) -> o2.getRegistrationTime().compareTo(o1.getRegistrationTime()));
             // 只返回10条数据
-            List<ReaiUsers> reaiUsersList = new ArrayList<>(list.stream()
+            List<ReaiUsersParamVo> reaiUsersList = new ArrayList<>(list.stream()
                 .filter(user -> user.getRegistrationTime() != null).limit(5).toList());
             Recommend recommend = new Recommend();
             recommend.setType("1");
@@ -120,7 +120,7 @@ public class RecommendServiceImpl extends DefaultService implements RecommendSer
                 .collect(Collectors.groupingBy(ReaiFollow::getFollowUserId, Collectors.counting()));
             //根据总数 排序，展示最受欢迎的用户
             // 注意：这里假设list中的ReaiUsers的userId都在countMap的键中存在
-            List<ReaiUsers> zshyUsersList = list.stream()
+            List<ReaiUsersParamVo> zshyUsersList = list.stream()
                 .filter(user -> countMap.containsKey(user.getUserId())) // 过滤掉不在countMap中的用户
                 .sorted(
                     (o1, o2) -> countMap.get(o2.getUserId())

@@ -1,15 +1,19 @@
 package com.newadmin.demoservice.mainPro.filepro.util;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.util.IdUtil;
+import com.newadmin.demoservice.mainPro.filepro.resp.FileUploadResp;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -25,6 +29,20 @@ public class FileUploadUtils {
 
     private FileUploadUtils() {
     }
+
+    /**
+     * 获取图片ids
+     *
+     * @param image 图片列表
+     * @return 图片ids
+     */
+    public static String getFileIds(List<FileUploadResp> image) {
+        if (CollUtil.isNotEmpty(image)) {
+            return image.stream().map(FileUploadResp::getFileId).collect(Collectors.joining("_"));
+        }
+        return "";
+    }
+
 
     /**
      * 上传

@@ -2,8 +2,8 @@ package com.newadmin.demoservice.mainPro.filepro.entity;
 
 import cn.hutool.core.util.StrUtil;
 import com.newadmin.democonfig.constant.StringConstants;
-import com.newadmin.democore.kduck.service.ValueMap;
 import com.newadmin.democonfig.util.StrUtils;
+import com.newadmin.democore.kduck.service.ValueMap;
 import com.newadmin.demoservice.mainPro.filepro.enums.FileTypeEnum;
 import java.util.Date;
 import java.util.Map;
@@ -16,7 +16,7 @@ import org.dromara.x.file.storage.core.FileInfo;
 public class FileDO extends ValueMap {
 
     /***/
-    public static final String FLIE_ID = "flieId";
+    public static final String FILE_ID = "fileId";
     /**
      * 名称
      */
@@ -109,7 +109,7 @@ public class FileDO extends ValueMap {
      * @param flieId
      */
     public void setFlieId(String flieId) {
-        super.setValue(FLIE_ID, flieId);
+        super.setValue(FILE_ID, flieId);
     }
 
     /**
@@ -118,7 +118,7 @@ public class FileDO extends ValueMap {
      * @return
      */
     public String getFlieId() {
-        return super.getValueAsString(FLIE_ID);
+        return super.getValueAsString(FILE_ID);
     }
 
     /**

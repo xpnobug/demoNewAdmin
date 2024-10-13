@@ -1,10 +1,9 @@
 package com.newadmin.demoservice.mainPro.ltpro.service;
 
 import com.newadmin.democore.kduck.utils.Page;
-import com.newadmin.democore.kduck.web.json.JsonObject;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiArticle;
 import com.newadmin.demoservice.mainPro.ltpro.vo.ReaiArticleList;
-import java.io.Serializable;
+import com.newadmin.demoservice.mainPro.ltpro.vo.ReaiArticleParamVo;
 import java.util.List;
 
 /**
@@ -16,8 +15,6 @@ import java.util.List;
  * @since 2024-05-16
  */
 public interface ReaiArticleService {
-
-    List<ReaiArticle> articleList(String userId);
 
     /**
      * 获取所有模块文章列表
@@ -33,15 +30,15 @@ public interface ReaiArticleService {
      * @param article
      * @return
      */
-    ReaiArticle addArticle(ReaiArticle article);
+    boolean addArticle(ReaiArticleParamVo article);
 
     /**
      * 单个文章
      *
-     * @param id
+     * @param articleId
      * @return
      */
-    ReaiArticle getArticleInfo(Serializable id);
+    ReaiArticle getArticleInfo(String articleId);
 
     /**
      * 根据用户id获取文章列表
@@ -49,7 +46,7 @@ public interface ReaiArticleService {
      * @param id
      * @return
      */
-    List<ReaiArticle> getArticleByUserId(String id);
+    List<ReaiArticle> getArticleByUserId(Page page, String id);
 
     List<ReaiArticle> selectAllList(Page page);
 
@@ -65,5 +62,5 @@ public interface ReaiArticleService {
 
     List<ReaiArticle> friendArticleList(Page page, String userId);
 
-    JsonObject deleteArticle(String id);
+    boolean deleteArticle(String id);
 }

@@ -9,13 +9,13 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONUtil;
 import com.newadmin.democonfig.constant.StringConstants;
+import com.newadmin.democonfig.trace.TraceProperties;
 import com.newadmin.democonfig.util.ExceptionUtils;
 import com.newadmin.democonfig.util.StrUtils;
 import com.newadmin.demolog.log.core.dao.LogDao;
 import com.newadmin.demolog.log.core.model.LogRecord;
 import com.newadmin.demolog.log.core.model.LogRequest;
 import com.newadmin.demolog.log.core.model.LogResponse;
-import com.newadmin.democonfig.trace.TraceProperties;
 import com.newadmin.demoservice.mainPro.ltpro.auth.model.req.AccountLoginReq;
 import com.newadmin.demoservice.mainPro.ltpro.common.enums.LogStatusEnum;
 import com.newadmin.demoservice.mainPro.ltpro.common.enums.SysConstants;
@@ -36,7 +36,6 @@ import org.springframework.scheduling.annotation.Async;
  *
  * @author couei
  * @author Charles7c
- * @author couei
  * @since 2023/12/16 23:55
  */
 @RequiredArgsConstructor

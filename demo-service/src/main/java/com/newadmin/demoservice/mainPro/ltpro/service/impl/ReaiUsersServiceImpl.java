@@ -2,7 +2,6 @@ package com.newadmin.demoservice.mainPro.ltpro.service.impl;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
-import com.newadmin.democore.kduck.id.IdGenerator;
 import com.newadmin.democore.kduck.query.QuerySupport;
 import com.newadmin.democore.kduck.service.DefaultService;
 import com.newadmin.democore.kduck.service.ParamMap;
@@ -13,11 +12,11 @@ import com.newadmin.democore.kduck.utils.Page;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiFollow;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiUsers;
 import com.newadmin.demoservice.mainPro.ltpro.entity.model.query.UserInfoQuery;
+import com.newadmin.demoservice.mainPro.ltpro.query.StatisticsQuery;
 import com.newadmin.demoservice.mainPro.ltpro.query.UserQuery;
-import com.newadmin.demoservice.mainPro.ltpro.service.ReaiArticleService;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiFollowService;
-import com.newadmin.demoservice.mainPro.ltpro.service.ReaiLogService;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiUsersService;
+import com.newadmin.demoservice.mainPro.ltpro.vo.ReaiUsersParamVo;
 import com.newadmin.demoservice.mainPro.ltpro.vo.ReaiUsersVo;
 import com.newadmin.demoservice.mainPro.ltpro.vo.Statistics;
 import java.io.Serializable;
@@ -28,8 +27,6 @@ import java.util.Map;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 /**
@@ -46,68 +43,106 @@ public class ReaiUsersServiceImpl extends DefaultService implements
     ReaiUsersService {
 
     public static final String TABLE_NAME = "reai_users";
-    private final IdGenerator idGenerator;
-    private final ReaiLogService logService;
     private final ReaiFollowService followService;
+    private final StatisticsQuery statisticsQuery;
 
-    //解决循环依赖
-    @Autowired
-    @Lazy
-    private ReaiArticleService articleService;
-
+    /**
+     * 根据用户名查询用户
+     *
+     * @param username 用户名
+     * @return
+     */
     @Override
-    public ReaiUsers usersById(String id) {
-        if (Objects.equals(id, "null")) {
-            return null;
-        } else {
-            Map<String, Object> paramMap = ParamMap.create("userId", id).toMap();
-            QuerySupport query = super.getQuery(UserQuery.class, paramMap);
-            return super.getForBean(query, null, ReaiUsers::new);
-        }
-    }
-
-    @Override
-    public List<ReaiUsers> usersListById(List<String> ids) {
-        Map<String, Object> paramMap = ParamMap.create("userId", ids).toMap();
-        QuerySupport query = super.getQuery(UserQuery.class, paramMap);
-        return super.listForBean(query, null, ReaiUsers::new);
-    }
-
-    @Override
-    public List<ReaiUsers> usersList(Page page) {
-        QuerySupport query = super.getQuery(UserQuery.class, null);
-        return super.listForBean(query, page, ReaiUsers::new);
+    public ReaiUsers getByUsername(String username) {
+        ValueMap paramMap = new ValueMap();
+        paramMap.put(ReaiUsers.USERNAME, username);
+        SelectBuilder selectBuilder = new SelectBuilder(paramMap);
+        selectBuilder.from("", super.getEntityDef(TABLE_NAME)).where()
+            .and("username", ConditionType.EQUALS, ReaiUsers.USERNAME);
+        return super.getForBean(selectBuilder.build(), null, ReaiUsers::new);
     }
 
     /**
+     * 根据手机号查询用户
      *
+     * @param phone 手机号
+     * @return
+     */
+    @Override
+    public ReaiUsers getByPhone(String phone) {
+        ValueMap paramMap = new ValueMap();
+        paramMap.put(ReaiUsers.PHONE_NUMBER, phone);
+        SelectBuilder selectBuilder = new SelectBuilder(paramMap);
+        selectBuilder.from("", super.getEntityDef(TABLE_NAME)).where()
+            .and("phone_number", ConditionType.EQUALS, ReaiUsers.PHONE_NUMBER);
+        return super.getForBean(selectBuilder.build(), null, ReaiUsers::new);
+    }
+
+    /**
+     * 根据邮箱查询用户
+     *
+     * @param email 邮箱
+     * @return
+     */
+    @Override
+    public ReaiUsers getByEmail(String email) {
+        ValueMap paramMap = new ValueMap();
+        paramMap.put(ReaiUsers.EMAIL, email);
+        SelectBuilder selectBuilder = new SelectBuilder(paramMap);
+        selectBuilder.from("", super.getEntityDef(TABLE_NAME)).where()
+            .and("email", ConditionType.EQUALS, ReaiUsers.EMAIL);
+        return super.getForBean(selectBuilder.build(), null, ReaiUsers::new);
+    }
+
+    /**
+     * 根据用户id查询用户
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public ReaiUsers getUserInfo(String userId) {
+        ValueMap paramMap = new ValueMap();
+        paramMap.put(ReaiUsers.USER_ID, userId);
+        SelectBuilder selectBuilder = new SelectBuilder(paramMap);
+        selectBuilder.from("", super.getEntityDef(TABLE_NAME)).where()
+            .and("user_id", ConditionType.EQUALS, ReaiUsers.USER_ID);
+        return super.getForBean(selectBuilder.build(), null, ReaiUsers::new);
+    }
+
+    /**
+     * 根据用户id列表查询用户 (列表)
+     *
+     * @param ids
+     * @return
+     */
+    @Override
+    public List<ReaiUsersParamVo> usersListById(List<String> ids) {
+        Map<String, Object> paramMap = ParamMap.create("userId", ids).toMap();
+        QuerySupport query = super.getQuery(UserQuery.class, paramMap);
+        return super.listForBean(query, null, ReaiUsersParamVo::new);
+    }
+
+    /**
+     * 分页获取用户信息
+     *
+     * @param page
+     * @return
+     */
+    @Override
+    public List<ReaiUsersParamVo> usersListByPage(Page page) {
+        QuerySupport query = super.getQuery(UserQuery.class, null);
+        return super.listForBean(query, page, ReaiUsersParamVo::new);
+    }
+
+    /**
+     * 注册用户
+     *
+     * @param user
+     * @return
      */
     @Override
     public ReaiUsers register(ReaiUsers user) {
-
-        // 获取前端传的账号密码
-//        String username = user.getUsername();
-//        String password = user.getPassword();
-//        String email = user.getEmail();
-
-        // 调用数据库查询该用户是否存在
-//        ReaiUsers existUser = super.getForBean(TABLE_NAME, "username", username, ReaiUsers::new);
-//        ReaiUsers existEmail = super.getForBean(TABLE_NAME, "email", email, ReaiUsers::new);
-//
-//        // 如果用户存在，返回null
-//        if (existUser != null || existEmail != null) {
-//            return null;
-//        }
-        //todo 注册时需要验证邮箱
-
-        // 如果不存在，则将用户信息插入数据库，并返回插入的用户信息
-        // 密码加密
-        try {
-//            String pwd = EncryptionUtil.encryptWithAES(password, password);
-//            user.setPassword(pwd);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         //默认背景
         user.setUserCover(
             "https://alist.reaicc.com/nas/image/jpeg/2024-05/1/fb02f075-42bb-4e0a-bb0a-dafc1032e4b6.jpg");
@@ -147,19 +182,42 @@ public class ReaiUsersServiceImpl extends DefaultService implements
         return user;
     }
 
+    /**
+     * 更新用户信息
+     *
+     * @param user
+     * @return
+     */
     @Override
     public ReaiUsers updateUserInfo(ReaiUsers user) {
         // 更新用户信息
-        ReaiUsers userInfo = new ReaiUsers();
-        BeanUtils.copyProperties(user, userInfo);
-        super.update(TABLE_NAME, userInfo);
+        ReaiUsers userInfo = getUserInfo(user.getUserId());
+        if (userInfo != null) {
+            userInfo.setAvatar(
+                Objects.equals(user.getAvatar(), "") ? userInfo.getAvatar() : user.getAvatar());
+            userInfo.setUserCover(
+                Objects.equals(user.getUserCover(), "") ? userInfo.getUserCover()
+                    : user.getUserCover());
+            userInfo.setNickName(
+                Objects.equals(user.getNickName(), "") ? userInfo.getNickName()
+                    : user.getNickName());
+            userInfo.setEmail(
+                Objects.equals(user.getEmail(), "") ? userInfo.getEmail() : user.getEmail());
+        }
+        super.update(TABLE_NAME, ReaiUsers.USER_ID, userInfo);
         return user;
     }
 
+    /**
+     * 用户版块列表
+     *
+     * @param page
+     * @return
+     */
     @Override
     public List<UserInfoQuery> pageList(Page page) {
         //获取所有注册的用户
-        List<ReaiUsers> reaiUsers = this.usersList(page);
+        List<ReaiUsersParamVo> userList = usersListByPage(page);
         List<UserInfoQuery> queryList = new ArrayList<>();
         //是否登录
         boolean login = StpUtil.isLogin();
@@ -172,9 +230,9 @@ public class ReaiUsersServiceImpl extends DefaultService implements
             List<ReaiFollow> followList = followService.getFollowList(userId, null, null);
 
             // 排除当前登录的自己
-            reaiUsers.removeIf(user -> user.getUserId().equals(userId));
+            userList.removeIf(user -> user.getUserId().equals(userId));
             // 对比reaiUsers 中userid 和 followList 中 followUserId是否一致
-            reaiUsers.stream().forEach(reaiUser -> {
+            userList.stream().forEach(reaiUser -> {
                 UserInfoQuery userInfoQuery = new UserInfoQuery();
                 BeanUtils.copyProperties(reaiUser, userInfoQuery);
                 queryList.add(userInfoQuery);
@@ -185,21 +243,21 @@ public class ReaiUsersServiceImpl extends DefaultService implements
                 boolean isFollow = followList.stream()
                     .anyMatch(follow -> follow.getFollowUserId().equals(user.getUserId()));
                 // 获取统计的数量
-                Statistics statistics = this.getStatistics(user.getUserId());
+                Statistics statistics = statisticsQuery.getUserStatistics(user.getUserId());
                 // 设置关注状态
                 user.setIsFollow(isFollow);
                 user.setStatistics(statistics);
             });
         } else {
 
-            reaiUsers.stream().forEach(reaiUser -> {
+            userList.stream().forEach(reaiUser -> {
                 UserInfoQuery userInfoQuery = new UserInfoQuery();
                 BeanUtils.copyProperties(reaiUser, userInfoQuery);
                 queryList.add(userInfoQuery);
             });
             queryList.forEach(user -> {
                 // 获取统计的数量
-                Statistics statistics = this.getStatistics(user.getUserId());
+                Statistics statistics = statisticsQuery.getUserStatistics(user.getUserId());
                 user.setStatistics(statistics);
             });
         }
@@ -220,7 +278,7 @@ public class ReaiUsersServiceImpl extends DefaultService implements
         // 对比reaiUsers 中userid 和 followList 中 followUserId是否一致
         list.forEach(user -> {
             // 获取统计的数量
-            Statistics statistics = this.getStatistics(user.getUserId());
+            Statistics statistics = statisticsQuery.getUserStatistics(user.getUserId());
             // 判断当前用户是否关注了该用户
             boolean isFollow = followList.stream()
                 .anyMatch(follow -> follow.getFollowUserId().equals(user.getUserId()));
@@ -233,7 +291,7 @@ public class ReaiUsersServiceImpl extends DefaultService implements
 
     @Override
     public ReaiUsers getUserById(Serializable id) {
-        ReaiUsers reaiUsers = usersById(String.valueOf(id));
+        ReaiUsers reaiUsers = getUserInfo(String.valueOf(id));
         // 获取当前登录的用户信息
         SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
         if (tokenInfo.loginId != null) {
@@ -254,7 +312,7 @@ public class ReaiUsersServiceImpl extends DefaultService implements
 
     @Override
     public ReaiUsersVo getUser(Serializable id) {
-        ReaiUsers reaiUsers = usersById(String.valueOf(id));
+        ReaiUsers reaiUsers = getUserInfo(String.valueOf(id));
         // 获取当前登录的用户信息
         SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
         if (tokenInfo.loginId != null) {
@@ -275,63 +333,6 @@ public class ReaiUsersServiceImpl extends DefaultService implements
             BeanUtils.copyProperties(reaiUsers, userInfoResp);
         }
         return userInfoResp;
-    }
-
-    @Override
-    public ReaiUsers getByUsername(String username) {
-        ValueMap paramMap = new ValueMap();
-        paramMap.put(ReaiUsers.USERNAME, username);
-        SelectBuilder selectBuilder = new SelectBuilder(paramMap);
-        selectBuilder.from("", super.getEntityDef(TABLE_NAME)).where()
-            .and("username", ConditionType.EQUALS, ReaiUsers.USERNAME);
-        return super.getForBean(selectBuilder.build(), null, ReaiUsers::new);
-    }
-
-    @Override
-    public ReaiUsers getByPhone(String phone) {
-        ValueMap paramMap = new ValueMap();
-        paramMap.put(ReaiUsers.PHONE_NUMBER, phone);
-        SelectBuilder selectBuilder = new SelectBuilder(paramMap);
-        selectBuilder.from("", super.getEntityDef(TABLE_NAME)).where()
-            .and("phone_number", ConditionType.EQUALS, ReaiUsers.PHONE_NUMBER);
-        return super.getForBean(selectBuilder.build(), null, ReaiUsers::new);
-    }
-
-    @Override
-    public ReaiUsers getByEmail(String email) {
-        ValueMap paramMap = new ValueMap();
-        paramMap.put(ReaiUsers.EMAIL, email);
-        SelectBuilder selectBuilder = new SelectBuilder(paramMap);
-        selectBuilder.from("", super.getEntityDef(TABLE_NAME)).where()
-            .and("email", ConditionType.EQUALS, ReaiUsers.EMAIL);
-        return super.getForBean(selectBuilder.build(), null, ReaiUsers::new);
-    }
-
-    public Statistics getStatistics(String userId) {
-        //1.获取用户发布的文章数量
-        int articleCount = articleService.articleList(userId).size();
-        //2.获取用户关注的用户数量
-        int followCount = followService.getFollowList(userId, null, null).size();
-        //3.获取用户的粉丝数量
-        int followerCount = followService.getFollowList(null, userId, null).size();
-
-        //返回统计结果
-        Statistics statistics = new Statistics();
-        statistics.put(Statistics.PUBLISH_ARTICLE_COUNT, articleCount);
-        statistics.put(Statistics.FOLLOW_COUNT, followCount);
-        statistics.put(Statistics.FANS_COUNT, followerCount);
-
-        return statistics;
-    }
-
-    @Override
-    public ReaiUsers getUserInfo(String userId) {
-        ValueMap paramMap = new ValueMap();
-        paramMap.put(ReaiUsers.USER_ID, userId);
-        SelectBuilder selectBuilder = new SelectBuilder(paramMap);
-        selectBuilder.from("", super.getEntityDef(TABLE_NAME)).where()
-            .and("user_id", ConditionType.EQUALS, ReaiUsers.USER_ID);
-        return super.getForBean(selectBuilder.build(), null, ReaiUsers::new);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.newadmin.demoservice.mainPro.ltpro.entity;
 
 import com.newadmin.democore.kduck.service.ValueMap;
+import com.newadmin.demoservice.mainPro.filepro.resp.FileUploadResp;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -164,6 +165,11 @@ public class ReaiArticle extends ValueMap {
     public static final String LEVEL = "level";
     /***/
     public static final String IMG_LIST = "imgList";
+
+    /**
+     * 图片列表
+     */
+    public static final String FILE_ID = "fileId";
 
     /**
      * 地址
@@ -717,7 +723,7 @@ public class ReaiArticle extends ValueMap {
      *
      * @return
      */
-    public List<String> getImgList() {
+    public List<FileUploadResp> getImgList() {
         return super.getValueAsList(IMG_LIST);
     }
 
@@ -809,5 +815,23 @@ public class ReaiArticle extends ValueMap {
      */
     public String getType() {
         return super.getValueAsString(TYPE);
+    }
+
+    /**
+     * 设置 图片列表
+     *
+     * @param fileId 图片列表
+     */
+    public void setFileId(String fileId) {
+        super.setValue(FILE_ID, fileId);
+    }
+
+    /**
+     * 获取 图片列表
+     *
+     * @return 图片列表
+     */
+    public String getFileId() {
+        return super.getValueAsString(FILE_ID);
     }
 }

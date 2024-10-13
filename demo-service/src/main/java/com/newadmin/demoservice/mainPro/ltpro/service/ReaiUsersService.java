@@ -3,6 +3,7 @@ package com.newadmin.demoservice.mainPro.ltpro.service;
 import com.newadmin.democore.kduck.utils.Page;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiUsers;
 import com.newadmin.demoservice.mainPro.ltpro.entity.model.query.UserInfoQuery;
+import com.newadmin.demoservice.mainPro.ltpro.vo.ReaiUsersParamVo;
 import com.newadmin.demoservice.mainPro.ltpro.vo.ReaiUsersVo;
 import java.io.Serializable;
 import java.util.List;
@@ -17,11 +18,21 @@ import java.util.List;
  */
 public interface ReaiUsersService {
 
-    ReaiUsers usersById(String id);
+    /**
+     * 根据用户id查询用户信息 (列表)
+     *
+     * @param userIds
+     * @return
+     */
+    List<ReaiUsersParamVo> usersListById(List<String> userIds);
 
-    List<ReaiUsers> usersListById(List<String> ids);
-
-    List<ReaiUsers> usersList(Page page);
+    /**
+     * 分页获取用户列表
+     *
+     * @param page
+     * @return
+     */
+    List<ReaiUsersParamVo> usersListByPage(Page page);
 
     /**
      * 注册新用户

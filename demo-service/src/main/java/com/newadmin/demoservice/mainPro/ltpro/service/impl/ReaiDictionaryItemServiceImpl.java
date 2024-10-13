@@ -95,7 +95,7 @@ public class ReaiDictionaryItemServiceImpl extends DefaultService implements
 
             return dictionaryItemMap;
         } else {
-            throw new RuntimeException("字典不存在");
+            return new HashMap<>();
         }
     }
 

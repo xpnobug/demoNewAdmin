@@ -33,6 +33,10 @@ public class CommonController {
         ValidationUtils.throwIf(projectProperties.isProduction(), "演示环境不支持上传文件");
         ValidationUtils.throwIf(file::isEmpty, "文件不能为空");
         FileInfo fileInfo = fileService.upload(file);
-        return FileUploadResp.builder().url(fileInfo.getUrl()).build();
+        return FileUploadResp.builder()
+            .fileId(fileInfo.getId())
+            .url(fileInfo.getUrl())
+            .thumbnail(fileInfo.getThUrl())
+            .build();
     }
 }

@@ -5,9 +5,9 @@ import com.newadmin.democore.kduck.web.json.JsonObject;
 import com.newadmin.democore.kduck.web.json.JsonPageObject;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiArticle;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiArticleService;
+import com.newadmin.demoservice.mainPro.ltpro.vo.ReaiArticleParamVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.io.Serializable;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -62,13 +62,8 @@ public class ReaiArticleController {
     @Operation(summary = "根据用户id获取文章数据", description = "根据用户id获取文章数据")
     @GetMapping("/listByUserId")
     public JsonPageObject selectPageAll(Page page, @RequestParam("userId") String userId) {
-        List<ReaiArticle> articleList = reaiArticleService.getArticleByUserId(userId);
-        List<ReaiArticle> collect = articleList.stream()
-            .skip((long) (page.getCurrentPage() - 1) * page.getPageSize())
-            .limit(page.getPageSize()).
-            toList();
-        page.setCount(articleList.size());
-        return new JsonPageObject(page, collect);
+        List<ReaiArticle> articleList = reaiArticleService.getArticleByUserId(page, userId);
+        return new JsonPageObject(page, articleList);
     }
 
     /**
@@ -79,7 +74,7 @@ public class ReaiArticleController {
      */
     @Operation(summary = "通过主键查询单条文章数据", description = "通过主键查询单条文章数据")
     @GetMapping("{id}")
-    public JsonObject selectOne(@PathVariable Serializable id) {
+    public JsonObject selectOne(@PathVariable String id) {
         return new JsonObject(reaiArticleService.getArticleInfo(id));
     }
 
@@ -91,9 +86,8 @@ public class ReaiArticleController {
      */
     @Operation(summary = "发布文章", description = "发布文章")
     @PostMapping("/add")
-    public JsonObject insert(@RequestBody ReaiArticle reaiArticle) {
-        ReaiArticle info = reaiArticleService.addArticle(reaiArticle);
-        return new JsonObject(info.getArticleId());
+    public JsonObject insert(@RequestBody ReaiArticleParamVo reaiArticle) {
+        return new JsonObject(reaiArticleService.addArticle(reaiArticle));
     }
 
     /**

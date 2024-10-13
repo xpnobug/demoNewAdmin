@@ -1,33 +1,31 @@
 package com.newadmin.demoservice.mainPro.ltpro.service.impl;
 
-import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.newadmin.democonfig.redisCommon.constant.CacheConstants;
 import com.newadmin.democonfig.redisCommon.util.RedisUtils;
-import com.newadmin.democore.kduck.definition.BeanEntityDef;
-import com.newadmin.democore.kduck.query.QuerySupport;
 import com.newadmin.democore.kduck.service.DefaultService;
-import com.newadmin.democore.kduck.service.ParamMap;
 import com.newadmin.democore.kduck.service.ValueMap;
 import com.newadmin.democore.kduck.sqlbuild.ConditionBuilder.ConditionType;
 import com.newadmin.democore.kduck.sqlbuild.SelectBuilder;
 import com.newadmin.democore.kduck.utils.ConversionUtils;
 import com.newadmin.democore.kduck.utils.Page;
-import com.newadmin.democore.kduck.web.json.JsonObject;
+import com.newadmin.demoservice.mainPro.filepro.entity.FileDO;
+import com.newadmin.demoservice.mainPro.filepro.util.FileUploadUtils;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiArticle;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiChannel;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiLikes;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiMusic;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiUsers;
 import com.newadmin.demoservice.mainPro.ltpro.query.ArticleQuery;
+import com.newadmin.demoservice.mainPro.ltpro.query.ChannelQuery;
+import com.newadmin.demoservice.mainPro.ltpro.query.FileQuery;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiArticleService;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiMusicService;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiUsersService;
 import com.newadmin.demoservice.mainPro.ltpro.vo.ReaiArticleList;
-import com.newadmin.demoservice.mainPro.nas.entity.File;
-import com.newadmin.demoservice.mainPro.nas.service.NasFileService;
-import com.newadmin.demoservice.util.FileTypeUtil;
-import java.io.Serializable;
+import com.newadmin.demoservice.mainPro.ltpro.vo.ReaiArticleParamVo;
+import com.newadmin.demoservice.mainPro.ltpro.vo.ReaiUsersParamVo;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,7 +38,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -60,18 +58,10 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
     public static final String TABLE_NAME = "reai_article";
 
     private final ReaiUsersService usersService;
-    private final NasFileService fileService;
     private final ReaiMusicService songService;
-
-    @Override
-    public List<ReaiArticle> articleList(String userId) {
-        Map<String, Object> paramMap = ParamMap.create("userId", userId)
-            .set(ReaiArticle.CHANNEL_ID, "friendCircle").
-            toMap();
-        QuerySupport query = super.getQuery(ArticleQuery.class, paramMap);
-        List<ReaiArticle> infolist = super.listForBean(query, ReaiArticle::new);
-        return infolist;
-    }
+    private final ArticleQuery articleQuery;
+    private final FileQuery fileQuery;
+    private final ChannelQuery channelQuery;
 
     /**
      * 首页展示的各版块文章列表
@@ -82,56 +72,104 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
     public List<ReaiArticleList> getArticleList() {
         // 尝试从 Redis 缓存中获取数据
         List<ReaiArticle> infolist = RedisUtils.get(CacheConstants.HOME_ARTICLE_LIST_KEY);
-
         // 如果缓存中有数据，直接返回处理结果
         if (infolist != null && !infolist.isEmpty()) {
             return buildArticleList(infolist);
         }
-
         // 如果缓存中没有数据，从数据库中查询
-        infolist = queryArticleListFromDatabase();
-
+        infolist = articleQuery.queryArticleAll();
         // 如果查询结果不为空，将数据存入 Redis，设置过期时间为10分钟
         if (infolist != null && !infolist.isEmpty()) {
             RedisUtils.set(CacheConstants.HOME_ARTICLE_LIST_KEY, infolist, Duration.ofMinutes(10));
         }
-
         // 构建并返回文章列表
         return buildArticleList(infolist);
     }
 
+
     /**
-     * 从数据库查询文章列表
+     * 根据用户id获取文章数据(个人信息)
+     * @param userId
+     * @return
      */
-    private List<ReaiArticle> queryArticleListFromDatabase() {
-        // 获取官方版块列表，根据发布平台进行分组 is_official 是否为官方
-        ValueMap params = new ValueMap();
-        params.put(ReaiChannel.IS_OFFICIAL, "1");
-
-        // 构建查询构造器
-        SelectBuilder selectBuilder = new SelectBuilder(params);
-        BeanEntityDef articleBean = super.getEntityDef(TABLE_NAME);
-        BeanEntityDef channelBean = super.getEntityDef(ReaiChannelServiceImpl.TABLE_NAME);
-        BeanEntityDef userBean = super.getEntityDef(ReaiUsersServiceImpl.TABLE_NAME);
-
-        selectBuilder.bindFields("article", false, "seoInformation", "editorialSuggestions",
-                "recommendations")
-            .bindFields("channel", "name", "type")
-            .bindFields("user", "userId", "nickName", "avatar");
-
-        // 设置表连接和条件
-        selectBuilder.from("article", articleBean)
-            .innerJoinOn("channel", channelBean, "channelId")
-            .innerJoinOn("user", userBean, "userId", articleBean)
-            .where()
-            .and("article.channel_id", ConditionType.EQUALS, "channelId")
-            .and("channel.is_official", ConditionType.EQUALS, ReaiChannel.IS_OFFICIAL)
-            .and("article.user_id", ConditionType.EQUALS, "userId")
-            .orderBy().desc("publish_date");
-
-        // 执行数据库查询并返回结果
-        return super.listForBean(selectBuilder.build(), ReaiArticle::new);
+    @Override
+    public List<ReaiArticle> getArticleByUserId(Page page, String userId) {
+        // 根据用户id 获取 文章列表
+        List<ReaiArticle> articleList = articleQuery.queryArticleListByUserId(page, userId);
+        articleList.forEach(article -> {
+            if (StringUtils.isNotBlank(article.getFileId())) {
+                String[] ids = article.getFileId().split("_");
+                List<FileDO> files = fileQuery.fileDOList(ids);
+                // 设置封面图片
+                article.put("coverImg", files.get(0));
+                // 设置图片列表
+                article.put("imgList", files);
+            }
+            if (StringUtils.isNotBlank(article.getChannelId())) {
+                // 获取文章版块信息
+                ReaiChannel reaiChannel = channelQuery.queryChannel(article.getChannelId());
+                if (reaiChannel != null) {
+                    article.put("name", reaiChannel.getName());
+                    article.put("type", reaiChannel.getType());
+                } else {
+                    article.put("name", "推荐");
+                }
+            } else {
+                article.put("name", "推荐");
+            }
+        });
+        return articleList;
     }
+
+    /**
+     * 新增数据(发布文章)
+     *
+     * @param article
+     * @return
+     */
+    @Override
+    @Transactional
+    public boolean addArticle(ReaiArticleParamVo article) {
+        //获取当前登录的用户信息
+        String userId = StpUtil.getLoginIdAsString();
+        Assert.notNull(userId, "用户未登录");
+        if (article.getArticleId() == null || Objects.equals(article.getArticleId(), "")) {
+            // 根据前端传的值添加
+            article.setPublishDate(new Date());
+            // 设置图片
+            article.setFileId(FileUploadUtils.getFileIds(article.getImgList()));
+
+            // 设置文章状态
+            ReaiArticle convert = new ReaiArticle();
+            // 设置主图
+            if (StringUtils.isNotBlank(article.getFileId())) {
+                String[] ids = article.getFileId().split("_");
+                List<FileDO> file = fileQuery.fileDOList(ids);
+                article.setCoverImage(file.get(0).getUrl());
+            }
+            BeanUtils.copyProperties(article, convert);
+            super.add(TABLE_NAME, convert);
+        } else {
+            ReaiArticle convert = new ReaiArticle();
+
+            //更新
+            article.setFileId(FileUploadUtils.getFileIds(article.getImgList()));
+            if (StringUtils.isNotBlank(article.getFileId())) {
+                String[] ids = article.getFileId().split("_");
+                List<FileDO> file = fileQuery.fileDOList(ids);
+                article.setCoverImage(file.get(0).getUrl());
+            }
+            article.setUpdateTime(new Date());
+            BeanUtils.copyProperties(article, convert);
+            super.update(TABLE_NAME, convert);
+        }
+        // 删除redis缓存
+        RedisUtils.delete(CacheConstants.HOME_ARTICLE_LIST_KEY);
+
+        //返回添加之后的主键
+        return true;
+    }
+
 
     /**
      * 构建文章列表返回结果
@@ -158,121 +196,56 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
         return list;
     }
 
+    /**
+     * 获取文章详情
+     * @param articleId
+     * @return
+     */
     @Override
-    @Transactional
-    public ReaiArticle addArticle(ReaiArticle article) {
-        //获取当前登录的用户信息
-        SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
-        Assert.notNull(tokenInfo.loginId, "用户未登录");
-        if (article.getArticleId() == null || Objects.equals(article.getArticleId(), "")) {
-            //根据前端传的值添加
-            article.setPublishDate(new Date());
-            ReaiArticle convert = ConversionUtils.convert(article, ReaiArticle.class);
-            String aid = super.add(TABLE_NAME, convert).toString();
-            //添加图片
-            List<String> imgList = article.getImgList();
-            String userId = tokenInfo.loginId.toString();
-            if (imgList != null) {
-                for (String imgUrl : imgList) {
-                    File file = new File();
-                    file.setSrc(imgUrl);
-                    file.setUpdatedAt(new Date());
-                    file.setCreatedAt(new Date());
-                    file.setUserId(Long.valueOf(userId));
-                    file.setArticleId(aid);
-                    file.setFileType(FileTypeUtil.fileTypeCheck(imgUrl));
-                    fileService.addImg(file);
-                }
+    public ReaiArticle getArticleInfo(String articleId) {
+        ReaiArticle postInfo = articleQuery.queryArticleInfoById(articleId);
+        if (postInfo != null) {
+            if (StringUtils.isNotBlank(postInfo.getFileId())) {
+                //获取图片
+                String[] ids = postInfo.getFileId().split("_");
+                List<FileDO> files = fileQuery.fileDOList(ids);
+                // 设置封面图片
+                postInfo.put("coverImage", files.get(0).getUrl());
+                // 设置图片列表
+                postInfo.put("imgList", files);
             }
-        } else {
-            //更新
-            ReaiArticle convert = ConversionUtils.convert(article, ReaiArticle.class);
-            convert.setUpdateTime(new Date());
-            super.update(TABLE_NAME, convert);
         }
-        //返回添加之后的主键
-        return article;
-    }
-
-    @Override
-    public ReaiArticle getArticleInfo(Serializable id) {
-        ValueMap params = new ValueMap();
-        params.put(ReaiArticle.ARTICLE_ID, id);
-        SelectBuilder selectBuilder = new SelectBuilder(params);
-        BeanEntityDef articleBean = super.getEntityDef(TABLE_NAME);
-        BeanEntityDef channelBean = super.getEntityDef(ReaiChannelServiceImpl.TABLE_NAME);
-        BeanEntityDef userBean = super.getEntityDef(ReaiUsersServiceImpl.TABLE_NAME);
-
-        selectBuilder.bindFields("article", false, "seoInformation", "editorialSuggestions",
-                "recommendations")
-            .bindFields("channel", "name", "type")
-            .bindFields("user", "userId", "nickName", "avatar", "exp", "level");
-
-        selectBuilder.from("article", articleBean)
-            .innerJoinOn("channel", channelBean, "channelId")
-            .innerJoinOn("user", userBean, "userId", articleBean)
-            .where()
-            .and("article.article_id", ConditionType.EQUALS, ReaiArticle.ARTICLE_ID)
-            .orderBy().desc("publish_date");
-        //官方版块文章列表
-        ReaiArticle postInfo = super.getForBean(selectBuilder.build(), ReaiArticle::new);
-        //获取图片
-        List<File> fileList = fileService.getFileList(postInfo.getArticleId(), null);
-
-        postInfo.setImgList(fileList.stream().map(File::getSrc).collect(Collectors.toList()));
         return postInfo;
     }
 
-    @Override
-    public List<ReaiArticle> getArticleByUserId(String id) {
-        //根据用户id
-        List<ReaiArticle> articleList = articleList(id);
-
-        //根据发布时间排序
-        articleList.sort((o1, o2) -> o2.getPublishDate().compareTo(o1.getPublishDate()));
-        List<ReaiArticle> collect = articleList.stream().filter(item -> item.getUserId().equals(id))
-            .collect(Collectors.toList());
-        //获取用户id
-        extracted(id, collect);
-        return collect;
-    }
-
+    /**
+     * 获取社区文章列表(分页)
+     * @param page
+     * @return
+     */
     @Override
     public List<ReaiArticle> selectAllList(Page page) {
-
-        SelectBuilder selectBuilder = new SelectBuilder();
-        BeanEntityDef articleBean = super.getEntityDef(TABLE_NAME);
-        BeanEntityDef channelBean = super.getEntityDef(ReaiChannelServiceImpl.TABLE_NAME);
-        BeanEntityDef userBean = super.getEntityDef(ReaiUsersServiceImpl.TABLE_NAME);
-
-        selectBuilder.bindFields("article", false, "seoInformation", "editorialSuggestions",
-                "recommendations")
-            .bindFields("channel", "name", "type")
-            .bindFields("user", "userId", "nickName", "avatar", "exp", "level");
-
-        selectBuilder.from("article", articleBean)
-            .innerJoinOn("channel", channelBean, "channelId")
-            .innerJoinOn("user", userBean, "userId", articleBean)
-            .where()
-            .and("article.channel_id", ConditionType.EQUALS, "channelId")
-            .and("article.user_id", ConditionType.EQUALS, "userId")
-            .orderBy().desc("publish_date");
-        //官方版块文章列表
-        List<ReaiArticle> infolist = super.listForBean(selectBuilder.build(), page,
-            ReaiArticle::new);
-
-        List<String> idList = new ArrayList<>();
-        //将用户信息存放在文章中
+        List<ReaiArticle> infolist = articleQuery.queryPageArticleList(page);
+        // 设置图片列表
         infolist.forEach(item -> {
-            //获取图片
-            idList.add(item.getArticleId());
-        });
-        List<File> fileList = fileService.getFileListById(idList);
-        infolist.forEach(item -> {
-            //判断文章id 和文件中的id是否一致
-            item.setImgList(
-                fileList.stream().filter(file -> file.getArticleId().equals(item.getArticleId()))
-                    .map(File::getSrc).collect(Collectors.toList()));
+            if (StringUtils.isNotBlank(item.getFileId())) {
+                String[] ids = item.getFileId().split("_");
+                List<FileDO> files = fileQuery.fileDOList(ids);
+                item.put("coverImg", files.get(0));
+                item.put("imgList", files);
+            }
+            if (StringUtils.isNotBlank(item.getChannelId())) {
+                // 获取文章版块信息
+                ReaiChannel reaiChannel = channelQuery.queryChannel(item.getChannelId());
+                if (reaiChannel != null) {
+                    item.put("name", reaiChannel.getName());
+                    item.put("type", reaiChannel.getType());
+                } else {
+                    item.put("name", "推荐");
+                }
+            } else {
+                item.put("name", "推荐");
+            }
         });
         return infolist;
     }
@@ -306,23 +279,6 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
         }
     }
 
-    @NotNull
-    private List<ReaiArticle> getList(Page page, String userId,
-        List<ReaiArticle> articleList) {
-        //查询发布平台为 friendCircle：朋友圈 的数据
-        //筛选发布版块为朋友圈的文章
-        List<ReaiArticle> filterAfterList = articleList.stream().filter(
-                item -> item.getChannelId() != null && item.getChannelId()
-                    .equals("friendCircle"))
-            .toList();
-        //如果过滤后的列表为空，则修改page
-        if (filterAfterList.isEmpty()) {
-            page.setCount(0);
-            page.setMaxPage(0);
-        }
-        extracted(userId, filterAfterList);
-        return filterAfterList;
-    }
 
     private void extracted(String userId, List<ReaiArticle> articleList) {
         if (!Objects.equals(userId, "null") && userId != null) {
@@ -350,15 +306,15 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
         });
 
         // 使用 userIds 获取用户信息
-        List<ReaiUsers> usersList = usersService.usersListById(new ArrayList<>(userIds));
+        List<ReaiUsersParamVo> usersList = usersService.usersListById(new ArrayList<>(userIds));
 
         // 创建 userId 到用户信息的映射
-        Map<String, ReaiUsers> userMap = usersList.stream()
-            .collect(Collectors.toMap(ReaiUsers::getUserId, Function.identity()));
+        Map<String, ReaiUsersParamVo> userMap = usersList.stream()
+            .collect(Collectors.toMap(ReaiUsersParamVo::getUserId, Function.identity()));
 
         // 填充文章的作者信息
         articleList.forEach(item -> {
-            ReaiUsers users = userMap.get(item.getUserId());
+            ReaiUsersParamVo users = userMap.get(item.getUserId());
             if (users != null) {
                 item.setAuthor(users.getNickName());
                 item.setAvatar(users.getAvatar());
@@ -372,17 +328,17 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
 
     private void getMediaInfo(String userId, List<ReaiArticle> articleList, List<String> idList) {
         // 获取所有文章相关的文件（图片和视频）
-        List<File> fileList = fileService.getFileListById(idList);
-
-        // 为每篇文章设置图片列表
-        articleList.forEach(item -> {
-            List<String> imgList = fileList.stream()
-                .filter(file -> file.getArticleId().equals(item.getArticleId())
-                    && "image".equals(file.getFileType()))
-                .map(File::getSrc)
-                .collect(Collectors.toList());
-            item.setImgList(imgList);
-        });
+//        List<File> fileList = fileService.getFileListById(idList);
+//
+//        // 为每篇文章设置图片列表
+//        articleList.forEach(item -> {
+//            List<String> imgList = fileList.stream()
+//                .filter(file -> file.getArticleId().equals(item.getArticleId())
+//                    && "image".equals(file.getFileType()))
+//                .map(File::getSrc)
+//                .collect(Collectors.toList());
+//            item.setImgList(imgList);
+//        });
 
         // 获取所有文章相关的音乐
         List<ReaiMusic> musicList = songService.songListById(null, idList);
@@ -396,14 +352,14 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
         });
 
         // 为每篇文章设置视频列表
-        articleList.forEach(item -> {
-            List<String> videoList = fileList.stream()
-                .filter(file -> file.getArticleId().equals(item.getArticleId())
-                    && "video".equals(file.getFileType()))
-                .map(File::getSrc)
-                .collect(Collectors.toList());
-            item.put("videoList", videoList);
-        });
+//        articleList.forEach(item -> {
+//            List<String> videoList = fileList.stream()
+//                .filter(file -> file.getArticleId().equals(item.getArticleId())
+//                    && "video".equals(file.getFileType()))
+//                .map(File::getSrc)
+//                .collect(Collectors.toList());
+//            item.put("videoList", videoList);
+//        });
 
         // 获取点赞信息（注释掉的代码，启用时根据需要取消注释）
 //    List<ReaiLikes> likesByIds = likesService.getLikesByIds(userId, idList.toString());
@@ -459,12 +415,12 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
     }
 
     @Override
-    public JsonObject deleteArticle(String id) {
+    public boolean deleteArticle(String id) {
         // 根据文章ID获取相关的音乐列表
         List<ReaiMusic> musicList = songService.songListById(null, Collections.singletonList(id));
 
         // 根据文章ID获取相关的文件列表
-        List<File> fileList = fileService.getFileListById(Collections.singletonList(id));
+//        List<File> fileList = fileService.getFileListById(Collections.singletonList(id));
 
         // 根据文章ID获取相关的点赞信息
         List<ReaiLikes> likesByIdsList = getLikesByIds(null, id);
@@ -490,42 +446,18 @@ public class ReaiArticleServiceImpl extends DefaultService implements ReaiArticl
         }
 
         // 如果存在关联的文件记录，进行删除
-        if (!fileList.isEmpty()) {
-            // 删除所有关联的文件记录
-            fileList.stream()
-                .map(File::getId)
-                .forEach(fileService::delectFile);
-        }
+//        if (!fileList.isEmpty()) {
+//            // 删除所有关联的文件记录
+//            fileList.stream()
+//                .map(File::getId)
+//                .forEach(fileService::delectFile);
+//        }
 
         // 删除文章记录
         super.delete(TABLE_NAME, ReaiArticle.ARTICLE_ID, new String[]{id});
 
         // 返回删除操作的结果
-        return null;
+        return true;
     }
-
-//    @Override
-//    public List<ReaiArticle> friendArticleList(Page page, String userId) {
-//        ValueMap param = new ValueMap();
-//        param.put(ReaiArticle.USER_ID, userId);
-//        param.put(ReaiArticle.PUBLISH_PLATFORM, "friendCircle");
-//        SelectBuilder selectBuilder = new SelectBuilder(param);
-//        selectBuilder.bindFields("a",
-//                BeanDefUtils.excludeField(super.getFieldDefList(TABLE_NAME),
-//                    "seoInformation", "copyright","summary","source","recommendations","readingTime",
-//                    "relatedArticles","editorialSuggestions"))
-//            .bindFields("b",
-//                BeanDefUtils.includeField(super.getFieldDefList(ReaiLikesServiceImpl.TABLE_NAME),
-//                    "guestId"));
-//
-//        selectBuilder.from("a", super.getEntityDef(TABLE_NAME))
-//            .innerJoinOn("b", super.getEntityDef(ReaiLikesServiceImpl.TABLE_NAME),
-//                ReaiLikes.ARTICLE_ID)
-//            .where()
-//            .and("a.user_id", ConditionType.EQUALS, ReaiArticle.USER_ID)
-//            .and("a.publish_platform", ConditionType.EQUALS, ReaiArticle.PUBLISH_PLATFORM)
-//            .orderBy().desc("a.publish_date");
-//        return super.listForBean(selectBuilder.build(), page, ReaiArticle::new);
-//    }
 
 }

@@ -51,7 +51,8 @@ public class FileRecorderImpl extends DefaultService implements FileRecorder {
         file.setCreateTime(fileInfo.getCreateTime());
         file.setUpdateUser(userId);
         file.setUpdateTime(file.getCreateTime());
-        super.add(FileServiceImpl.TABLE_NAME, file);
+        String fileId = super.add(FileServiceImpl.TABLE_NAME, file).toString();
+        fileInfo.setId(fileId);
         return true;
     }
 
