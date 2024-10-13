@@ -25,7 +25,7 @@ public class ReaiMusicServiceImpl extends DefaultService implements ReaiMusicSer
     public static final String TABLE_NAME = "reai_music";
 
     @Override
-    public List<ReaiMusic> songListById(String userId, List<String> articleId) {
+    public List<ReaiMusic> songListById(String userId, String[] articleId) {
         // 构建查询条件
         ValueMap param = new ValueMap();
         param.put(ReaiMusic.USER_ID, userId);

@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface ReaiMusicService {
 
-    List<ReaiMusic> songListById(String userId, List<String> articleId);
+    List<ReaiMusic> songListById(String userId, String[] articleId);
 
     JsonObject addSong(ReaiMusic reaiSong);
 

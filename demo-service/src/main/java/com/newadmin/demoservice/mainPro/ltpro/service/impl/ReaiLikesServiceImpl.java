@@ -4,14 +4,11 @@ import com.newadmin.democore.kduck.service.DefaultService;
 import com.newadmin.democore.kduck.service.ValueMap;
 import com.newadmin.democore.kduck.sqlbuild.ConditionBuilder.ConditionType;
 import com.newadmin.democore.kduck.sqlbuild.SelectBuilder;
-import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiArticle;
 import com.newadmin.demoservice.mainPro.ltpro.entity.ReaiLikes;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiArticleService;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiLikesService;
 import com.newadmin.demoservice.mainPro.ltpro.service.ReaiUsersService;
-import com.newadmin.demoservice.mainPro.ltpro.vo.ReaiUsersParamVo;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -142,25 +139,25 @@ public class ReaiLikesServiceImpl extends DefaultService implements ReaiLikesSer
         //获取点赞列表
         List<ReaiLikes> list = getLikesByIds(userId, articleId);
 
-        //获取文章信息
-        List<ReaiArticle> articleList = articleService.friendArticleList(null, userId);
-        List<String> userIds = new ArrayList<>();
-        //获取用户信息
-        articleList.forEach(item -> {
-            userIds.add(item.getUserId());
-        });
-        List<ReaiUsersParamVo> usersList = usersService.usersListById(userIds);
-
-        list.forEach(item -> {
-            //获取用户信息
-            ReaiUsersParamVo users = usersList.stream()
-                .filter(user -> user.getUserId().equals(item.getUserId())).findFirst().orElse(null);
-            if (users != null) {
-                item.put("userName", users.getUsername());
-            } else {
-                item.put("userName", "访客");
-            }
-        });
+//        //获取文章信息
+//        List<ReaiArticle> articleList = articleService.friendArticleList(null, userId);
+//        List<String> userIds = new ArrayList<>();
+//        //获取用户信息
+//        articleList.forEach(item -> {
+//            userIds.add(item.getUserId());
+//        });
+//        List<ReaiUsersParamVo> usersList = usersService.usersListById(userIds);
+//
+//        list.forEach(item -> {
+//            //获取用户信息
+//            ReaiUsersParamVo users = usersList.stream()
+//                .filter(user -> user.getUserId().equals(item.getUserId())).findFirst().orElse(null);
+//            if (users != null) {
+//                item.put("userName", users.getUsername());
+//            } else {
+//                item.put("userName", "访客");
+//            }
+//        });
 
         return list;
     }

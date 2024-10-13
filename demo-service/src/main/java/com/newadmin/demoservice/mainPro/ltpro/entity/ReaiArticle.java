@@ -1,6 +1,7 @@
 package com.newadmin.demoservice.mainPro.ltpro.entity;
 
 import com.newadmin.democore.kduck.service.ValueMap;
+import com.newadmin.demoservice.mainPro.filepro.entity.FileDO;
 import com.newadmin.demoservice.mainPro.filepro.resp.FileUploadResp;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -714,7 +715,7 @@ public class ReaiArticle extends ValueMap {
      *
      * @param imgList
      */
-    public void setImgList(List<String> imgList) {
+    public void setImgList(List<FileDO> imgList) {
         super.setValue(IMG_LIST, imgList);
     }
 

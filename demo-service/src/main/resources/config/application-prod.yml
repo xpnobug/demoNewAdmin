@@ -134,6 +134,7 @@ sa-token.extension:
     - /generator/**
     - /live/**
     - /common/**
+    - /friend/**
 
 reai:
   show-sql:

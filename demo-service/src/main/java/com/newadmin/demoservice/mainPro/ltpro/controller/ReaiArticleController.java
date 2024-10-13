@@ -114,17 +114,5 @@ public class ReaiArticleController {
         return new JsonObject(reaiArticleService.deleteArticle(idList));
     }
 
-    /**
-     * 查询好友动态
-     *
-     * @param page
-     * @param userId
-     * @return
-     */
-    @Operation(summary = "查询好友动态", description = "查询好友动态")
-    @GetMapping("/friendCircleList")
-    public JsonPageObject selectFriendCircleList(Page page, @RequestParam("userId") String userId) {
-        return new JsonPageObject(page, reaiArticleService.friendCircleList(page, userId));
-    }
 
 }

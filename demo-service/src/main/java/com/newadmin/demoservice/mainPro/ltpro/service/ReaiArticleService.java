@@ -23,14 +23,13 @@ public interface ReaiArticleService {
      */
     List<ReaiArticleList> getArticleList();
 
-
     /**
      * 添加文章
      *
      * @param article
      * @return
      */
-    boolean addArticle(ReaiArticleParamVo article);
+    String addArticle(ReaiArticleParamVo article);
 
     /**
      * 单个文章
@@ -57,10 +56,6 @@ public interface ReaiArticleService {
      * @return
      */
     ReaiArticle updateArticle(ReaiArticle article);
-
-    List<ReaiArticle> friendCircleList(Page page, String userId);
-
-    List<ReaiArticle> friendArticleList(Page page, String userId);
 
     boolean deleteArticle(String id);
 }
